@@ -131,157 +131,197 @@ print_gstep_class (SCM exp, SCM port, scm_print_state *pstate)
 
 
 /*
+ *	Structure to contain information to be passed to proc_wrapper() in
+ *	order to execute a guile procedure.
+ */
+typedef	struct {
+  SCM	proc;		/* The guile procedure to be executed.		*/
+  SCM	receiver;	/* Receiving object (first arg of procedure)	*/
+  SCM	selname;	/* Selector name (second arg of procedure)	*/
+  SCM	argslist;	/* Remaining arguments to be passed.		*/
+} proc_data;
+
+static SCM
+proc_wrapper(void* data, SCM jmpbuf)
+{
+  proc_data	*p = (proc_data*)data;
+
+  return gh_call3(p->proc, p->receiver, p->selname, p->argslist);
+}
+
+SCM
+proc_error(void *data, SCM tag, SCM throw_args)
+{
+  [NSException raise: NSGenericException
+	      format: @"%s: guile threw an exception", (char*)data];
+}
+
+/*
  *	Internal forwarding routine to pass objc method invocations to guile.
  *	This uses the name of the receivers class to look up a 'class_info'
  *	entry in the 'knownClasses' map.  It then uses the name of the
  *	selector to look up a Guile procedure in on of the maps in that
- *	strucutre, and calls that procedure.
+ *	structure, and calls that procedure.
  */
 static retval_t
 gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 {
-    va_list	ap;
-    arglist_t	frame;
-    BOOL out_parameters;
-    Class	rclass;
-    class_info	*cls;
-    const char *type;
-    const char *tmptype;
-    const char *rcvname;
-    const char *selname;
-    char *procname;
-    retval_t retframe;
-    SCM val = 0;
-    SCM proc = 0;
-    SCM	receiver;
-    SCM	method;
-    SCM	argsList = SCM_EOL;
-    SCM argsEnd = 0;
-    BOOL rcvIsClass = gstep_guile_object_is_class(rcv);
-    NSString	*meth;
-    typedef struct { id many[8];} __big;
-    __big return_block (void* data)
-      {
-	return *(__big*)data;
-      }
-    char return_char (char data)
-      {
-	return data;
-      }
-    double return_double (double data)
-      {
-	return data;
-      }
-    float return_float (float data)
-      {
-	return data;
-      }
-    short return_short (short data)
-      {
-	return data;
-      }
-    retval_t apply_block(void* data)
-      {
-	void* args = __builtin_apply_args();
-	return __builtin_apply((apply_t)return_block, args, sizeof(void*));
-      }
-    retval_t apply_char(char data)
-      {
-	void* args = __builtin_apply_args();
-	return __builtin_apply((apply_t)return_char, args, sizeof(void*));
-      }
-    retval_t apply_float(float data)
-      {
-	void* args = __builtin_apply_args();
-	return __builtin_apply((apply_t)return_float, args, sizeof(float));
-      }
-    retval_t apply_double(double data)
-      {
-	void* args = __builtin_apply_args();
-	return __builtin_apply((apply_t)return_double, args, sizeof(double));
-      }
-    retval_t apply_short(short data)
-      {
-	void* args = __builtin_apply_args();
-	return __builtin_apply((apply_t)return_short, args, sizeof(void*));
-      }
-
-    /*
-     *	Get receiver object and it's class name.
-     */
-    receiver = gstep_id2scm(rcv, YES); 
-    rcvname = object_get_class_name(rcv);
-
-    /*
-     *	Get the method name and types from the selector
-     */
-    type = sel_get_type(sel);
-    tmptype = type;
-    selname = sel_get_name(sel);
-
-    /*
-     *	Build name for error logging purposes.
-     */
-    procname = objc_malloc(strlen(rcvname) + strlen(selname) + 5);
-    strcpy(procname, "[");
-    strcat(procname, rcvname);
-    strcat(procname, " ");
-    if (rcvIsClass) {
-	strcat(procname, "+");
+  va_list	ap;
+  arglist_t	frame;
+  BOOL		out_parameters;
+  Class		rclass;
+  class_info	*cls;
+  const char	*type;
+  const char	*tmptype;
+  const char	*rcvname;
+  const char	*selname;
+  char		*procname;
+  retval_t	retframe;
+  SCM		val = 0;
+  SCM		proc = 0;
+  SCM		receiver;
+  SCM		method;
+  SCM		argsList = SCM_EOL;
+  SCM		argsEnd = 0;
+  BOOL		rcvIsClass = gstep_guile_object_is_class(rcv);
+  NSString	*meth;
+  proc_data	data;
+  typedef struct { id many[8];} __big;
+  __big return_block (void* data)
+    {
+      return *(__big*)data;
     }
-    else {
-	strcat(procname, "-");
+  char return_char (char data)
+    {
+      return data;
     }
-    strcat(procname, selname);
-    strcat(procname, "]");
+  double return_double (double data)
+    {
+      return data;
+    }
+  float return_float (float data)
+    {
+      return data;
+    }
+  short return_short (short data)
+    {
+      return data;
+    }
+  retval_t apply_block(void* data)
+    {
+      void* args = __builtin_apply_args();
+      return __builtin_apply((apply_t)return_block, args, sizeof(void*));
+    }
+  retval_t apply_char(char data)
+    {
+      void* args = __builtin_apply_args();
+      return __builtin_apply((apply_t)return_char, args, sizeof(void*));
+    }
+  retval_t apply_float(float data)
+    {
+      void* args = __builtin_apply_args();
+      return __builtin_apply((apply_t)return_float, args, sizeof(float));
+    }
+  retval_t apply_double(double data)
+    {
+      void* args = __builtin_apply_args();
+      return __builtin_apply((apply_t)return_double, args, sizeof(double));
+    }
+  retval_t apply_short(short data)
+    {
+      void* args = __builtin_apply_args();
+      return __builtin_apply((apply_t)return_short, args, sizeof(void*));
+    }
 
-    /*
-     *	Get SCM object for procedure with the method name.
-     */
-    if (rcvIsClass) {
-	rclass = rcv;
+  /*
+   *	Get receiver object and it's class name.
+   */
+  receiver = gstep_id2scm(rcv, YES); 
+  rcvname = object_get_class_name(rcv);
+
+  /*
+   *	Get the method name and types from the selector
+   */
+  type = sel_get_type(sel);
+  tmptype = type;
+  selname = sel_get_name(sel);
+
+  /*
+   *	Build name for error logging purposes.
+   */
+  procname = objc_malloc(strlen(rcvname) + strlen(selname) + 5);
+  strcpy(procname, "[");
+  strcat(procname, rcvname);
+  strcat(procname, " ");
+  if (rcvIsClass)
+    {
+      strcat(procname, "+");
     }
-    else {
-	rclass = (Class)rcv->class_pointer;
+  else
+    {
+      strcat(procname, "-");
     }
-    meth = [NSString stringWithCString: selname];
-    while (proc == 0 && rclass != nil) {
-	val = (SCM)NSMapGet(knownClasses, rclass->name);
-	while (val == 0 && rclass != nil) {
-	    rclass = rclass->super_class;
-	    val = (SCM)NSMapGet(knownClasses, rclass->name);
+  strcat(procname, selname);
+  strcat(procname, "]");
+
+  /*
+   *	Get SCM object for procedure with the method name.
+   */
+  if (rcvIsClass)
+    {
+      rclass = rcv;
+    }
+  else
+    {
+      rclass = (Class)rcv->class_pointer;
+    }
+  meth = [NSString stringWithCString: selname];
+  while (proc == 0 && rclass != nil)
+    {
+      val = (SCM)NSMapGet(knownClasses, rclass->name);
+      while (val == 0 && rclass != nil)
+	{
+	  rclass = rclass->super_class;
+	  val = (SCM)NSMapGet(knownClasses, rclass->name);
 	}
-	if (val != 0) {
-	    cls = (class_info*)gh_cdr(val);
-	    if (rcvIsClass) {
-		proc = (SCM)NSMapGet(cls->factory_methods, meth);
+      if (val != 0)
+	{
+	  cls = (class_info*)gh_cdr(val);
+	  if (rcvIsClass)
+	    {
+	      proc = (SCM)NSMapGet(cls->factory_methods, meth);
 	    }
-	    else {
-		proc = (SCM)NSMapGet(cls->instance_methods, meth);
+	  else
+	    {
+	      proc = (SCM)NSMapGet(cls->instance_methods, meth);
 	    }
-	    if (proc == 0) {
-		rclass = rclass->super_class;
+	  if (proc == 0)
+	    {
+	      rclass = rclass->super_class;
 	    }
 	}
     }
 
-    if (proc == 0) {
-	[NSException raise: NSGenericException
-		    format: @"no class info for method dispatch - %s\n",
+  if (proc == 0)
+    {
+      [NSException raise: NSGenericException
+		  format: @"no class info for method dispatch - %s",
 			procname];
     }
 
-    /*
-     *	Now encode the method arguments into a list of Guile data items to
-     *	be passed to the Guile procedure.
-     */
-    tmptype = objc_skip_argspec(tmptype);	/* skip return type	*/
-    tmptype = objc_skip_argspec(tmptype);	/* skip receiver	*/
-    tmptype = objc_skip_argspec(tmptype);	/* skip selector	*/
+  /*
+   *	Now encode the method arguments into a list of Guile data items to
+   *	be passed to the Guile procedure.
+   */
+  tmptype = objc_skip_argspec(tmptype);	/* skip return type	*/
+  tmptype = objc_skip_argspec(tmptype);	/* skip receiver	*/
+  tmptype = objc_skip_argspec(tmptype);	/* skip selector	*/
 
-    va_start(ap, sel);
-    while (*tmptype != '\0') {
-	switch (*tmptype) {
+  va_start(ap, sel);
+  while (*tmptype != '\0')
+    {
+      switch (*tmptype)
+	{
 	  case _C_ID:
 	  case _C_CLASS:
 	    val = gstep_id2scm(va_arg(ap, id), YES); 
@@ -327,169 +367,189 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 	    break;
 	  case _C_STRUCT_B:
 	    {
-		int size = objc_sizeof_type(tmptype);
-		{
-		    struct dummy {
-			char	val[size];
-		    } block;
-		    int	offset = 0;
+	      int size = objc_sizeof_type(tmptype);
+	      {
+		struct dummy {
+		  char	val[size];
+		} block;
+		int	offset = 0;
 
-		    block = va_arg(ap, struct dummy);
-		    val = gstep_guile_encode_item((void*)&block, &offset,
-				&tmptype, NO, NO, nil, 0);
-		}
+		block = va_arg(ap, struct dummy);
+		val = gstep_guile_encode_item((void*)&block, &offset,
+			      &tmptype, NO, NO, nil, 0);
+	      }
 	    }
 	    break;
 	  default:
 	    [NSException raise: NSInvalidArgumentException
 			format: @"gstep_send_msg_to_guile - don't handle "
-				@"that type yet - %s\n", procname]; break;
+				@"that type yet - %s", procname]; break;
 	}
-	tmptype = objc_skip_argspec(tmptype);
-	gh_defer_ints();
-	if (argsEnd == 0) {
-	    SCM_NEWCELL(argsEnd);
-	    SCM_SETCAR(argsEnd, val); 
-	    SCM_SETCDR(argsEnd, SCM_EOL);
-	    argsList = argsEnd;
+      tmptype = objc_skip_argspec(tmptype);
+      gh_defer_ints();
+      if (argsEnd == 0)
+	{
+	  SCM_NEWCELL(argsEnd);
+	  SCM_SETCAR(argsEnd, val); 
+	  SCM_SETCDR(argsEnd, SCM_EOL);
+	  argsList = argsEnd;
 	}
-	else {
-	    SCM	tmp;
-	    SCM_NEWCELL(tmp);
-	    SCM_SETCAR(tmp, val); 
-	    SCM_SETCDR(tmp, gh_cdr(argsEnd));
-	    SCM_SETCDR(argsEnd, tmp);
-	    argsEnd = tmp;
+      else
+	{
+	  SCM	tmp;
+	  SCM_NEWCELL(tmp);
+	  SCM_SETCAR(tmp, val); 
+	  SCM_SETCDR(tmp, gh_cdr(argsEnd));
+	  SCM_SETCDR(argsEnd, tmp);
+	  argsEnd = tmp;
 	}
-	gh_allow_ints();
+      gh_allow_ints();
     }
-    va_end(ap);
+  va_end(ap);
 
-    /*
-     *	Now call the guile procedure.
-     */
-    val = gh_call3(proc, receiver, gh_str02scm((char*)selname), argsList);
+  /*
+   *	Now call the guile procedure.
+   */
+  data.proc = proc;
+  data.receiver = receiver;
+  data.selname = gh_str02scm((char*)selname);
+  data.argslist = argsList;
 
-    /*
-     *	Now decode the Guile return value into the correct ObjectiveC
-     *	data type and return it.
-     */
-    switch (*type) {
-	case _C_ID:
-	case _C_CLASS:
-	  {
-	    if (gstep_id_p(val) == 0)
-	      [NSException raise: NSGenericException
-			  format: @"%s\n", procname];
-	    return((void*)gh_cdr(val));
-	  }
-	case _C_SEL:
-	  {
-	    char *s;
-	    int l;
-	    if (SCM_STRINGP(val) == 0)
-	      [NSException raise: NSGenericException
-			  format: @"%s\n", procname];
-	    gstep_scm2str(&s, &l, &val);
-	    return((void*) sel_get_any_typed_uid(s));
-	  }
-	case _C_CHR:
-	  if (SCM_INUMP(val) == 0)
-	    [NSException raise: NSGenericException
-			format: @"%s\n", procname];
-	  return(apply_char((char) gh_scm2long(val)));
-	case _C_UCHR:
-	  if (SCM_BOOL_F==val)
-	    return(apply_char(NO));
-	  else if (SCM_BOOL_T==val)
-	    return(apply_char(YES));
-	  else 
-	    {
-	      if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
-		[NSException raise: NSGenericException
-			    format: @"%s\n", procname];
-	      return(apply_char((unsigned char)gh_scm2long(val)));
-	    }
-	case _C_SHT:
-	  if (SCM_INUMP(val) == 0)
-	    [NSException raise: NSGenericException
-			format: @"%s\n", procname];
-	  return(apply_short((short)gh_scm2long(val)));
-	case _C_USHT:
-	  if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
-	    [NSException raise: NSGenericException
-			format: @"%s\n", procname];
-	  return(apply_short((unsigned short)gh_scm2long(val)));
-	case _C_INT:
-	  if (SCM_INUMP(val) == 0)
-	    [NSException raise: NSGenericException
-			format: @"%s\n", procname];
-	  return((void*) gh_scm2long(val));
-	case _C_UINT:
-	  if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
-	    [NSException raise: NSGenericException
-			format: @"%s\n", procname];
-	  return((void*) gh_scm2long(val));
-	case _C_LNG:
-	  if (SCM_INUMP(val) == 0)
-	    [NSException raise: NSGenericException
-			format: @"%s\n", procname];
-	  return((void*) gh_scm2long(val));
-	case _C_ULNG:
-	  if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
-	    [NSException raise: NSGenericException
-			format: @"%s\n", procname];
-	  return((void*) gh_scm2long(val));
-	case _C_FLT:
-	  if (SCM_INUMP(val))
-	    return(apply_float((float) gh_scm2long(val)));
-	  else
-	    {
-	      double d;	/* debugging */
-	      d = gh_scm2double(val);
-	      return(apply_float((float) d));
-	    }
-	case _C_DBL:
-	  if (SCM_INUMP(val))
-	    return(apply_double((double) gh_scm2long(val)));
-	  else
-	    return(apply_double((double) gh_scm2double(val)));
-	case _C_CHARPTR:
-	  {
-	    NSMutableData *d;
-	    char *s;
-	    int l;
-	    if ((SCM_NIMP(val) && SCM_STRINGP(val)) == 0)
-	      [NSException raise: NSGenericException
-			  format: @"%s\n", procname];
+  val = gh_catch(SCM_BOOL_T, (scm_catch_body_t)proc_wrapper, (void*)&data,
+			(scm_catch_handler_t)proc_error, (void*)procname);
 
-	    s = gh_scm2newstr(val, &l);
-	    d = [NSMutableData dataWithBytesNoCopy: s length: l];
-	    return [d mutableBytes];
-	  }
-	case _C_PTR:
-	  {
-	    if ((SCM_NIMP(val) && OBJC_VOIDP_P(val)) == 0)
-	      [NSException raise: NSGenericException
-			  format: @"%s\n", procname];
-	    return ((voidp)gh_cdr(val))->ptr;
-	  }
-	case _C_STRUCT_B:
-	  {
-	    void	*datum = alloca(objc_sizeof_type(type));
-	    int		offset = 0;
-
-	    gstep_guile_decode_item(val, datum, &offset, &type);
-	    return(apply_block(datum));
-	  }
-	case _C_VOID:
-	  break;
-	default:
+  /*
+   *	Now decode the Guile return value into the correct ObjectiveC
+   *	data type and return it.
+   */
+  switch (*type)
+    {
+      case _C_ID:
+      case _C_CLASS:
+	{
+	  if (gstep_id_p(val) == 0)
+	    [NSException raise: NSGenericException
+			format: @"%s - return value is not an object",
+			procname];
+	  return((void*)gh_cdr(val));
+	}
+      case _C_SEL:
+	{
+	  char *s;
+	  int l;
+	  if (SCM_STRINGP(val) == 0)
+	    [NSException raise: NSGenericException
+			format: @"%s - return value is not a selector",
+			procname];
+	  gstep_scm2str(&s, &l, &val);
+	  return((void*) sel_get_any_typed_uid(s));
+	}
+      case _C_CHR:
+	if (SCM_INUMP(val) == 0)
 	  [NSException raise: NSGenericException
-		      format: @"%s - don't handle that return type yet\n", procname];
+		      format: @"%s - return values is not an integer",
+			procname];
+	return(apply_char((char) gh_scm2long(val)));
+      case _C_UCHR:
+	if (SCM_BOOL_F==val)
+	  return(apply_char(NO));
+	else if (SCM_BOOL_T==val)
+	  return(apply_char(YES));
+	else 
+	  {
+	    if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
+	      [NSException raise: NSGenericException
+			  format: @"%s - return value is not an unsigned int",
+			procname];
+	    return(apply_char((unsigned char)gh_scm2long(val)));
+	  }
+      case _C_SHT:
+	if (SCM_INUMP(val) == 0)
+	  [NSException raise: NSGenericException
+		      format: @"%s - return value is not an integer",
+			procname];
+	return(apply_short((short)gh_scm2long(val)));
+      case _C_USHT:
+	if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
+	  [NSException raise: NSGenericException
+		      format: @"%s - return value is not an unsigned int",
+			procname];
+	return(apply_short((unsigned short)gh_scm2long(val)));
+      case _C_INT:
+	if (SCM_INUMP(val) == 0)
+	  [NSException raise: NSGenericException
+		      format: @"%s - return value is not an integer",
+			procname];
+	return((void*) gh_scm2long(val));
+      case _C_UINT:
+	if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
+	  [NSException raise: NSGenericException
+		      format: @"%s - return value is not an unsigned int",
+			procname];
+	return((void*) gh_scm2long(val));
+      case _C_LNG:
+	if (SCM_INUMP(val) == 0)
+	  [NSException raise: NSGenericException
+		      format: @"%s - return value is not an integer",
+			procname];
+	return((void*) gh_scm2long(val));
+      case _C_ULNG:
+	if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
+	  [NSException raise: NSGenericException
+		      format: @"%s - return value is not an unsigned int",
+			procname];
+	return((void*) gh_scm2long(val));
+      case _C_FLT:
+	if (SCM_INUMP(val))
+	  return(apply_float((float) gh_scm2long(val)));
+	else
+	  {
+	    double d;	/* debugging */
+	    d = gh_scm2double(val);
+	    return(apply_float((float) d));
+	  }
+      case _C_DBL:
+	if (SCM_INUMP(val))
+	  return(apply_double((double) gh_scm2long(val)));
+	else
+	  return(apply_double((double) gh_scm2double(val)));
+      case _C_CHARPTR:
+	{
+	  NSMutableData *d;
+	  char *s;
+	  int l;
+	  if ((SCM_NIMP(val) && SCM_STRINGP(val)) == 0)
+	    [NSException raise: NSGenericException
+			format: @"%s - return value is not a string", procname];
+
+	  s = gh_scm2newstr(val, &l);
+	  d = [NSMutableData dataWithBytesNoCopy: s length: l];
+	  return [d mutableBytes];
+	}
+      case _C_PTR:
+	{
+	  if ((SCM_NIMP(val) && OBJC_VOIDP_P(val)) == 0)
+	    [NSException raise: NSGenericException
+			format: @"%s return value is not a pointer", procname];
+	  return ((voidp)gh_cdr(val))->ptr;
+	}
+      case _C_STRUCT_B:
+	{
+	  void	*datum = alloca(objc_sizeof_type(type));
+	  int		offset = 0;
+
+	  gstep_guile_decode_item(val, datum, &offset, &type);
+	  return(apply_block(datum));
+	}
+      case _C_VOID:
+	break;
+      default:
+	[NSException raise: NSGenericException
+		    format: @"%s - don't handle that return type yet",
+			procname];
     }
-    retframe = alloca(sizeof(void*));
-    return retframe;
+  retframe = alloca(sizeof(void*));
+  return retframe;
 }
 
 /*
