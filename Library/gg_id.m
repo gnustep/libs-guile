@@ -579,7 +579,7 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
       selector = sel_get_uid(method_name);
       if (selector)
 	{
-	  arp = [[NSAutoreleasePool alloc] init];
+	  arp = [NSAutoreleasePool new];
 	  NS_DURING
 	    {
 	      signature = [self methodSignatureForSelector: selector];
@@ -645,7 +645,7 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
     void		*data;
     const char		*type;
 
-    arp = [[NSAutoreleasePool alloc] init];
+    arp = [NSAutoreleasePool new];
     NS_DURING
       {
 	signature = [self methodSignatureForSelector: selector];

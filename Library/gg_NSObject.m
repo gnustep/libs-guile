@@ -22,6 +22,7 @@
    */
 
 #include "gstep_guile.h"
+#include <Foundation/NSAutoreleasePool.h>
 
 /*
  *	Catagory of the 'NSObject' class for GNUstep-Guile
@@ -30,6 +31,8 @@
 
 - (void) printForGuile: (SCM)port
 {
+  NSAutoreleasePool	*pool = [NSAutoreleasePool new];
+
   if (print_for_guile == NULL)
     {
       scm_display(gh_str02scm(" string=\""), port);
@@ -37,7 +40,10 @@
       scm_display(gh_str02scm("\""), port);
     }
   else
-    print_for_guile(self, _cmd, port);
+    {
+      print_for_guile(self, _cmd, port);
+    }
+  [pool release];
 }
 
 @end

@@ -23,6 +23,7 @@
 
 #include <Foundation/NSMapTable.h>
 #include <Foundation/NSMethodSignature.h>
+#include <Foundation/NSAutoreleasePool.h>
 #include <objc/objc-api.h>
 
 #include "gg_Object.h"
@@ -41,27 +42,33 @@ static NSMapTable	*objectMap = 0;
  */
 + (void) release
 {
-    return;
+  return;
 }
 + (id) retain
 {
-    return self;
+  return self;
 }
 
 - (NSMethodSignature*) methodSignatureForSelector: (SEL)aSelector
 {
-    struct objc_method* mth =
+  NSMethodSignature	*sig;
+
+  struct objc_method* mth =
             (object_is_instance(self) ?
                   class_get_instance_method(self->isa, aSelector)
                 : class_get_class_method(self->isa, aSelector));
-    return mth ? [NSMethodSignature signatureWithObjCTypes:mth->method_types]
+  sig = mth ? [NSMethodSignature signatureWithObjCTypes:mth->method_types]
                 : nil;
+  return sig;
 }
 
 - (void) printForGuile: (SCM)port
 {
+  NSAutoreleasePool	*pool = [NSAutoreleasePool new];
+
   if (print_for_guile != NULL)
     print_for_guile(self, _cmd, port);
+  [pool release];
 }
 
 /*
@@ -70,42 +77,47 @@ static NSMapTable	*objectMap = 0;
  */
 - (void) release
 {
-    [gstep_guile_object_lock lock];
-    if (objectMap != 0) {
-	int	*val;
+  [gstep_guile_object_lock lock];
+  if (objectMap != 0)
+    {
+      int	*val;
 
-	val = (int*)NSMapGet(objectMap, self);
-	if (--*val > 0) {
-	    [gstep_guile_object_lock unlock];
-	    return;		/* retain count > 0	*/
+      val = (int*)NSMapGet(objectMap, self);
+      if (--*val > 0)
+	{
+	  [gstep_guile_object_lock unlock];
+	  return;		/* retain count > 0	*/
 	}
-	objc_free(val);
-	NSMapRemove(objectMap, self);
+      objc_free(val);
+      NSMapRemove(objectMap, self);
     } 
-    [gstep_guile_object_lock unlock];
-    [self free];
+  [gstep_guile_object_lock unlock];
+  [self free];
 }
 
 - (id) retain
 {
-    int	*val;
+  int	*val;
 
-    [gstep_guile_object_lock lock];
-    if (objectMap != 0) {
-	objectMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
+  [gstep_guile_object_lock lock];
+  if (objectMap != 0)
+    {
+      objectMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
                       NSNonOwnedPointerMapValueCallBacks, 0);
     }
-    val = (int*)NSMapGet(objectMap, self);
-    if (val == 0) {
-	val = (int*)objc_malloc(sizeof(int));
-	*val = 1;
-	NSMapInsertKnownAbsent(objectMap, self, val);
+  val = (int*)NSMapGet(objectMap, self);
+  if (val == 0)
+    {
+      val = (int*)objc_malloc(sizeof(int));
+      *val = 1;
+      NSMapInsertKnownAbsent(objectMap, self, val);
     }
-    else {
-	*val++;
+  else
+    {
+      *val++;
     }
-    [gstep_guile_object_lock unlock];
-    return self;
+  [gstep_guile_object_lock unlock];
+  return self;
 }
 @end
 
@@ -115,11 +127,11 @@ static NSMapTable	*objectMap = 0;
  */
 - (void) release
 {
-    return;
+  return;
 }
 - (id) retain
 {
-    return self;
+  return self;
 }
 @end
 
