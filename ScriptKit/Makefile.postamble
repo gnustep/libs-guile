@@ -37,9 +37,16 @@
 
 # Things to do before compiling
 # Make link to to use as an include directory
+ifeq ($(GNUSTEP_TARGET_OS), mingw32)
+before-all::
+	-rm -rf ScriptKit
+	-mkdir ScriptKit
+	cp -f Library/*.h ScriptKit
+else
 before-all::
 	rm -f ScriptKit
 	$(LN_S) Library ScriptKit
+endif
 
 # Things to do after compiling
 # after-all::

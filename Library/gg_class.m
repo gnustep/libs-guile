@@ -47,6 +47,7 @@ extern void __objc_resolve_class_links();
 
 #include <string.h>		// #ifdef .. #endif
 
+#include "../config.h"
 #include "gstep_guile.h"
 #include "private.h"
 

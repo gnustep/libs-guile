@@ -1,3 +1,11 @@
+2001-07-30  Adam Fedor  <fedor@gnu.org>
+
+	* Makefile.postamble: Copy headers on mingw32 instead of linking.
+	* path_guile.m4: Separate guile_config call from setting flags to
+	avoid bug in Mingw.
+	* config.h: New file.
+	* Library/GuileSCM.m: Include it.
+
 2001-05-10  Adam Fedor  <fedor@gnu.org>
 
 	* path_guile.m4: Add GUILE_LIBS to LIBS so link command knows which

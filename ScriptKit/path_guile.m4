@@ -87,14 +87,18 @@ if test -n "$GUILE"; then
 	$ac_path_guile_dummy_path)
 
   if test -n "$GUILE_CONFIG"; then
+    $GUILE_CONFIG info includedir > tmp_guile_config
     AC_CACHE_CHECK(for guile cflags, ac_cv_misc_guile_cflags, [
-	ac_cv_misc_guile_cflags="-I`$GUILE_CONFIG info includedir`"
+	ac_cv_misc_guile_cflags="-I`cat tmp_guile_config`"
     ])
+    rm -f tmp_guile_config
     GUILE_CFLAGS="$ac_cv_misc_guile_cflags"
 
+    $GUILE_CONFIG link > tmp_guile_config
     AC_CACHE_CHECK(for guile libs, ac_cv_misc_guile_libs, [
-	ac_cv_misc_guile_libs="`$GUILE_CONFIG link`"
+	ac_cv_misc_guile_libs="`cat tmp_guile_config`"
     ])
+    rm -f tmp_guile_config
     GUILE_LIBS="$ac_cv_misc_guile_libs"
 
     ac_save_LIBS="$LIBS"

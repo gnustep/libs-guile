@@ -21,7 +21,9 @@
    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
    */
 
+#include "../config.h"
 #include "gstep_guile.h"
+#include "private.h"
 #include <Foundation/NSAutoreleasePool.h>
 #include <Foundation/NSProxy.h>
 

@@ -45,6 +45,7 @@
 
 #include <string.h>		// #ifdef .. #endif
 
+#include "../config.h"
 #include "gstep_guile.h"
 #include "private.h"
 
