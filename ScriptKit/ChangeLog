@@ -1,3 +1,11 @@
+1999-03-12  Adam Fedor  <fedor@gnu.org>
+
+	* Makefile.postamble (before-all): Make ScriptKit link to use as
+	include dir. 
+	* Examples/Makefile.preamble (ADDITIONAL_INCLUDE_DIRS): Add
+	../../Library. (ADDITIONAL_LIB_DIRS) Likewise.
+	* Library/Makefile.preamble: Likewise.
+
 Thu Mar  4 20:25:55 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
 
 	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): 0.2.3.

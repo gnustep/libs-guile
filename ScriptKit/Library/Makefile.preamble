@@ -22,13 +22,14 @@ ADDITIONAL_OBJCFLAGS +=
 ADDITIONAL_CFLAGS += 
 
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS += $(GUILE_CFLAGS)
+ADDITIONAL_INCLUDE_DIRS += $(GUILE_CFLAGS) -I../../Library
 
 # Additional LDFLAGS to pass to the linker
 # ADDITIONAL_LDFLAGS += 
 
 # Additional library directories the linker should search
-ADDITIONAL_LIB_DIRS += -L../Library/$(GNUSTEP_OBJ_DIR)
+ADDITIONAL_LIB_DIRS += -L../Library/$(GNUSTEP_OBJ_DIR) \
+			-L../../Library/$(GNUSTEP_OBJ_DIR)
 
 # Additional libraries when linking tools
 ADDITIONAL_TOOL_LIBS += -lScriptKit -lgstep_guile $(GUILE_LIBS)

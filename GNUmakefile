@@ -6,7 +6,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 # The list of subproject directories
 #
-SUBPROJECTS = Library Greg Test Documentation ScriptKit
+SUBPROJECTS = Library Greg Test ScriptKit Documentation
 
 -include GNUmakefile.preamble
 

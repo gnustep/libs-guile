@@ -1,3 +1,9 @@
+1999-03-12  Adam Fedor  <fedor@gnu.org>
+
+	* GNUmakefile (SUBPROJECTS): Moved Documentation last, just in
+	case people can't make it.
+	* configure.in: Add with-guile-path for Greg
+
 Thu Mar  4 19:35:31 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
 
 	* GNUmakefile (after-distclean): Added new target.

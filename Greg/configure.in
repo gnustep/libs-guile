@@ -9,7 +9,19 @@ AC_PROG_CC
 AC_PROG_CPP
 AM_PROG_LIBTOOL
 
-AC_PATH_PROG(GUILEPATH, guile, /usr/bin/guile)
+AC_ARG_WITH(guile-path,
+           [  --with-guile-path=DIR   How to call guile], ,)
+
+AC_PATH_PROG(GUILEPATH, guile, NONE, $PATH:$with_guile_path)
+if test "$GUILEPATH" = "NONE"; then
+  echo "********************************************************************"
+  echo "You need guile in order to use this library. If it is not in your"
+  echo "path, set the correct path by calling configure with --with-guile-path"
+  echo "set to the correct path (e.g. configure --with-guile-path=/usr/bin/guile)"
+  echo "********************************************************************"
+  AC_ERROR(No guile found - cannot continue)
+fi
+
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
@@ -21,18 +33,22 @@ AC_TYPE_MODE_T
 
 AC_CHECK_FUNCS(grantpt setpgid setsid tcgetpgrp tcsetpgrp waitpid)
 
-AC_MSG_CHECKING(whether we have a recent guile)
-HAVE_RECENT_GUILE=`guile -c '(display (if (string>? (version) "1.2") 1 0))'`
-if test $HAVE_RECENT_GUILE = 0; then
-    AC_MSG_RESULT(no)
-else
-    AC_MSG_RESULT(yes)
+HAVE_RECENT_GUILE=0
+GUILE_LIB_PATH=
+if test "$GUILEPATH" != "NONE"; then
+  AC_MSG_CHECKING(whether we have a recent guile)
+  HAVE_RECENT_GUILE=`$GUILEPATH -c '(display (if (string>? (version) "1.2") 1 0))'`
+  if test $HAVE_RECENT_GUILE = 0; then
+      AC_MSG_RESULT(no)
+  else
+      AC_MSG_RESULT(yes)
+  fi
+  GUILE_LIB_PATH=`$GUILEPATH -c '(display (string-append (%package-data-dir) "/" (version)))'`
 fi
 
 AC_DEFINE_UNQUOTED(HAVE_RECENT_GUILE, $HAVE_RECENT_GUILE)
 AC_SUBST(HAVE_RECENT_GUILE)
 
-GUILE_LIB_PATH=`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`
 AC_DEFINE_UNQUOTED(GUILE_LIB_PATH, $GUILE_LIB_PATH)
 
 GUILE_BIN_PATH=$GUILE_LIB_PATH/greg

@@ -11,6 +11,8 @@
 ac_help=
 ac_default_prefix=/usr/local
 # Any additions from configure.in:
+ac_help="$ac_help
+  --with-guile-path=DIR   How to call guile"
 
 # Initialize some variables set by options.
 # The variables have the same names as the options, with
@@ -515,6 +517,14 @@ if (echo "testing\c"; echo 1,2,3) | grep c >/dev/null; then
   fi
 else
   ac_n= ac_c='\c' ac_t=
+fi
+
+
+
+# Check whether --with-guile-path or --without-guile-path was given.
+if test "${with_guile_path+set}" = set; then
+  withval="$with_guile_path"
+  :
 fi
 
 
