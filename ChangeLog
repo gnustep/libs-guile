@@ -1,3 +1,8 @@
+2003-06-07  Adam Fedor  <fedor@gnu.org>
+
+	* configure.in: Fix for new path locations (gnustep-make-1.7.0)
+	(patch from Damien Genet <damien.genet@free.fr>).
+
 2003-06-02 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/gg_class.m: Fix to parse anonymous structures
