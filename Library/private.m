@@ -65,6 +65,11 @@ gstep_guile_check_type(const char* type)
 	  if (*type == _C_STRUCT_E) {
 	      type = 0;		/* Empty struct are illegal */
 	  }
+	  else {
+	    const char	*ptr = type;
+	    while (*ptr != _C_STRUCT_E && *ptr != '=') ptr++;
+	    if (*ptr == '=') type = ++ptr;
+	  }
 	  while (type && *type && *type != _C_STRUCT_E) {
 	      type = gstep_guile_check_type(type);
 	  }
