@@ -1,0 +1,5 @@
+Thu Nov 19 09:09:54 1998  Adam Fedor  <fedor@doc.com>
+
+	* Test/Makefile.preamble (ADDITIONAL_INCLUDE_DIRS): Add ../Library
+	(Fix from Gregor Hoffleit <flight@mathi.uni-heidelberg.de>).
+
