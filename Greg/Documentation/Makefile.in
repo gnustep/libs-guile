@@ -46,9 +46,10 @@ info:	gregdoc
 	makeinfo -D NO-TEXI2HTML -o gregdoc.info gregdoc
 
 install-info: gregdoc.info
-	install-info --quiet -r Greg $(infodir)/dir
-	install-info gregdoc.info $(infodir)/dir
-	$(INSTALL_DATA) gregdoc.info $(infodir)/greg.info
+	../mkinstalldirs $(INSTALL_ROOT_DIR)$(infodir)
+	install-info --quiet -r Greg $(INSTALL_ROOT_DIR)$(infodir)/dir
+	install-info gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/dir
+	$(INSTALL_DATA) gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/greg.info
 
 install:	install-info
 
