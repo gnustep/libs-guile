@@ -1,3 +1,15 @@
+2001-03-31  Adam Fedor  <fedor@gnu.org>
+
+        * Fixes to compile on cygwin/mingw32.
+        * Library/gg_class.m (gstep_add_methods): Use objc_EXPORT
+        if defined for __objc_runtime_mutex.
+        * Library/gstep_guile.h: Define DLL EXPORT commands. Use them.
+        * ScriptKit/Library/libScriptKit.def: New file.
+        * ScriptKit/Library/GNUmakefile: Use it.
+        * ScriptKit/Library/Guile.h: Define DLL EXPORT commands. Use them.
+        * ScriptKit/Library/Makeifile.preamble: Define LIBRARIES_DEPEND_UPON
+        for cygwin and mingw32.
+
 2001-03-23 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/gg_voidp.m: Reformat to coding standards ... just because

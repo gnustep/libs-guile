@@ -47,3 +47,6 @@
 /* Define if you have the <sys/stropts.h> header file.  */
 #undef HAVE_SYS_STROPTS_H
 
+/* Define if you have the <errno.h> header file.  */
+#undef HAVE_ERRNO_H
+
