@@ -3,16 +3,28 @@ to those of gstep-core.  This means that changes in the sub-minor
 version number may actually denote major changes in functionality!  I
 think that things have stabilised now and future releases will be more
 in the way of bug/portability fixes than the addition of new features.
-Version 0.5.14
+
+   Version 0.6.5
+
+   * Minor updates to work with Guile-1.3.4.
+
+   * Version updated to be inline with current GNUstep core release.
+
+
+   Version 0.5.14
+
    * Note that previous version inadvertently set the version number of
      shared libraries to 1.0.0. You may have to manually remove these
      libraries if you have previously installed versions of gstep-guile.
 
    * Merged in ScriptKit
 
+
    Version 0.5.13 (unreleased)
+
    * Added `gstep-ptr-ivar' to return a voidp that points to an instance
      variable in an object.
+
 
    Version 0.5.12
    * Fixes to permit you to use Distributed Objects (ie send messages to
@@ -23,12 +35,14 @@ Version 0.5.14
    * Modifications to the Greg package to permit it to be built outside
      the GNUstep environment.
 
+
    Version 0.5.11
    * Fixes suggested by Helge Hess to tidy things up and to get rid of
      warnings when building for libFoundation instead of gstep-base.
 
    * Warning about libFoundation garbage collection added to
      documentation.
+
 
    Version 0.5.10
    * Many minor code changes to accommodate libFoundation - that can now
@@ -58,6 +72,7 @@ Version 0.5.14
    * More efficient mark routine to speed up garbage collecting of
      classes.
 
+
    Version 0.5.9
    * Modified to use NSInvocation rather than mframe for improved
      portability to libFoundation and (eventually) MacOS-X, as
@@ -67,6 +82,7 @@ Version 0.5.14
      implemente using NSInvocation, and the preferred way to call a
      Guile method from ObjectiveC is to create a new class or add a
      (Guile) method to an existing class anyway.
+
 
    Version 0.5.8
    * No longer link all Foundation classes by default - you have to call
@@ -88,6 +104,7 @@ Version 0.5.14
 
    * Added all NSMapTable related functions.
 
+
    Version 0.5.7
    * Documented more (all?) of the macros.
 
@@ -96,6 +113,7 @@ Version 0.5.14
    * Fixed bug in scm2voidp() function.
 
    * Added NSZone related functions.
+
 
    Version 0.5.6
    * Incorporated bugfix for returing the SCM corresponding to a  'nil'
@@ -130,6 +148,7 @@ Version 0.5.14
    * Updated to work with recent developer snapshots of Guile while
      retaining compatibility with the old 1.2 release.
 
+
    Version 0.5.4.1
    * Bugfix for macro `bool->gstep-bool' supplied by Masatake YAMATO
 
@@ -137,6 +156,7 @@ Version 0.5.14
      suggested by Masatake YAMATOa.
 
    * Credit Eiichi Takamori for work on guileobjc.
+
 
    Version 0.5.4
 
@@ -161,6 +181,7 @@ that all major features are now in place.
 
    * Improved the documentation some.
 
+
    Version 0.5.3
 
    * Improved class creation to permit creation of classes with new
@@ -176,6 +197,7 @@ that all major features are now in place.
 
    * Added code to ensure that all foundation classes are linked in.
 
+
    Version 0.5.2
 
    * Added the ability to create new ObjectiveC classes from Guile using
@@ -190,6 +212,7 @@ that all major features are now in place.
 
    * Now handles `copy' and `mutableCopy' methods is the same way as
      `alloc' and `new' for memory management.
+
 
    Version 0.5.1
 
@@ -207,6 +230,7 @@ that all major features are now in place.
 
    * Added helper macros to gstep-guile.scm for unquoted selector names
      and terse creation of NSStrings from guile strings.
+
 
    Version 0.5.0
 

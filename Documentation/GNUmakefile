@@ -17,8 +17,10 @@ README_TEXI_FILES = version.texi
 README_TEXT_MAIN = readme.tmpl.texi
 
 INSTALL_TEXT_MAIN = install.tmpl.texi
+INSTALL_TEXI_FILES = version.texi
 
 NEWS_TEXT_MAIN = news.tmpl.texi
+NEWS_TEXI_FILES = version.texi
 
 -include Makefile.preamble
 
