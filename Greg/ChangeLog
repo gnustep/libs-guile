@@ -1,5 +1,17 @@
 2001-04-20  Nicola Pero  <nicola@brainstorm.co.uk>
 
+	* Documentation/Makefile.in: Removed sed for email, url since now
+	texinfo has support for it; do not rebuild everything each time
+	`make' is run; do not abort if any of the texinfo stuff does not
+	work; cleaned; rearranged targets to be simpler.
+	* Documentation/gregdoc.in: Renamed to
+	Documentation/gregdoc.texi.in.
+	* configure.in: Emit Documentation/gregdoc.texi rather than
+	Documentation/gregdoc.
+	* configure: Regenerated.
+	
+2001-04-20  Nicola Pero  <nicola@brainstorm.co.uk>
+
 	* Library/Makefile.in: Lot of changes so that it is more simple,
 	standard and fast, and installs libraries correctly.
 
