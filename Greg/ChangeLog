@@ -1,0 +1,5 @@
+Wed Oct 14 20:15:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Library/greg.scm.in: greg-testcase modified to run garbage collection
+	explicitly after each test to maintain good state.
+
