@@ -1,3 +1,8 @@
+Sun Dec 13 13:00:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Documentation/Makefile: Fixed to build info file correctly based
+	on patch supplied by <Torbjorn.Lindh@c3l.tyreso.se>
+
 Sat Dec 12 18:30:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Library/Makefile.in: Fixed include locations to use $(prefix) as
