@@ -7,13 +7,15 @@ include $(GNUSTEP_MAKEFILES)/common.make
 TOOL_NAME = guile-base
 guile-base_OBJC_FILES = guile-base.m
 
-#ifneq ($(GUI_LIB),nil)
-#  APP_NAME = guile-gui
-#  guile-gui_OBJC_FILES = guile-gui.m
-#endif
+ifneq ($(GUI_LIB),nil)
+APP_NAME = guile-gui
+guile-gui_OBJC_FILES = guile-gui.m
+endif
 
 include Makefile.preamble
 
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/tool.make
-#include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/application.make
 
+ifneq ($(GUI_LIB),nil)
+include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/application.make
+endif
