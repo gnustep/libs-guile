@@ -1,7 +1,6 @@
 /* GuileSCM.m
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -26,6 +25,7 @@
 
 #include "../config.h"
 #include "Guile.h"
+
 #include <Foundation/NSObjCRuntime.h>
 #include <Foundation/NSException.h>
 
@@ -50,14 +50,14 @@ static void GuileSCM_mapper_remove (SCM scm);
 @implementation GuileSCM
 + (void)initialize
 {
-    GuileSCM_mapper_init ();
+  GuileSCM_mapper_init ();
 }
 
 /* this is root of init */
-- (id)initWithSCM: (SCM)scm
+- (id) initWithSCM: (SCM)scm
 {
-  self = [super init] ;
-  if(self)
+  self = [super init];
+  if (self)
     {
       DEBUG_INIT_DEALLOC ("GuileSCM init: %p\n", self);
       value = scm;
@@ -73,7 +73,7 @@ static void GuileSCM_mapper_remove (SCM scm);
   [super dealloc];
 }
 
-+ (id)scmWithSCM:(SCM)scm
++ (id) scmWithSCM: (SCM)scm
 {
   if (gh_procedure_p(scm))
     return [[[GuileProcedure alloc] initWithSCM:scm] autorelease];
@@ -81,68 +81,69 @@ static void GuileSCM_mapper_remove (SCM scm);
     return [[[self alloc] initWithSCM:scm] autorelease];
 }
 
-- (SCM)scmValue
+- (SCM) scmValue
 {
-    return value;
+  return value;
 }
 
-+ (GuileSCM *)nilValue
++ (GuileSCM *) nilValue
 {
-    if( GuileSCM_nil == nil ) {
+  if( GuileSCM_nil == nil )
+    {
       GuileSCM_nil = [[GuileSCM alloc] initWithSCM:gstep_id2scm(nil, NO)];
     }
-    return GuileSCM_nil;
+  return GuileSCM_nil;
 }
 
-+ (SCM)nilSCMValue
++ (SCM) nilSCMValue
 {
-    return gstep_id2scm (nil, NO);
+  return gstep_id2scm (nil, NO);
 }
 
-+ (SCM)id2scm:(id)o
++ (SCM) id2scm: (id)o
 {
-	return gstep_id2scm(o,NO);
+  return gstep_id2scm(o,NO);
 }
 
 // only pass a SCM with smob car == scm_tc16_OpenStep
-+ (id)scm2id:(SCM)scm
++ (id) scm2id: (SCM)scm
 {
-	// return gstep_guile_scm2id(scm);
-	// I think that gstep_guile_scm2id have a problem.
+  // return gstep_guile_scm2id(scm);
+  // I think that gstep_guile_scm2id have a problem.
 
-	 return (id) gh_cdr(scm);
+  return (id) gh_cdr(scm);
 }
 
-+ (NSString *)scm2str:(SCM)scm
++ (NSString *) scm2str: (SCM)scm
 {
-    NSString *ret_str;
-    char *str;
-    int len;
+  NSString *ret_str;
+  char *str;
+  int len;
 
-    // How do you think about exception?
-    if (!(SCM_NIMP (scm) && (SCM_STRINGP (scm) || SCM_SYMBOLP(scm))))
-      {
-	[NSException raise: NSInvalidArgumentException
-		     format: @"Can't convert to string"];
-	/* TODO: I think any typed object should be converted to a string. 
-	   - masatake
+  // How do you think about exception?
+  if (!(SCM_NIMP (scm) && (SCM_STRINGP (scm) || SCM_SYMBOLP(scm))))
+    {
+      [NSException raise: NSInvalidArgumentException
+		   format: @"Can't convert to string"];
+      /* TODO: I think any typed object should be converted to a string. 
+	 - masatake
 	 e.g.
 	 17(int) -> @"17".
 	 3.14(float) -> @"3.14".
 	 ... */
-      }
+    }
 
     /* protect str from GC while we copy off its data */
-    scm_protect_object (scm);
+  scm_protect_object (scm);
 
-    str = SCM_CHARS (scm);
-    len = SCM_LENGTH (scm);
+  str = SCM_CHARS (scm);
+  len = SCM_LENGTH (scm);
 
-    ret_str = [NSString stringWithCString:str length:len];
+  ret_str = [NSString stringWithCString:str length:len];
 
-    scm_unprotect_object (scm);
+  scm_unprotect_object (scm);
 
-    return ret_str;
+  return ret_str;
 }
 
 #define constFlag  (1<<1)
@@ -153,149 +154,155 @@ static void GuileSCM_mapper_remove (SCM scm);
 #define byrefFlag  (1<<6)
 #define onewayFlag (1<<7)
 
-+ (void)decode:(SCM)datum ofType:(const char *)type to:(void *)buf
++ (void) decode: (SCM)datum ofType: (const char *)type to: (void *)buf
 {
-    char *tptr = (char *)type;
-    int flags = 0;
-    switch (*tptr) {
-        case 'r':
-            flags |= constFlag;
-            break;
-        case 'n':
-            flags |= inFlag;
-            break;
-        case 'N':
-            flags |= inoutFlag;
-            break;
-        case 'o':
-            flags |= outFlag;
-            break;
-        case 'O':
-            flags |= bycopyFlag;
-            break;
-        case 'R':
-            flags |= byrefFlag;
-            break;
-        case 'V':
-            flags |= onewayFlag;
-            break;
+  char *tptr = (char *)type;
+  int flags = 0;
+  switch (*tptr)
+    {
+      case 'r':
+	flags |= constFlag;
+	break;
+      case 'n':
+	flags |= inFlag;
+	break;
+      case 'N':
+	flags |= inoutFlag;
+	break;
+      case 'o':
+	flags |= outFlag;
+	break;
+      case 'O':
+	flags |= bycopyFlag;
+	break;
+      case 'R':
+	flags |= byrefFlag;
+	break;
+      case 'V':
+	flags |= onewayFlag;
+	break;
     }
-    if( flags != 0 )
-        tptr++;
-    switch (*tptr) {
-        case '@':
-        case '#':
-            *(id*)buf = [GuileSCM scm2id:datum];
-            break;
-        case 'c':
-            *(char*)buf = (char) gh_scm2char(datum);
-            break;
-        case 'C':
-            *(unsigned char*)buf = (unsigned char) gh_scm2ulong(datum);
-            break;
-        case 's':
-            *(short*)buf = (short) gh_scm2long(datum);
-            break;
-        case 'S':
-            *(unsigned short*)buf = (unsigned short) gh_scm2ulong(datum);
-            break;
-        case 'i':
-            *(int*)buf = (int) gh_scm2int(datum);
-            break;
-        case 'I':
-            *(unsigned int*)buf = (unsigned int) gh_scm2ulong(datum);
-            break;
-        case 'l':
-            *(long*)buf = (long) gh_scm2long(datum);
-            break;
-        case 'L':
-            *(unsigned long*)buf = (unsigned long) gh_scm2ulong(datum);
-            break;
-        case 'q':
-            *(long long*)buf = (long long) gh_scm2long(datum);
-            break;
-        case 'Q':
-            *(unsigned long long*)buf = (unsigned long long) gh_scm2ulong(datum);
-            break;
-        case 'f':
-            *(float*)buf = (float) gh_scm2double(datum);
-            break;
-        case 'd':
-            *(double*)buf = gh_scm2double(datum);
-            break;
-        case ':': {
-            NSString *str = [GuileSCM scm2str:datum];
-            *(SEL*)buf = NSSelectorFromString(str);
-            break;
+  if( flags != 0 )
+    tptr++;
+  switch (*tptr)
+    {
+      case '@':
+      case '#':
+	*(id*)buf = [GuileSCM scm2id:datum];
+	break;
+      case 'c':
+	*(char*)buf = (char) gh_scm2char(datum);
+	break;
+      case 'C':
+	*(unsigned char*)buf = (unsigned char) gh_scm2ulong(datum);
+	break;
+      case 's':
+	*(short*)buf = (short) gh_scm2long(datum);
+	break;
+      case 'S':
+	*(unsigned short*)buf = (unsigned short) gh_scm2ulong(datum);
+	break;
+      case 'i':
+	*(int*)buf = (int) gh_scm2int(datum);
+	break;
+      case 'I':
+	*(unsigned int*)buf = (unsigned int) gh_scm2ulong(datum);
+	break;
+      case 'l':
+	*(long*)buf = (long) gh_scm2long(datum);
+	break;
+      case 'L':
+	*(unsigned long*)buf = (unsigned long) gh_scm2ulong(datum);
+	break;
+      case 'q':
+	*(long long*)buf = (long long) gh_scm2long(datum);
+	break;
+      case 'Q':
+	*(unsigned long long*)buf = (unsigned long long) gh_scm2ulong(datum);
+	break;
+      case 'f':
+	*(float*)buf = (float) gh_scm2double(datum);
+	break;
+      case 'd':
+	*(double*)buf = gh_scm2double(datum);
+	break;
+      case ':':
+	{
+	  NSString *str = [GuileSCM scm2str:datum];
+	  *(SEL*)buf = NSSelectorFromString(str);
+	  break;
         }
-        case '*': {
-            NSString *str = [GuileSCM scm2str:datum];
-            *(char**)buf = (char*)[str cString];
-            break;
+      case '*':
+	{
+	  NSString *str = [GuileSCM scm2str:datum];
+	  *(char**)buf = (char*)[str cString];
+	  break;
         }
-        default:
-            [GuileInterpreter scmError:@"don't handle that datum type yet" args:datum];
+      default:
+	[GuileInterpreter scmError: @"don't handle that datum type yet"
+			  args: datum];
     }
-    return;
 }
 
 
 // DIL add DO support!
 // guileobjc hackers, Steal this code! 
-+ (SCM)encode:(void *)datum ofType:(const char *)type
++ (SCM)encode: (void *)datum ofType: (const char *)type
 {
-    switch (*type) {
-        case '@':
-        case '#':
-            return [*(id*)datum scmValue];
-            break;
-        case 'c':
-            return gh_char2scm(*(char*)datum);
-            break;
-        case 'C':
-            return gh_ulong2scm((unsigned long) *(unsigned char*)datum);
-            break;
-        case 's':
-            return gh_long2scm((long) *(short*)datum);
-            break;
-        case 'S':
-            return gh_ulong2scm((unsigned long) *(unsigned short*)datum);
-            break;
-        case 'i':
-            return gh_int2scm(*(int*)datum);
-            break;
-        case 'I':
-            return gh_ulong2scm((unsigned long) *(unsigned int*)datum);
-            break;
-        case 'l':
-            return gh_long2scm(*(long*)datum);
-            break;
-        case 'L':
-            return gh_ulong2scm(*(unsigned long*)datum);
-            break;
-        case 'f':
-            return gh_double2scm((double) *(float*)datum);
-            break;
-        case 'd':
-            return gh_double2scm(*(double*)datum);
-            break;
-        case '*':
-            return gh_str02scm(*(char**)datum);
-            break;
-        default:
-            [GuileInterpreter scmError:@"don't handle that return type yet" args:SCM_UNDEFINED];
-            return SCM_UNDEFINED;
-            break;
+  switch (*type)
+    {
+      case '@':
+      case '#':
+	return [*(id*)datum scmValue];
+	break;
+      case 'c':
+	return gh_char2scm(*(char*)datum);
+	break;
+      case 'C':
+	return gh_ulong2scm((unsigned long) *(unsigned char*)datum);
+	break;
+      case 's':
+	return gh_long2scm((long) *(short*)datum);
+	break;
+      case 'S':
+	return gh_ulong2scm((unsigned long) *(unsigned short*)datum);
+	break;
+      case 'i':
+	return gh_int2scm(*(int*)datum);
+	break;
+      case 'I':
+	return gh_ulong2scm((unsigned long) *(unsigned int*)datum);
+	break;
+      case 'l':
+	return gh_long2scm(*(long*)datum);
+	break;
+      case 'L':
+	return gh_ulong2scm(*(unsigned long*)datum);
+	break;
+      case 'f':
+	return gh_double2scm((double) *(float*)datum);
+	break;
+      case 'd':
+	return gh_double2scm(*(double*)datum);
+	break;
+      case '*':
+	return gh_str02scm(*(char**)datum);
+	break;
+      default:
+	[GuileInterpreter scmError: @"don't handle that return type yet"
+			  args: SCM_UNDEFINED];
+	return SCM_UNDEFINED;
+	break;
     }
 }
 
-- (NSString *)description
+- (NSString *) description
 {
   // what to do?
   return [self descriptionWithLocale: nil];
 }
 
-- (NSString *)descriptionWithLocale:(NSDictionary *)locale
+- (NSString *) descriptionWithLocale: (NSDictionary *)locale
 {
   static SCM write2str = SCM_BOOL_F;
   char *tmpstr;
@@ -309,8 +316,8 @@ static void GuileSCM_mapper_remove (SCM scm);
   
   tmpstr = gh_scm2newstr (gh_call1 (write2str, value), NULL);
   
-  ret = [[[super description] stringByAppendingString: @" "]
-	   stringByAppendingString: [NSString stringWithCString: tmpstr]];
+  ret = [[super description] stringByAppindingFormat: @" %s", tmpstr];
+
   free (tmpstr);
   return ret;
 }
@@ -326,7 +333,7 @@ static void GuileSCM_mapper_remove (SCM scm);
 @implementation GuileSCM (Debugging)
 + (void) setDebugFlag: (int) flag
 {
-    GuileSCM_debug_flag = flag;
+  GuileSCM_debug_flag = flag;
 }
 @end
 

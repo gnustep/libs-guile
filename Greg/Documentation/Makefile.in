@@ -1,7 +1,7 @@
 #
 #  Makefile for Greg documentation.
 #  
-#  Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+#  Copyright (C) 1998, 2001, 2003 Free Software Foundation, Inc.
 #
 #  Written by:	Richard Frith-Macdonald <rfm@gnu.org>
 #  Modified by: Nicola Pero <n.pero@mi.flashnet.it>
@@ -61,6 +61,13 @@ install: install-info
 	-rm -f $(INSTALL_ROOT_DIR)$(man1dir)/greg.1
 	-$(INSTALL_DATA) greg.1 $(INSTALL_ROOT_DIR)$(man1dir)/greg.1
 	-chmod a-x $(INSTALL_ROOT_DIR)$(man1dir)/greg.1
+
+uninstall-info:
+	rm -rf $(INSTALL_ROOT_DIR)$(infodir)/dir
+	rm -rf $(INSTALL_ROOT_DIR)$(infodir)/greg.info
+
+uninstall: uninstall-info
+	rm -rf $(INSTALL_ROOT_DIR)$(man1dir)/greg.1
 
 clean:
 	rm -f gregdoc.aux gregdoc.cp gregdoc.cps gregdoc.dvi \

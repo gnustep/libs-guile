@@ -1,7 +1,7 @@
 #
 #  Makefile for Greg Library and control program
 #  
-#  Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+#  Copyright (C) 1998, 2001, 2003 Free Software Foundation, Inc.
 #
 #  Written by:	Richard Frith-Macdonald <rfm@gnu.org>
 #  Modifed by:  Nicola Pero <n.pero@mi.flashne.it>
@@ -88,9 +88,14 @@ $(INSTALL_ROOT_DIR)$(bindir):
 
 install: $(LIB) create_install_dirs
 	$(LIBTOOL_INSTALL) \
-	  $(INSTALL_LIBRARY) $(LIB) $(INSTALL_ROOT_DIR)/$(libdir)/ ; \
+	  $(INSTALL_LIBRARY) $(LIB) $(INSTALL_ROOT_DIR)$(libdir)/ ; \
 	$(INSTALL_DATA)   greg.scm $(INSTALL_ROOT_DIR)${GUILE_SCM_PATH}/ ; \
 	$(INSTALL_SCRIPT) greg     $(INSTALL_ROOT_DIR)${bindir}/
+
+uninstall:
+	rm -rf $(INSTALL_ROOT_DIR)$(libdir)/$(LIB)
+	rm -rf $(INSTALL_ROOT_DIR)${GUILE_SCM_PATH}/greg.scm
+	rm -rf $(INSTALL_ROOT_DIR)${bindir}/greg
 
 clean:
 	rm -rf core *.o *.lo *.la .libs *.log *.dbg

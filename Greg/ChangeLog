@@ -1,3 +1,10 @@
+2003-04-07  David Ayers  <d.ayers@inode.at>
+
+	* Makefile: Added uninstall target.
+	* Library/Makefile.in: Added uninstall target and fixed typo.
+	* Documentation/Makefile.in: Added uninstall and uninstall-info
+	target.
+
 Fri Mar 14 10:35:00 2003  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* GREG-VERSION: Bump to 1.5

@@ -1,7 +1,6 @@
 /* SKInterpreter.m
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -34,44 +33,45 @@ script_kit_version()
 
 @implementation SKInterpreter
 
-- (id)init
+- (id) init
 {
-  self = [super init] ;
-  if(self){
-    userDictionary = nil;
-  }
+  self = [super init];
+  if (self)
+    {
+      userDictionary = nil;
+    }
   return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
-    [userDictionary release];
-    [super dealloc];
+  [userDictionary release];
+  [super dealloc];
 }
 
-+ (oneway void)initializeInterpreter
++ (oneway void) initializeInterpreter
 {
 }
 
-- (id)executeScript:(id)scr
+- (id) executeScript: (id)scr
 {
   return [self shouldNotImplement:_cmd];
 }
 
-- (oneway void)executeScriptOneway:(id)scr
+- (oneway void) executeScriptOneway: (id)scr
 {
   [self shouldNotImplement:_cmd];
 }
 
-- (NSMutableDictionary *)userDictionary
+- (NSMutableDictionary *) userDictionary
 {
-    return userDictionary;
+  return userDictionary;
 }
 
-- (oneway void)setUserDictionary:(NSMutableDictionary *)dict
+- (oneway void) setUserDictionary: (NSMutableDictionary *)dict
 {
-    [userDictionary autorelease];
-    userDictionary = [dict retain];
+  [userDictionary autorelease];
+  userDictionary = [dict retain];
 }
 
 @end

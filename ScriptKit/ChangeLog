@@ -1,3 +1,16 @@
+2003-04-07  David Ayers  <d.ayers@inode.at>
+
+	* Library/*.h/m: Reformatted according to standard.
+	* Library/Guile.h: Use qualified <gnustep/guile/header.h> path for
+	inclusions.  Use "" rather than <> for local inclusions.
+	* Library/GuileInterpreter.h: Use "" rather than <> for local
+	inclusions.
+	* Library/GuileScript.h: Ditto.
+	* Library/SKInterpreter.h: Ditto.
+	* Library/SKScript.h: Ditto.
+	* Library/GuileSCM.h: Use qualified <gnustep/guile/header.h> path
+	for inclusions.
+
 2002-01-07  Adam Fedor  <fedor@gnu.org>
 
 	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): 0.3.0

@@ -1,7 +1,6 @@
 /* SKScript.h
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -26,7 +25,8 @@
 #ifndef S_K_SCRIPT_H
 #define S_K_SCRIPT_H 
 
-#include <ScriptKit/SKInterpreter.h>
+#include "SKInterpreter.h"
+
 #include <Foundation/NSDictionary.h>
 #include <Foundation/NSObject.h>
 #include <objc/objc-api.h>

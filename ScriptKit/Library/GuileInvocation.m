@@ -1,7 +1,6 @@
 /* GuileInvocation.m
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
 
@@ -45,11 +44,11 @@
     }  
   return self ;
 }
-+ (GuileInvocation *)invocationWithArgc: (int)c
++ (GuileInvocation *) invocationWithArgc: (int)c
 {
   return [[[GuileInvocation alloc] initWithArgc: c] autorelease];
 }
-- (void)dealloc
+- (void) dealloc
 {
   if (proc != nil)
     {
@@ -65,7 +64,7 @@
     }
   [super dealloc];
 }
-- (id)argumentAtIndex: (int)index
+- (id) argumentAtIndex: (int)index
 {
   if (0 == index)
     {
@@ -77,15 +76,15 @@
       return [arguments objectAtIndex: index];
     }  
 }
-- (GuileSCM *)returnValue
+- (GuileSCM *) returnValue
 {
   return result;
 }
-- (GuileProcedure *)procedure
+- (GuileProcedure *) procedure
 {
   return proc;
 }
-- (int)procedureArgc
+- (int) procedureArgc
 {
   return [arguments count];
 }

@@ -1,7 +1,6 @@
 /* GuileInterpreter.h
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -25,7 +24,7 @@
 /* GuileInterpreter.h created by dlehn on Mon 16-Jun-1997 */
 #ifndef GUILE_INTERPRETER_H
 #define GUILE_INTERPRETER_H 
-#include <ScriptKit/Guile.h>
+#include "Guile.h"
 
 @class NSString;
 
@@ -44,12 +43,12 @@ extern NSString * GuileInterpreterKeyWord_Update;
 
 + (void)initialize;
 
-+ (void)scmError:(NSString *)message args:(SCM)args;
++ (void)scmError: (NSString *)message args:(SCM)args;
 
 - (id)init;
 - (void)dealloc;
 
-- (void)replWithPrompt:(NSString *)prompt;
+- (void)replWithPrompt: (NSString *)prompt;
 - (void)repl;
 
 - (void)interactiveMode;
@@ -57,15 +56,15 @@ extern NSString * GuileInterpreterKeyWord_Update;
 - (BOOL)isInBatchMode;
 - (BOOL)isInInteractiveMode;
 
-- (GuileSCM *)eval: (NSString *) sexp;
-- (GuileSCM *)eval: (NSString *) sexp 
+- (GuileSCM *)eval: (NSString *)sexp;
+- (GuileSCM *)eval: (NSString *)sexp 
   inUserDictionary: (NSMutableDictionary *)d;
-- (GuileSCM *)loadFile: (NSString *) filename;
-- (GuileSCM *)define: (NSString *) name withValue: (GuileSCM *) val;
-- (GuileSCM *)lookup: (NSString *) name;
+- (GuileSCM *)loadFile: (NSString *)filename;
+- (GuileSCM *)define: (NSString *)name withValue: (GuileSCM *)val;
+- (GuileSCM *)lookup: (NSString *)name;
 
-- (void)display: (GuileSCM *) val;
-- (void)write: (GuileSCM *) val;
+- (void)display: (GuileSCM *)val;
+- (void)write: (GuileSCM *)val;
 - (void)newline;
 /* Useful for debugging */
 - (NSString *)generateRealScript: (id<SKScript>)scr;

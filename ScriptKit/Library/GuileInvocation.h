@@ -1,7 +1,6 @@
 /* GuileInvocation.h
 
    Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
    
    Author: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
 
@@ -27,6 +26,7 @@
 #define GUILE_INVOCATION_H 
 
 #include <Foundation/NSObject.h>
+
 @class NSArray, NSMutableArray;
 @class GuileProcedure, GuileSCM;
 

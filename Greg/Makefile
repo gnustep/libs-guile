@@ -1,7 +1,7 @@
 #
 #  Main Makefile for Greg (GNUstep REGrestation testing framework in Guile)
 #  
-#  Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+#  Copyright (C) 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
 #
 #  Written by:	Richard Frith-Macdonald <rfm@gnu.org>
 #  Modified by: Nicola Pero <n.pero@mi.flashnet.it>
@@ -50,6 +50,11 @@ documentation:
 install: all
 	(cd Library; $(MAKE) install); \
 	(cd Documentation; $(MAKE) install);
+
+uninstall:
+	(cd Library; $(MAKE) uninstall); \
+	(cd Documentation; $(MAKE) uninstall);
+
 
 #
 # The clean and distclean targets have `-' because if `make distclean'

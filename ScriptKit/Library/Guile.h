@@ -1,7 +1,6 @@
 /* Guile.h
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2001, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -27,14 +26,14 @@
 #ifndef SK_GUILE_H
 #define SK_GUILE_H 
 
-#include <gstep_guile.h>
+#include <gnustep/guile/gstep_guile.h>
 
-#include <ScriptKit/ScriptKit.h>
-#include <ScriptKit/GuileSCM.h>
-#include <ScriptKit/GuileProcedure.h>
-#include <ScriptKit/GuileInterpreter.h>
-#include <ScriptKit/GuileInvocation.h>
-#include <ScriptKit/GuileScript.h>
+#include "ScriptKit.h"
+#include "GuileSCM.h"
+#include "GuileProcedure.h"
+#include "GuileInterpreter.h"
+#include "GuileInvocation.h"
+#include "GuileScript.h"
 
 #if BUILD_libScriptKit_DLL
 #  define SK_EXPORT  __declspec(dllexport)

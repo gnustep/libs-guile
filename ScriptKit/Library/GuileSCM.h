@@ -1,7 +1,6 @@
 /* GuileSCM.h
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -25,7 +24,7 @@
 #ifndef GUILE_S_C_M_H
 #define GUILE_S_C_M_H 
 
-#include <gstep_guile.h>
+#include <gnustep/guile/gstep_guile.h>
 
 #include <Foundation/NSString.h>
 #include <Foundation/NSValue.h>
