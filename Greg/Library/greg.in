@@ -35,6 +35,7 @@
 
 (set! greg-debug #f)
 (set! greg-verbose 0)
+(set! greg-paths ())
 
 (define greg-ok-to-proceed #t)
 (define greg-last-option "")
@@ -121,12 +122,6 @@
 	  (display "No 'files' specified\n")
 	  (set! greg-files (reverse greg-files))
 	)
-	(if (> (length greg-paths) 0)
-	  (begin
-	    (display "Use of --file overrides --path\n")
-	    (set! greg-files ())
-	  )
-	)
       )
       ((or (string=? s "--help") (string=? s "-H"))
 	(display "\nGreg is a Gnustep REGression testing framework\n\n")
@@ -177,38 +172,12 @@
 	  (display "No 'src' directory specified\n")
 	)
       )
-      ((string=? s "--path")
-	(set! greg-paths ())
-	(set! args (get-paths args))
-	(if (= (length greg-paths) 0)
-	  (display "No test file paths specified\n")
-	  (set! greg-paths (reverse greg-paths))
-	)
-	(if (> (length greg-tools) 0)
-	  (begin
-	    (display "Use of --path overrides --tool\n")
-	    (set! greg-tools ())
-	  )
-	)
-	(if (> (length greg-files) 0)
-	  (begin
-	    (display "Use of --path overrides --file\n")
-	    (set! greg-files ())
-	  )
-	)
-      )
       ((string=? s "--tool")
 	(set! greg-tools ())
 	(set! args (get-tools args))
 	(if (= (length greg-tools) 0)
 	  (display "No 'tools' directories specified\n")
 	  (set! greg-tools (reverse greg-tools))
-	)
-	(if (> (length greg-paths) 0)
-	  (begin
-	    (display "Use of --tool overrides --path\n")
-	    (set! greg-paths ())
-	  )
 	)
       )
       ((or (string=? s "--verbose") (string=? s "-v"))
@@ -232,16 +201,34 @@
 	(set! args ())	; End loop
       )
     )
-    (begin
-      (display "Unknown option - '")
-      (display s)
-      (display "'\n")
-      (set! greg-ok-to-proceed #f)
-      (set! args ())	; End loop
+    (if (> (string-length s) 1)
+      (begin
+	(set! greg-paths (cons s greg-paths))
+	(set! args (get-paths args))
+      )
+      (display "Nul argument ignored!\n")
     )
   )
   (options args)
 )))())
+
+(if (> (length greg-paths) 0)
+  (begin
+    (set! greg-paths (reverse greg-paths))
+    (if (> (length greg-tools) 0)
+      (begin
+	(display "Use of filename in command-line args overrides --tool\n")
+	(set! greg-tools ())
+      )
+    )
+    (if (> (length greg-files) 0)
+      (begin
+	(display "Use of filename in command-line args overrides --file\n")
+	(set! greg-files ())
+      )
+    )
+  )
+)
 
 (options (command-line))
 
@@ -255,6 +242,5 @@
   )
   1
 )
-
 
 
