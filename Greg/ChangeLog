@@ -1,3 +1,8 @@
+2001-04-20  Nicola Pero  <nicola@brainstorm.co.uk>
+
+	* Library/Makefile.in: Lot of changes so that it is more simple,
+	standard and fast, and installs libraries correctly.
+
 2001-04-17  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* configure.in: If we are running under GNUstep, and no --prefix
