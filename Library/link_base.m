@@ -1126,6 +1126,7 @@ gstep_base_classes()
     CCLS(NSNotificationCenter);
     CCLS(NSNotificationQueue);
     CCLS(NSNumber);
+    CCLS(NSNull);
     CCLS(NSObject);
     CCLS(NSPipe);
     CCLS(NSProcessInfo);

@@ -31,7 +31,7 @@ include ../Version
 
 LIBRARY_NAME = libgstep_guile libgg_base
 
-ifneq (S(strip $(HAVE_APPKIT)),no)
+ifneq ($(strip $(HAVE_APPKIT)),no)
   LIBRARY_NAME += libgg_gui
   libgg_gui_OBJC_FILES = link_gui.m
 endif
