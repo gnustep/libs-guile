@@ -93,17 +93,28 @@ if test -n "$GUILE"; then
     GUILE_CFLAGS="$ac_cv_misc_guile_cflags"
 
     AC_CACHE_CHECK(for guile libs, ac_cv_misc_guile_libs, [
-	ac_cv_misc_guile_libs="-L$guile_exec_prefix/lib `$GUILE_CONFIG link`"
+	ac_cv_misc_guile_libs="`$GUILE_CONFIG link`"
     ])
     GUILE_LIBS="$ac_cv_misc_guile_libs"
 
-    AC_CHECK_LIB(guile, gh_apply)
+    ac_save_LIBS="$LIBS"
+    ac_save_CPPFLAGS="$LDFLAGS"
+    LIBS="$GUILE_LIBS $LIBS"
+    CPPFLAGS="$CPPFLAGS $GUILE_CFLAGS"
+
+    AC_CHECK_FUNCS(gh_apply)
+    if test "$ac_cv_func_gh_apply" = no; then
+      AC_WARN(Could not link to libguile - configuration is probably messed up)
+    fi
     AC_CHECK_FUNC(scm_make_smob_type)
     if test $ac_cv_func_scm_make_smob_type = yes; then
       GUILE_MAKE_SMOB_TYPE=1
     else
       GUILE_MAKE_SMOB_TYPE=0
     fi
+
+    LIBS="$ac_save_LIBS"
+    CPPFLAGS="$ac_save_CPPFLAGS"
 
   else
     dnl hmm you are using old stock guile-1.2
