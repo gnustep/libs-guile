@@ -22,6 +22,7 @@
 ;   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
+(begin
 
 ;
 ;  Define some variables to bhe used to pass information between testcases.
@@ -116,9 +117,17 @@
 (greg-testcase "We can create an NSData object from a Guile string" #t
 (lambda ()
   (set! s0 "This is a test string")
+(greg-dlog s0)
   (set! l0 (string-length s0))
+(greg-dlog l0)
   (set! v0 (string->voidp s0))
+(greg-dlog v0)
+;  (set! d0 (gstep-lookup-class "NSData")) 
+;(greg-dlog d0)
+;  (set! d0 (gstep-msg-send d0 "dataWithBytesNoCopy:length:" v0 l0))
+;(greg-dlog d0)
   (set! d0 ([] "NSData" dataWithBytesNoCopy: v0 length: l0))
+(greg-dlog d0)
   ;
   ;; Having given the buffer malloced to hold the string to the NSData object
   ;; we must tell v0 not to attempt to free the buffer when it is destroyed.
@@ -147,4 +156,5 @@
   (gc)
   #t
 ))
+)
 

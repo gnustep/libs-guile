@@ -27,26 +27,6 @@ after-install::
 	for i in $(SCHEME_FILES); do \
 	  $(INSTALL_DATA) $$i $$DIRP/languages/$$i; \
 	done; \
-        if [ "$(shared)" != "yes" ]; then exit 0; fi; \
-	libdir=`expr $(GNUSTEP_LIBRARIES) : '$(INSTALL_ROOT_DIR)\(.*\)'`; \
-	for i in $(LIBRARY_NAME); do \
-	  m=`expr "$$i" : 'lib\(.*\)'`; \
-	  echo module $$m; \
-	  if [ ! -d $$DIRP/languages/gstep-guile/$$m ]; then \
-	    mkdir $$DIRP/languages/gstep-guile/$$m; \
-	  fi; \
-	  lib=$${i}$(LIBRARY_NAME_SUFFIX)$(SHARED_LIBEXT); \
-	  if [ -h $(GNUSTEP_LIBRARIES)/$$lib ]; then \
-	    tmp=`ls -l $(GNUSTEP_LIBRARIES)/$$lib`; \
-	    v=`expr "$$tmp" : ".*->.*$$lib.\(.*\)"`; \
-	  else \
-	    v=$(VERSION); \
-	  fi; \
-	  srcfile=libcompiled$(SHARED_LIBEXT); \
-	  rm -f $$DIRP/languages/gstep-guile/$$m/$$srcfile; \
-	  $(LN_S) $$libdir/$$lib.$$v \
-	    $$DIRP/languages/gstep-guile/$$m/$$srcfile; \
-	done
 
 # Things to do after uninstalling
 # after-uninstall::

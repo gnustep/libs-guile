@@ -75,12 +75,6 @@ gstep_init()
    *	Create a variable 'gstep-nil' as a conveniance to users.
    */
   gh_define("gstep-nil", gstep_id2scm(nil, 0));
-
-}
-
-void
-scm_init_languages_gstep_guile_gstep_guile_module()
-{
-    scm_register_module_xxx ("languages gstep-guile gstep_guile", gstep_init);
+  scm_add_feature("gstep-guile");
 }
 
