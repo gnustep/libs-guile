@@ -43,7 +43,7 @@ info:	gregdoc
 
 clean:
 	rm -f gregdoc.aux gregdoc.cp gregdoc.cps gregdoc.dvi \
-	gregdoc.fn gregdoc.info gregdoc.ky gregdoc.log gregdoc.pg \
+	gregdoc.fn gregdoc.ky gregdoc.log gregdoc.pg \
 	gregdoc.texi gregdoc.toc gregdoc.tp gregdoc.vr
 
 distclean:	clean
