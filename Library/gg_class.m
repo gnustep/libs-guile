@@ -58,21 +58,21 @@ extern void __objc_resolve_class_links();
  *	Objective-C class methods are never garbage collected.
  */
 typedef	struct {
-    Module_t	objc_runtime_info;
-    NSMapTable	*instance_methods;
-    NSMapTable	*factory_methods;
+  Module_t	objc_runtime_info;
+  NSMapTable	*instance_methods;
+  NSMapTable	*factory_methods;
 } class_info;
 
 int gstep_scm_tc16_class;
 static NSMapTable *knownClasses = 0;
-#define OBJC_CLASS_P(arg) ((SCM_TYP16(arg)) == gstep_scm_tc16_class) 
+#define OBJC_CLASS_P(arg) ((SCM_TYP16(arg)) == gstep_scm_tc16_class)
 
 static SCM equal_gstep_class (SCM s1, SCM s2);
 static scm_sizet free_gstep_class (SCM obj);
 static int print_gstep_class (SCM exp, SCM port, scm_print_state *pstate);
 static SCM mark_gstep_class (SCM obj);
 
-static SCM 
+static SCM
 mark_gstep_class (SCM obj)
 {
   class_info	*cls;
@@ -82,7 +82,7 @@ mark_gstep_class (SCM obj)
 
   if (SCM_GC8MARKP (obj))
     return SCM_BOOL_F;
-  
+
   SCM_SETGC8MARK (obj);
 
   cls = (class_info*)gh_cdr(obj);
@@ -98,7 +98,7 @@ mark_gstep_class (SCM obj)
   return SCM_BOOL_F;
 }
 
-static SCM  
+static SCM
 equal_gstep_class (SCM s1, SCM s2)
 {
   if (gh_cdr(s1) == gh_cdr(s2))
@@ -107,11 +107,11 @@ equal_gstep_class (SCM s1, SCM s2)
     return SCM_BOOL_F;
 }
 
-static scm_sizet 
+static scm_sizet
 free_gstep_class (SCM obj)
 {
-    fprintf(stderr, "HELP - Garbage collector attacks class!\n");
-    return (scm_sizet)0;
+  fprintf(stderr, "HELP - Garbage collector attacks class!\n");
+  return (scm_sizet)0;
 }
 
 static int
@@ -230,7 +230,7 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
   /*
    *	Get receiver object and it's class name.
    */
-  receiver = gstep_id2scm(rcv, YES); 
+  receiver = gstep_id2scm(rcv, YES);
   rcvname = object_get_class_name(rcv);
 
   /*
@@ -323,7 +323,7 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 	{
 	  case _C_ID:
 	  case _C_CLASS:
-	    val = gstep_id2scm(va_arg(ap, id), YES); 
+	    val = gstep_id2scm(va_arg(ap, id), YES);
 	    break;
 	  case _C_SEL:
 	    val = gh_str02scm((char*)sel_get_name(va_arg(ap, SEL)));
@@ -389,7 +389,7 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
       if (argsEnd == 0)
 	{
 	  SCM_NEWCELL(argsEnd);
-	  SCM_SETCAR(argsEnd, val); 
+	  SCM_SETCAR(argsEnd, val);
 	  SCM_SETCDR(argsEnd, SCM_EOL);
 	  argsList = argsEnd;
 	}
@@ -397,7 +397,7 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 	{
 	  SCM	tmp;
 	  SCM_NEWCELL(tmp);
-	  SCM_SETCAR(tmp, val); 
+	  SCM_SETCAR(tmp, val);
 	  SCM_SETCDR(tmp, gh_cdr(argsEnd));
 	  SCM_SETCDR(argsEnd, tmp);
 	  argsEnd = tmp;
@@ -454,7 +454,7 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 	  return(apply_char(NO));
 	else if (SCM_BOOL_T==val)
 	  return(apply_char(YES));
-	else 
+	else
 	  {
 	    if ((SCM_INUMP(val) && gh_scm2long(val) >= 0) == 0)
 	      [NSException raise: NSGenericException
@@ -593,8 +593,8 @@ gstep_class_info(Class objcClass, Module_t module)
    *	representing the methods of the class are never garbage collected.
    */
   SCM_NEWCELL(wrap);
-  SCM_SETCAR(wrap, gstep_scm_tc16_class); 
-  SCM_SETCDR(wrap, (SCM)cls); 
+  SCM_SETCAR(wrap, gstep_scm_tc16_class);
+  SCM_SETCDR(wrap, (SCM)cls);
   scm_permanent_object(wrap);	/* Don't let class be garbage collected. */
 
   /*
@@ -732,16 +732,16 @@ gstep_add_methods(Class dest, SCM mlist, BOOL instance)
 		if (instance == YES)
 		  {
 		    NSMapInsert(cls->instance_methods,
-			[NSString stringWithCString: 
-			    (char*)ml->method_list[count].method_name],
-			    (void*)mimp);
+		      [NSString stringWithCString:
+			(char*)ml->method_list[count].method_name],
+			(void*)mimp);
 		  }
 		else
 		  {
 		    NSMapInsert(cls->factory_methods,
-			[NSString stringWithCString: 
-			    (char*)ml->method_list[count].method_name],
-			    (void*)mimp);
+		      [NSString stringWithCString:
+			(char*)ml->method_list[count].method_name],
+			(void*)mimp);
 		  }
 		count++;
 	      }
@@ -773,25 +773,28 @@ gstep_add_methods(Class dest, SCM mlist, BOOL instance)
 
 static char gstep_lookup_class_n[] = "gstep-lookup-class";
 
-static SCM 
+static SCM
 gstep_lookup_class_fn (SCM classname)
-{	
-    if (SCM_NIMP(classname) && SCM_SYMBOLP(classname)) {
-	classname = scm_symbol_to_string(classname);
+{
+  if (SCM_NIMP(classname) && SCM_SYMBOLP(classname))
+    {
+      classname = scm_symbol_to_string(classname);
     }
-    if (SCM_NIMP(classname) && SCM_STRINGP(classname)) {
-	char	*name;
-	int	len;
-	id	class;
+  if (SCM_NIMP(classname) && SCM_STRINGP(classname))
+    {
+      char	*name;
+      int	len;
+      id	class;
 
-	name = gh_scm2newstr(classname, &len);
-	class = (id) objc_lookup_class(name);
-	free(name);
-	return gstep_id2scm(class, NO);
+      name = gh_scm2newstr(classname, &len);
+      class = (id) objc_lookup_class(name);
+      free(name);
+      return gstep_id2scm(class, NO);
     }
-    else {
-	gstep_scm_error("not a symbol or string", classname);
-	return gstep_id2scm(nil, NO);
+  else
+    {
+      gstep_scm_error("not a symbol or string", classname);
+      return gstep_id2scm(nil, NO);
     }
 }
 
@@ -801,16 +804,16 @@ static char gstep_classnames_n[] = "gstep-classnames";
 static SCM
 gstep_classnames_fn()
 {
-    void * enum_state = NULL;
-    Class class;
-    SCM answer;
+  void	*enum_state = NULL;
+  Class	class;
+  SCM	answer;
 
-    answer = SCM_EOL;
-    while ((class = objc_next_class(&enum_state)))
-      {
-        answer = scm_cons(scm_makfrom0str(class -> name), answer);
-      }
-    return answer;
+  answer = SCM_EOL;
+  while ((class = objc_next_class(&enum_state)))
+    {
+      answer = scm_cons(scm_makfrom0str(class -> name), answer);
+    }
+  return answer;
 }
 
 
@@ -822,158 +825,172 @@ static char gstep_new_class_n[] = "gstep-new-class";
 static SCM
 gstep_new_class_fn(SCM classn, SCM supern, SCM ilist, SCM mlist, SCM clist)
 {
-    extern void	__objc_exec_class(Module_t);
-    Module_t	module;
-    Symtab_t	symtab;
-    Class	new_class;
-    char	*cname = 0;
-    char	*sname = 0;
-    id		sclass = nil;
-    SCM		tmp;
-    int		ivarsize = 0;
-    int		num_ivars = 0;
+  extern void	__objc_exec_class(Module_t);
+  Module_t	module;
+  Symtab_t	symtab;
+  Class		new_class;
+  char		*cname = 0;
+  char		*sname = 0;
+  id		sclass = nil;
+  SCM		tmp;
+  int		ivarsize = 0;
+  int		num_ivars = 0;
 
-    for (tmp = ilist; tmp != SCM_EOL; tmp = gh_cdr(tmp)) {
-	SCM	name = gh_caar(tmp);
-	SCM	type = gh_cdar(tmp);
-	char	*ptr;
-	int	len;
+  for (tmp = ilist; tmp != SCM_EOL; tmp = gh_cdr(tmp))
+    {
+      SCM	name = gh_caar(tmp);
+      SCM	type = gh_cdar(tmp);
+      char	*ptr;
+      int	len;
 
-	if ((SCM_NIMP(name) && SCM_STRINGP(name)) == 0) {
-	    gstep_scm_error("variable name is not a string", classn);
+      if ((SCM_NIMP(name) && SCM_STRINGP(name)) == 0)
+	{
+	  gstep_scm_error("variable name is not a string", classn);
 	}
-	if ((SCM_NIMP(type) && SCM_STRINGP(type)) == 0) {
-	    gstep_scm_error("variable type is not a string", classn);
+      if ((SCM_NIMP(type) && SCM_STRINGP(type)) == 0)
+	{
+	  gstep_scm_error("variable type is not a string", classn);
 	}
-	gstep_scm2str(&ptr, &len, &type);
-	if (gstep_guile_check_type(ptr) == 0) {
-	    gstep_scm_error("variable type is not legal", classn);
+      gstep_scm2str(&ptr, &len, &type);
+      if (gstep_guile_check_type(ptr) == 0)
+	{
+	  gstep_scm_error("variable type is not legal", classn);
 	}
-	num_ivars++;
+      num_ivars++;
     }
 
-    /*
-     *	Get the name for the new class and check that it isn't already in use.
-     */
-    if (SCM_NIMP(classn) && SCM_SYMBOLP(classn)) {
-	classn = scm_symbol_to_string(classn);
+  /*
+   *	Get the name for the new class and check that it isn't already in use.
+   */
+  if (SCM_NIMP(classn) && SCM_SYMBOLP(classn))
+    {
+      classn = scm_symbol_to_string(classn);
     }
-    if (SCM_NIMP(classn) && SCM_STRINGP(classn)) {
-	cname = gh_scm2newstr(classn, 0);
-	if (objc_lookup_class(cname) != nil) {
-	    free(cname);
-	    gstep_scm_error("the named class already exists", classn);
-	}
-    }
-    else {
-	gstep_scm_error("not a symbol or string", classn);
-    }
-
-    /*
-     *	Get the super class to use and check that it is based on NSObject.
-     */
-    if (SCM_NIMP(supern) && SCM_SYMBOLP(supern)) {
-	supern = scm_symbol_to_string(supern);
-    }
-    if (SCM_NIMP(supern) && SCM_STRINGP(supern)) {
-	Class	want1 = [NSObject class];
-	Class	want2 = [NSProxy class];
-	Class	class;
-
-	sname = gh_scm2newstr(supern, 0);
-	sclass = objc_lookup_class(sname);
-
-	class = sclass;
-	while (class != nil)
-	  {
-	    if (class == want1 || class == want2)
-	      {
-		break;
-	      }
-	    class = class_get_super_class(class);
-	  }
-
-	if (class == nil)
-	  {
-	    free(cname);
-	    free(sname);
-	    gstep_scm_error("the superclass isn't based on NSObject or NSProxy",
-	      supern);
-	  }
-      }
-    else
-      {
-	gstep_scm_error("not a symbol or string", supern);
-      }
-
-    module = objc_calloc(1, sizeof(Module));
-    module->version = OBJC_VERSION;
-    module->size = sizeof(*module);
-    module->name = objc_malloc(strlen(cname) + 13);
-    strcpy((char*)module->name, "Gstep-Guile-");
-    strcat((char*)module->name, cname);
-    module->symtab = objc_calloc(2, sizeof(Symtab));
-
-    symtab = module->symtab;
-    symtab->sel_ref_cnt = 0;
-    symtab->refs = 0;
-    symtab->cls_def_cnt = 1;	/* We are defining a single class.	*/
-    symtab->cat_def_cnt = 0;
-    symtab->defs[1] = 0;	/* Nul terminate the list.		*/
-    symtab->defs[0] = objc_calloc(2, sizeof(struct objc_class));
-
-    /*
-     *	Build class structure.
-     */
-    new_class = (Class)symtab->defs[0];
-    new_class->class_pointer = &new_class[1];
-    new_class->super_class = (Class)sname;
-    new_class->class_pointer->super_class = (Class)sname;
-    new_class->name = cname;
-    new_class->class_pointer->name = cname;
-    new_class->version = 0;
-    new_class->class_pointer->version = 0;
-    new_class->info = _CLS_CLASS;
-    new_class->class_pointer->info = _CLS_META;
-
-    ivarsize = ((Class)sclass)->instance_size;
-    if (num_ivars > 0) {
-	struct objc_ivar	*ivar;
-
-	new_class->ivars = (struct objc_ivar_list*) objc_malloc(sizeof(struct objc_ivar_list) + (num_ivars-1)*sizeof(struct objc_ivar));
-	new_class->ivars->ivar_count = num_ivars;
-	ivar = new_class->ivars->ivar_list;
-
-	for (tmp = ilist; tmp != SCM_EOL; tmp = gh_cdr(tmp)) {
-	    SCM	name = gh_caar(tmp);
-	    SCM	type = gh_cdar(tmp);
-	    int	align;
-
-	    ivar->ivar_name = gh_scm2newstr(name, 0);
-	    ivar->ivar_type = gh_scm2newstr(type, 0);
-
-	    align = objc_alignof_type(ivar->ivar_type); /* pad to alignment */
-	    ivarsize = ROUND(ivarsize, align);
-	    ivar->ivar_offset = ivarsize;
-	    ivarsize += objc_sizeof_type(ivar->ivar_type);
-	    ivar++;
+  if (SCM_NIMP(classn) && SCM_STRINGP(classn))
+    {
+      cname = gh_scm2newstr(classn, 0);
+      if (objc_lookup_class(cname) != nil)
+	{
+	  free(cname);
+	  gstep_scm_error("the named class already exists", classn);
 	}
     }
-    new_class->instance_size = ivarsize;
-    new_class->class_pointer->instance_size = ((Class)sclass)->class_pointer->instance_size;
+  else
+    {
+      gstep_scm_error("not a symbol or string", classn);
+    }
 
-    /*
-     *	Insert our new class into the runtime.
-     */
-    __objc_exec_class(module);
-    __objc_resolve_class_links();
-    free(sname);
+  /*
+   *	Get the super class to use and check that it is based on NSObject.
+   */
+  if (SCM_NIMP(supern) && SCM_SYMBOLP(supern))
+    {
+      supern = scm_symbol_to_string(supern);
+    }
+  if (SCM_NIMP(supern) && SCM_STRINGP(supern))
+    {
+      Class	want1 = [NSObject class];
+      Class	want2 = [NSProxy class];
+      Class	class;
 
-    /*
-     *	Add methods to our new class.
-     */
-    gstep_add_methods(new_class, clist, NO);
-    return gstep_add_methods(new_class, mlist, YES);
+      sname = gh_scm2newstr(supern, 0);
+      sclass = objc_lookup_class(sname);
+
+      class = sclass;
+      while (class != nil)
+	{
+	  if (class == want1 || class == want2)
+	    {
+	      break;
+	    }
+	  class = class_get_super_class(class);
+	}
+
+      if (class == nil)
+	{
+	  free(cname);
+	  free(sname);
+	  gstep_scm_error("the superclass isn't based on NSObject or NSProxy",
+	    supern);
+	}
+    }
+  else
+    {
+      gstep_scm_error("not a symbol or string", supern);
+    }
+
+  module = objc_calloc(1, sizeof(Module));
+  module->version = OBJC_VERSION;
+  module->size = sizeof(*module);
+  module->name = objc_malloc(strlen(cname) + 13);
+  strcpy((char*)module->name, "Gstep-Guile-");
+  strcat((char*)module->name, cname);
+  module->symtab = objc_calloc(2, sizeof(Symtab));
+
+  symtab = module->symtab;
+  symtab->sel_ref_cnt = 0;
+  symtab->refs = 0;
+  symtab->cls_def_cnt = 1;	/* We are defining a single class.	*/
+  symtab->cat_def_cnt = 0;
+  symtab->defs[1] = 0;	/* Nul terminate the list.		*/
+  symtab->defs[0] = objc_calloc(2, sizeof(struct objc_class));
+
+  /*
+   *	Build class structure.
+   */
+  new_class = (Class)symtab->defs[0];
+  new_class->class_pointer = &new_class[1];
+  new_class->super_class = (Class)sname;
+  new_class->class_pointer->super_class = (Class)sname;
+  new_class->name = cname;
+  new_class->class_pointer->name = cname;
+  new_class->version = 0;
+  new_class->class_pointer->version = 0;
+  new_class->info = _CLS_CLASS;
+  new_class->class_pointer->info = _CLS_META;
+
+  ivarsize = ((Class)sclass)->instance_size;
+  if (num_ivars > 0) {
+      struct objc_ivar	*ivar;
+
+      new_class->ivars = (struct objc_ivar_list*)
+	objc_malloc(sizeof(struct objc_ivar_list)
+	+ (num_ivars-1)*sizeof(struct objc_ivar));
+      new_class->ivars->ivar_count = num_ivars;
+      ivar = new_class->ivars->ivar_list;
+
+      for (tmp = ilist; tmp != SCM_EOL; tmp = gh_cdr(tmp))
+	{
+	  SCM	name = gh_caar(tmp);
+	  SCM	type = gh_cdar(tmp);
+	  int	align;
+
+	  ivar->ivar_name = gh_scm2newstr(name, 0);
+	  ivar->ivar_type = gh_scm2newstr(type, 0);
+
+	  align = objc_alignof_type(ivar->ivar_type); /* pad to alignment */
+	  ivarsize = ROUND(ivarsize, align);
+	  ivar->ivar_offset = ivarsize;
+	  ivarsize += objc_sizeof_type(ivar->ivar_type);
+	  ivar++;
+	}
+  }
+  new_class->instance_size = ivarsize;
+  new_class->class_pointer->instance_size
+    = ((Class)sclass)->class_pointer->instance_size;
+
+  /*
+   *	Insert our new class into the runtime.
+   */
+  __objc_exec_class(module);
+  __objc_resolve_class_links();
+  free(sname);
+
+  /*
+   *	Add methods to our new class.
+   */
+  gstep_add_methods(new_class, clist, NO);
+  return gstep_add_methods(new_class, mlist, YES);
 }
 
 static char gstep_class_methods_n[] = "gstep-class-methods";
@@ -1015,25 +1032,29 @@ static char gstep_instance_methods_n[] = "gstep-instance-methods";
 static SCM
 gstep_instance_methods_fn(SCM classn, SCM mlist)
 {
-    char	*cname;
-    Class	dest;
+  char	*cname;
+  Class	dest;
 
-    if (SCM_NIMP(classn) && SCM_SYMBOLP(classn)) {
-	classn = scm_symbol_to_string(classn);
+  if (SCM_NIMP(classn) && SCM_SYMBOLP(classn))
+    {
+      classn = scm_symbol_to_string(classn);
     }
-    if (SCM_NIMP(classn) && SCM_STRINGP(classn)) {
-	cname = gh_scm2newstr(classn, 0);
-	dest = objc_lookup_class(cname);
-	free(cname);
-	if (dest == nil) {
-	    gstep_scm_error("the named class does not exists", classn);
+  if (SCM_NIMP(classn) && SCM_STRINGP(classn))
+    {
+      cname = gh_scm2newstr(classn, 0);
+      dest = objc_lookup_class(cname);
+      free(cname);
+      if (dest == nil)
+	{
+	  gstep_scm_error("the named class does not exists", classn);
 	}
     }
-    else {
-	gstep_scm_error("not a symbol or string", classn);
+  else
+    {
+      gstep_scm_error("not a symbol or string", classn);
     }
 
-    return gstep_add_methods(dest, mlist, YES);
+  return gstep_add_methods(dest, mlist, YES);
 }
 
 

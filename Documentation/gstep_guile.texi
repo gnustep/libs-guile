@@ -434,6 +434,18 @@ which is the name of the method (the selector), and subsequent arguments are
 the arguments to be sent.
 
 @item
+@findex sup-send
+@samp{(gstep-sup-send receiver method args)}
+is used to send a message to an object specifying that the superclasses
+implementation of the method should be executed.  It takes two or more
+arguments, the first is the object to which the message is to be sent,
+the second is a string which is the name of the method (the selector),
+and subsequent arguments are the arguments to be sent.
+This is intended for use within guile procedures which implement methods
+of objc clases ... to allow them to invoke the corresponding methods in
+superclasses.
+
+@item
 @findex ivarnames
 @samp{(gstep-ivarnames obj)}
 is used to return a list of the names of the instance variables of the
