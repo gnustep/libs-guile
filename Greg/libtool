@@ -40,7 +40,7 @@ if test "X${CDPATH+set}" = Xset; then CDPATH=:; export CDPATH; fi
 # LD="/usr/bin/ld" LDFLAGS="" LIBS="" \
 # NM="/usr/bin/nm -B" RANLIB="ranlib" LN_S="ln -s" \
 # DLLTOOL="" OBJDUMP="" AS="" \
-#   ./ltconfig --cache-file=./config.cache --with-gcc --with-gnu-ld --enable-win32-dll --no-verify ./ltmain.sh i686-pc-linux-gnu
+#   ./ltconfig --cache-file=.././config.cache --with-gcc --with-gnu-ld --enable-win32-dll --no-verify ./ltmain.sh i686-pc-linux-gnu
 #
 # Compiler and other test output produced by ltconfig, useful for
 # debugging ltconfig, is in ./config.log if it exists.

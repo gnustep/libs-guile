@@ -112,7 +112,8 @@
 
 (greg-testcase "$$ creates an NSString" #t
 (lambda ()
-  (set! result ([] ($$ "hello") isKindOfClass: cls))
+  (set! result ($$ "hello"))
+  (set! result ([] result isKindOfClass: cls))
   (gstep-bool->bool result)
 ))
 
@@ -151,7 +152,7 @@
   (string=? (gstep-nsstring obj) "hello")
 ))
 
-(set! r ())
+(set! r '())
 (greg-testcase "NSMakeRange builds expected list" #t
 (lambda ()
   (set! r (NSMakeRange 5 6))

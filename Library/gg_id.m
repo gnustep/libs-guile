@@ -50,8 +50,6 @@
 
 #include <string.h>		// #ifdef .. #endif
 
-#include "../config.h"
-#include "gstep_guile.h"
 #include "private.h"
 
 static SCM gstep_nil = 0;
@@ -62,7 +60,7 @@ static SCM gstep_get_nil_fn();
 /*
  *	SMOB stuff for the Guile wrappers for ObjectiveC objects.
  */
-int gstep_scm_tc16_id;
+int gstep_scm_tc16_id = 0;
 static NSMapTable *knownObjects = 0;
 
 static SCM equal_gstep_id (SCM s1, SCM s2);
@@ -227,16 +225,31 @@ static char gstep_id_p_n[] = "gstep-id?";
 SCM
 gstep_scm_id_p (SCM obj) 
 {
-  if (SCM_NIMP(obj) && OBJC_ID_P(obj)) 
-    return SCM_BOOL_T; 
-  else
-    return SCM_BOOL_F;    
+  if (SCM_NIMP(obj))
+    {
+      int	typ = SCM_TYP16(obj);
+
+      if (typ == gstep_scm_tc16_id)
+	{
+	  return SCM_BOOL_T; 
+	}
+    }
+  return SCM_BOOL_F;    
 }
 
 int
 gstep_id_p (SCM val)
 {
-  return (gstep_scm_id_p (val) == SCM_BOOL_T) ? 1 : 0;
+  if (SCM_NIMP(val))
+    {
+      int	typ = SCM_TYP16(val);
+
+      if (typ == gstep_scm_tc16_id)
+	{
+	  return 1;
+	}
+    }
+  return 0;
 }
 
 
@@ -806,7 +819,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
 #endif
 	    data = alloca(objc_sizeof_type(type));
 	    SCM_ASSERT(gstep_guile_decode_item(gh_car(next_arg), data, &offset,
-	      &type), gh_car(next_arg), count, procname);
+	      &type), gh_car(next_arg), count+1, procname);
 	    [invocation setArgument: data atIndex: count];
 
 	    next_arg = gh_cdr(next_arg);
@@ -905,35 +918,37 @@ gstep_get_nil_fn()
 void
 gstep_init_id()
 {
+  if (gstep_scm_tc16_id == 0)
+    {
 #if	GUILE_MAKE_SMOB_TYPE
-  gstep_scm_tc16_id = scm_make_smob_type ("gg_id", 0);
-  scm_set_smob_mark(gstep_scm_tc16_id, mark_gstep_id);
-  scm_set_smob_free(gstep_scm_tc16_id, free_gstep_id);
-  scm_set_smob_print(gstep_scm_tc16_id, print_gstep_id);
-  scm_set_smob_equalp(gstep_scm_tc16_id, equal_gstep_id);
+      gstep_scm_tc16_id = scm_make_smob_type ("gg_id", 0);
+      scm_set_smob_mark(gstep_scm_tc16_id, mark_gstep_id);
+      scm_set_smob_free(gstep_scm_tc16_id, free_gstep_id);
+      scm_set_smob_print(gstep_scm_tc16_id, print_gstep_id);
+      scm_set_smob_equalp(gstep_scm_tc16_id, equal_gstep_id);
 #else
-  static struct scm_smobfuns gstep_id_smob = {
-    mark_gstep_id,
-    free_gstep_id,
-    print_gstep_id,
-    equal_gstep_id
-  };
+      static struct scm_smobfuns gstep_id_smob = {
+	mark_gstep_id,
+	free_gstep_id,
+	print_gstep_id,
+	equal_gstep_id
+      };
 
-  gstep_scm_tc16_id = scm_newsmob (&gstep_id_smob);
+      gstep_scm_tc16_id = scm_newsmob (&gstep_id_smob);
 #endif
 
-  /*
-   *	Stuff to do with id's
-   */
-  scm_make_gsubr(gstep_id_p_n, 1, 0, 0, gstep_scm_id_p);
-  scm_make_gsubr(gstep_get_nil_n, 0, 0, 0, gstep_get_nil_fn);
-  scm_make_gsubr(gstep_msg_send_n, 2, 0, 1, gstep_msg_send_fn);
-  scm_make_gsubr(gstep_sup_send_n, 2, 0, 1, gstep_sup_send_fn);
-  scm_make_gsubr(gstep_ivarnames_n, 1, 0, 0, gstep_ivarnames_fn);
-  scm_make_gsubr(gstep_methods_n, 1, 0, 0, gstep_methods_fn);
-  scm_make_gsubr(gstep_get_ivar_n, 2, 0, 0, gstep_get_ivar_fn);
-  scm_make_gsubr(gstep_ptr_ivar_n, 2, 0, 0, gstep_ptr_ivar_fn);
-  scm_make_gsubr(gstep_set_ivar_n, 3, 0, 0, gstep_set_ivar_fn);
-
+      /*
+       *	Stuff to do with id's
+       */
+      CFUN(gstep_id_p_n, 1, 0, 0, gstep_scm_id_p);
+      CFUN(gstep_get_nil_n, 0, 0, 0, gstep_get_nil_fn);
+      CFUN(gstep_msg_send_n, 2, 0, 1, gstep_msg_send_fn);
+      CFUN(gstep_sup_send_n, 2, 0, 1, gstep_sup_send_fn);
+      CFUN(gstep_ivarnames_n, 1, 0, 0, gstep_ivarnames_fn);
+      CFUN(gstep_methods_n, 1, 0, 0, gstep_methods_fn);
+      CFUN(gstep_get_ivar_n, 2, 0, 0, gstep_get_ivar_fn);
+      CFUN(gstep_ptr_ivar_n, 2, 0, 0, gstep_ptr_ivar_fn);
+      CFUN(gstep_set_ivar_n, 3, 0, 0, gstep_set_ivar_fn);
+    }
 }
 

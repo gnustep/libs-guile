@@ -45,8 +45,6 @@
 
 #include <string.h>		// #ifdef .. #endif
 
-#include "../config.h"
-#include "gstep_guile.h"
 #include "private.h"
 
 static char gstep_protocolnames_n[] = "gstep-protocolnames";
@@ -214,7 +212,7 @@ lookup_protocol_over_protocols_list(char * const name,
 void
 gstep_init_protocol()
 {
-  scm_make_gsubr(gstep_lookup_protocol_n, 1, 0, 0, gstep_lookup_protocol_fn);
-  scm_make_gsubr(gstep_protocolnames_n, 0, 0, 0, gstep_protocolnames_fn);
+  CFUN(gstep_lookup_protocol_n, 1, 0, 0, gstep_lookup_protocol_fn);
+  CFUN(gstep_protocolnames_n, 0, 0, 0, gstep_protocolnames_fn);
 }
 

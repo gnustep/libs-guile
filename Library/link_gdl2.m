@@ -22,10 +22,7 @@
    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
    */
 
-#include "../config.h"
-
-
-#include "gstep_guile.h"
+#include "private.h"
 
 #include	<Foundation/Foundation.h>
 
@@ -66,30 +63,29 @@ gstep_gdl2_string_constants()
 static void
 gstep_gdl2_selector_constants()
 {
-    NSAutoreleasePool *arp;
-    arp = [NSAutoreleasePool new];
+  NSAutoreleasePool *arp;
+  arp = [NSAutoreleasePool new];
 
 #define	CSEL(X) gh_define(#X, gh_str02scm((char*)sel_get_name(X)))
 
 #if	HAVE_EOCONTROL_EOCONTROL_H
-    CSEL(EOQualifierOperatorEqual);
-    CSEL(EOQualifierOperatorNotEqual);
-    CSEL(EOQualifierOperatorLessThan);
-    CSEL(EOQualifierOperatorGreaterThan);
-    CSEL(EOQualifierOperatorLessThanOrEqualTo);
-    CSEL(EOQualifierOperatorGreaterThanOrEqualTo);
-    CSEL(EOQualifierOperatorContains);
-    CSEL(EOQualifierOperatorLike);
-    CSEL(EOQualifierOperatorCaseInsensitiveLike);
+  CSEL(EOQualifierOperatorEqual);
+  CSEL(EOQualifierOperatorNotEqual);
+  CSEL(EOQualifierOperatorLessThan);
+  CSEL(EOQualifierOperatorGreaterThan);
+  CSEL(EOQualifierOperatorLessThanOrEqualTo);
+  CSEL(EOQualifierOperatorGreaterThanOrEqualTo);
+  CSEL(EOQualifierOperatorContains);
+  CSEL(EOQualifierOperatorLike);
+  CSEL(EOQualifierOperatorCaseInsensitiveLike);
 
-    CSEL(EOCompareAscending);
-    CSEL(EOCompareDescending);
-    CSEL(EOCompareCaseInsensitiveAscending);
-    CSEL(EOCompareCaseInsensitiveDescending);
+  CSEL(EOCompareAscending);
+  CSEL(EOCompareDescending);
+  CSEL(EOCompareCaseInsensitiveAscending);
+  CSEL(EOCompareCaseInsensitiveDescending);
 #endif
 
-    [arp release];
-
+  [arp release];
 }
 
 
@@ -150,65 +146,65 @@ gstep_gdl2_functions()
 static void
 gstep_gdl2_classes()
 {
-    NSAutoreleasePool	*arp = [NSAutoreleasePool new];
+  NSAutoreleasePool	*arp = [NSAutoreleasePool new];
 #define	CCLS(X) gh_define(#X, gstep_id2scm([X class], NO))
 
-    /*EOAccess*/
+  /*EOAccess*/
 #if	HAVE_EOACCESS_EOACCESS_H
-    CCLS(EOAdaptor);
-    CCLS(EOAdaptorChannel);
-    CCLS(EOAdaptorContext);
-    CCLS(EOAdaptorOperation);
-    CCLS(EOAttribute);
-    CCLS(EODatabase);
-    CCLS(EODatabaseChannel);
-    CCLS(EODatabaseContext);
-    CCLS(EODatabaseDataSource);
-    CCLS(EODatabaseOperation);
-    CCLS(EOEntity);
-    CCLS(EOJoin);
-    CCLS(EOModel);
-    CCLS(EOModelGroup);
-    CCLS(EORelationship);
-    CCLS(EOStoredProcedure);
-    CCLS(EOSQLExpression);
-    CCLS(EOSQLQualifier);
+  CCLS(EOAdaptor);
+  CCLS(EOAdaptorChannel);
+  CCLS(EOAdaptorContext);
+  CCLS(EOAdaptorOperation);
+  CCLS(EOAttribute);
+  CCLS(EODatabase);
+  CCLS(EODatabaseChannel);
+  CCLS(EODatabaseContext);
+  CCLS(EODatabaseDataSource);
+  CCLS(EODatabaseOperation);
+  CCLS(EOEntity);
+  CCLS(EOJoin);
+  CCLS(EOModel);
+  CCLS(EOModelGroup);
+  CCLS(EORelationship);
+  CCLS(EOStoredProcedure);
+  CCLS(EOSQLExpression);
+  CCLS(EOSQLQualifier);
 
 #endif
 
 #if	HAVE_EOCONTROL_EOCONTROL_H
-    /*EOControl*/
-    CCLS(EOSortOrdering);
-    CCLS(EOFetchSpecification);
-    CCLS(EOGenericRecord);
-    CCLS(EOClassDescription);
-    CCLS(EOQualifier);
-    CCLS(EOKeyValueQualifier);
-    CCLS(EOKeyComparisonQualifier);
-    CCLS(EOAndQualifier);
-    CCLS(EOOrQualifier);
-    CCLS(EONotQualifier);
-    CCLS(EONull);
-    CCLS(EOKeyValueArchiver);
-    CCLS(EOKeyValueUnarchiver);
-    CCLS(EOGlobalID);
-    CCLS(EOKeyGlobalID);
-    CCLS(EOUndoManager);
-    CCLS(EOObjectStore);
-    CCLS(EOCooperatingObjectStore);
-    CCLS(EOObjectStoreCoordinator);
-    CCLS(EOFault);
-    CCLS(EOEditingContext);
-    CCLS(EODataSource);
-    CCLS(EODetailDataSource);
-    CCLS(EOObserverCenter);
-    CCLS(EODelayedObserver);
-    CCLS(EODelayedObserverQueue);
-    CCLS(EOObserverProxy);
+  /*EOControl*/
+  CCLS(EOSortOrdering);
+  CCLS(EOFetchSpecification);
+  CCLS(EOGenericRecord);
+  CCLS(EOClassDescription);
+  CCLS(EOQualifier);
+  CCLS(EOKeyValueQualifier);
+  CCLS(EOKeyComparisonQualifier);
+  CCLS(EOAndQualifier);
+  CCLS(EOOrQualifier);
+  CCLS(EONotQualifier);
+  CCLS(EONull);
+  CCLS(EOKeyValueArchiver);
+  CCLS(EOKeyValueUnarchiver);
+  CCLS(EOGlobalID);
+  CCLS(EOKeyGlobalID);
+  CCLS(EOUndoManager);
+  CCLS(EOObjectStore);
+  CCLS(EOCooperatingObjectStore);
+  CCLS(EOObjectStoreCoordinator);
+  CCLS(EOFault);
+  CCLS(EOEditingContext);
+  CCLS(EODataSource);
+  CCLS(EODetailDataSource);
+  CCLS(EOObserverCenter);
+  CCLS(EODelayedObserver);
+  CCLS(EODelayedObserverQueue);
+  CCLS(EOObserverProxy);
 
 #endif
 
-    [arp release];
+  [arp release];
 }
 
 
@@ -216,11 +212,12 @@ gstep_gdl2_classes()
 void
 gstep_link_gdl2()
 {
-    gstep_gdl2_numeric_constants();
-    gstep_gdl2_string_constants();
-    gstep_gdl2_selector_constants();
-    gstep_gdl2_functions();
-    gstep_gdl2_classes();
+  gstep_init();
+  gstep_gdl2_numeric_constants();
+  gstep_gdl2_string_constants();
+  gstep_gdl2_selector_constants();
+  gstep_gdl2_functions();
+  gstep_gdl2_classes();
 }
 
 

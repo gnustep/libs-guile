@@ -102,7 +102,9 @@
 
 (greg-testcase "Creation of a voidp from an ivar is OK" #t
 (lambda ()
+(greg-dlog "XXX1\n")
   (set! d0 ([] "NSString" stringWithCString: "Hello"))
+(greg-dlog "XXX2\n")
   (set! v0 (gstep-ptr-ivar d0 "_count"))
   (greg-dlog v0)
   (set! l0 (voidp->list v0 "I" 1))
