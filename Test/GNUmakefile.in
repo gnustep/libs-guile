@@ -6,8 +6,10 @@ GNUSTEP_MAKEFILES = $(GNUSTEP_SYSTEM_ROOT)/Makefiles
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+include ../config.mak
+
 # The application to be compiled
-ifneq ($(GUI_LIB),nil)
+ifneq ($(HAVE_APPKIT),no)
   ifneq (@ac_cv_header_AppKit_AppKit_h@,no)
     APP_NAME = gui
     gui_OBJC_FILES = gui.m
@@ -24,7 +26,7 @@ go_OBJC_FILES = go.m
 -include GNUmakefile.local
 
 include $(GNUSTEP_MAKEFILES)/tool.make
-ifneq ($(GUI_LIB),nil)
+ifneq ($(HAVE_APPKIT),no)
 include $(GNUSTEP_MAKEFILES)/application.make
 endif
 -include Makefile.postamble
