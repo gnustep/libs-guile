@@ -3,3 +3,4 @@ config.cache
 config.status
 config.mak
 tests.*
+libtool
