@@ -85,18 +85,17 @@ before-clean:: remove-header-links
 
 ifeq ($(GNUSTEP_TARGET_OS), mingw32)
 header-links: $(HEADER_LINK_DEPENDS)
-	-rm -rf gnustep
-	$(MKDIRS) gnustep/guile
-	cp -f ./*.h guile
+	-rm -rf GNUstepGuile
+	$(MKDIRS) GNUstepGuile
+	cp -f ./*.h GNUstepGuile
 remove-header-links:
-	-rm -rf gnustep
+	-rm -rf GNUstepGuile
 else
 header-links: $(HEADER_LINK_DEPENDS)
-	@(if [ ! -L gnustep/guile ]; then \
-	  rm -rf gnustep; \
-	  $(MKDIRS) gnustep; \
-	  $(LN_S) .. gnustep/guile; \
+	@(if [ ! -L GNUstepGuile ]; then \
+	  rm -rf GNUstepGuile; \
+	  $(LN_S) . GNUstepGuile; \
 	fi)
 remove-header-links:
-	-rm -rf gnustep
+	-rm -rf GNUstepGuile
 endif
