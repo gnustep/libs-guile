@@ -37,7 +37,7 @@
   if (print_for_guile == NULL)
     {
       scm_display(gh_str02scm(" string=\""), port);
-      scm_display(gh_str02scm((char *)[[self description] cString]), port); 
+      scm_display(gh_str02scm((char *)[[self description] lossyCString]), port);
       scm_display(gh_str02scm("\""), port);
     }
   else
@@ -68,7 +68,7 @@
   if (print_for_guile == NULL)
     {
       scm_display(gh_str02scm(" string=\""), port);
-      scm_display(gh_str02scm((char *)[[self description] cString]), port); 
+      scm_display(gh_str02scm((char *)[[self description] lossyCString]), port);
       scm_display(gh_str02scm("\""), port);
     }
   else
