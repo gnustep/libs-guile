@@ -40,6 +40,10 @@ if test "$GUILEPATH" = "NONE"; then
   AC_ERROR(No guile found - cannot continue)
 fi
 
+AC_CHECK_PROG(TEXI2HTML, texi2html, texi2html, :)
+AC_CHECK_PROG(TEXI2DVI, texi2dvi, texi2dvi, :)
+AC_CHECK_PROG(MAKEINFO, makeinfo, makeinfo, :)
+
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT

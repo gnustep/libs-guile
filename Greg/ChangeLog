@@ -1,3 +1,7 @@
+2001-04-13  Adam Fedor  <fedor@gnu.org>
+
+	* configure.in: Check for texi programs.
+
 2001-04-04  Adam Fedor  <fedor@gnu.org>
 
 	* Some fixes to compile DLLs on Windows.
