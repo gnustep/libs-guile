@@ -24,7 +24,7 @@
 #ifndef GUILE_S_C_M_H
 #define GUILE_S_C_M_H 
 
-#include <gnustep/guile/gstep_guile.h>
+#include <GNUstepGuile/gstep_guile.h>
 
 #include <Foundation/NSString.h>
 #include <Foundation/NSValue.h>
