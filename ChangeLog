@@ -1,3 +1,8 @@
+Tue Feb 22 08:56:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Updated documentation and version numbering to match new release
+	of GNUstep core.
+
 Tue Sep 21  5:14:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Misc changes to tidy compiler warnings etc.

@@ -24,7 +24,7 @@ END-INFO-DIR-ENTRY
 This file documents the features and implementation of The GNUstep-Guile
 interface class library.
 
-Copyright (C) 1998 Free Software Foundation, Inc.
+Copyright (C) 1998,2000 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -62,14 +62,14 @@ Free Software Foundation instead of in the original English.
 @title Guide to the
 @title GNUstep-Guile interface library
 @sp 3
-@c @subtitle last updated October 27, 1998
+@c @subtitle last updated February 22, 2000
 @subtitle Version @value{GNUSTEP-GUILE-VERSION}
 @subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION}
 @subtitle and @samp{libguile} version @value{GUILE-VERSION} (or greater)
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1998 Free Software Foundation, Inc.
+Copyright @copyright{} 1998,2000 Free Software Foundation, Inc.
 
 
 Permission is granted to make and distribute verbatim copies of
@@ -181,8 +181,7 @@ GNUstep and an interactive system for developing GNUstep applications.
 You can find out more about GNUstep at
 @url{http://www.gnustep.org}@*
 You can find out more about Guile at
-@url{http://www.red-bean.com/guile/} or
-@url{http://www.fsf.org/software/guile/guile.html}
+@url{http://www.fsf.org/software/guile}
 
 The package provides a (trivial) program which, when compiled and linked
 with libguile, libgstep_guile, and the GNUstep toolkit libraries, will

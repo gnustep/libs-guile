@@ -10,6 +10,16 @@ number may actually denote major changes in functionality!
 I think that things have stabilised now and future releases will be more
 in the way of bug/portability fixes than the addition of new features.
 
+Version 0.6.5
+
+@itemize @bullet
+
+@item Minor updates to work with Guile-0.3.4.
+
+@item Version updated to be inline with current GNUstep core release.
+
+@end itemize
+
 
 Version 0.5.14
 
