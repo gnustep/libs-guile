@@ -1080,16 +1080,16 @@
 	      (set! expect-timeout-proc
 		(lambda (arg)
 		  (begin
-		    (greg-dlog "timed out in expect\n")
-		    ()
+		    (greg-dlog "timed out in expect after '" arg "'\n")
+		    (throw `unresolved)
 		  )
 		)
 	      )
 	      (set! expect-eof-proc
 		(lambda (arg)
 		  (begin
-		    (greg-dlog "end-of-file in expect\n")
-		    ()
+		    (greg-dlog "end-of-file in expect after '" arg "'\n")
+		    (throw `unresolved)
 		  )
 		)
 	      )
