@@ -10,7 +10,20 @@ all:
 	#
 
 distclean:
-	rm -f config.cache config.log config.status
-	(cd Library; make distclean)
-	(cd Test; make distclean)
+	rm -f config.cache config.log config.status; \
+	(cd Library; make distclean); \
+	(cd Test; make distclean); \
 	(cd Documentation; make distclean)
+
+distrib:
+	( \
+	rm -f config.cache config.log config.status; \
+	(cd Library; make distclean); \
+	(cd Test; make distclean); \
+	. GREG-VERSION; \
+	mkdir /tmp/$$PACKAGE-$$VERSION; \
+	tar -cf - . | (cd /tmp/$$PACKAGE-$$VERSION; tar -xf -); \
+	cd /tmp; tar -cf $$PACKAGE-$$VERSION.tar $$PACKAGE-$$VERSION; \
+	gzip $$PACKAGE-$$VERSION.tar; \
+	rm -rf /tmp/$$PACKAGE-$$VERSION; \
+	)

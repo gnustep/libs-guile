@@ -77,7 +77,7 @@ install: libgreg.la
 	$(INSTALL_SCRIPT) greg ${bindir}/greg;
 
 clean:
-	rm -rf core *.o *.lo *.la .libs
+	rm -rf core *.o *.lo *.la .libs *.log *.dbg
 
 distclean:	clean
 	rm -rf greg greg.scm config.h test.* Makefile
