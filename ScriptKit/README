@@ -1,0 +1,106 @@
+			     -*- text -*-
+		    Guide to the ScriptKit library
+
+	       Time-stamp: <99/02/28 01:51:57 masata-y>
+
+		Original Japanese version written by
+                            Masatake YAMATO
+		    <masata-y@is.aist-nara.ac.jp>
+
+		       Translated to English by
+			  Yasuhiro SHIRASAKI
+		     <yasuhiro@awa.tohoku.ac.jp>
+
+
+1. What's "ScriptKit"?
+======================
+
+You can merge GNUstep environment and GUILE interpreter with the ScriptKit
+class library. The ScriptKit makes it possible to evaluate GUILE scripts
+from GNUstep programs. As an interface library of GNUstep and GUILE,
+its role looks like the gstep_guile library, but the direction of
+communications the library supports is opposite.
+
+The gstep_guile supports to use the GNUstep libraries to send messages
+to GNUstep classes and objects from GUILE scripts. On the other hand,
+the ScriptKit helps to evaluate guile script from GNUstep applications.
+
+You can use the gstep_guile and ScriptKit at the same time. For example,
+thinking about the GUILE script written with gstep_guile to send the
+messages to GNUstep classes. You can evaluate such a script from GNUstep
+applications written with ScriptKit, and vice versa.
+
+You can do the same thing only with gstep_guile and GUILE.
+But the things described as above will be more clearly, when you use
+the ScriptKit.
+
+  a. correspondence of GNUstep variables with GUILE variables
+  b. SCM type handling
+  c. GNUstep exceptions and GUILE exceptions
+
+See the chapter 4 "ScriptKit Tutorials" for more informations.
+
+
+2. History of "ScriptKit"
+=========================
+
+The first version of ScriptKit was written by David I. Lehn <dlehn@vt.edu>.
+But he gave up to maintenance it, so we, GYVE developers, took over its
+maintenance work. The ScriptKit was merged into gstep_guile in March 1999.
+However, we've still been working on it. Please send the bug reports and
+your suggestions to following address:
+
+<masata-y@is.aist-nara.ac.jp>
+
+
+3. Installation instructions
+============================
+
+As the ScriptKit was merged into gstep_guile, if you installed gstep_guile,
+the ScriptKit is already available for use. If so, skip this chapter.
+
+3.1 Before you start
+--------------------
+
+ * gstep_guile
+
+Before installing the ScriptKit, you must install gstep_guile and its
+corresponding softwares like guile-1.3, gstep-core, gcc 2.8.x or later. 
+
+3.2 Configuring and building the software
+-----------------------------------------
+
+You can just type
+
+ sh configure
+
+and let the configure script construct appropriate configuration files.
+configure has two special options as follows:
+ 
+  * --with-guile-prefix=PFX     
+
+  With this option, you can specify where the plathome independent guile
+  files are.
+
+  * --with-guile-exec-prefix=PFX        
+
+  With this option, you can specify where the plathome dependent guile
+  files are.
+
+Now, just say:
+
+ make
+ make install
+
+NOTE: If you want to produce debugging information, use debug=yes option
+as follows:
+
+ make debug=yes
+ make install debug=yes
+
+3.3 Testing the software
+------------------------
+
+As a quick test of functionality, run "run_test.sh" in the ScriptKit/Library
+directory.
+
