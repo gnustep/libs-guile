@@ -21,9 +21,11 @@
 ;   License along with this library; if not, write to the Free
 ;   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+(use-modules (languages gstep-guile))
 
 (begin
 
+  (define base "")
 ;
 ;  Define some variables to bhe used to pass information between testcases.
 ;
@@ -100,8 +102,8 @@
 
 (greg-testcase "Creation of a voidp from an ivar is OK" #t
 (lambda ()
-  (define ns ([] "NSString" stringWithCString: "Hello"))
-  (set! v0 (gstep-ptr-ivar ns "_count"))
+  (set! d0 ([] "NSString" stringWithCString: "Hello"))
+  (set! v0 (gstep-ptr-ivar d0 "_count"))
   (greg-dlog v0)
   (set! l0 (voidp->list v0 "I" 1))
   (greg-dlog l0)

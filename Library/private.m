@@ -465,20 +465,15 @@ gstep_guile_list_length(SCM list)
     return l;
 }
 
-/* xxx For experimentation.  The function in objc-api.h doesn't always
-   work for objects; it sometimes returns YES for an instance. */
-
 /* But, metaclasses return YES too? */
 BOOL
 gstep_guile_object_is_class(id object)
 {
   if (object != nil 
 #if NeXT_runtime
-      && CLS_ISMETA(((Class)object)->isa)
-      && ((Class)object)->isa != ((Class)object)->isa) // ??? --- Masatake
+      && CLS_ISMETA(((Class)object)->isa))
 #else
-      && CLS_ISMETA(((Class)object)->class_pointer)
-      && ((Class)object)->class_pointer != ((Class)object)->class_pointer) // ???
+      && CLS_ISMETA(((Class)object)->class_pointer))
 #endif
     return YES;
   else

@@ -270,9 +270,13 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
   while (proc == 0 && rclass != nil)
     {
       val = (SCM)NSMapGet(knownClasses, rclass->name);
-      while (val == 0 && rclass != nil)
+      while (val == 0)
 	{
 	  rclass = rclass->super_class;
+	  if (rclass == nil)
+	    {
+	      break;
+	    }
 	  val = (SCM)NSMapGet(knownClasses, rclass->name);
 	}
       if (val != 0)
@@ -280,10 +284,12 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 	  cls = (class_info*)gh_cdr(val);
 	  if (rcvIsClass)
 	    {
+NSLog(@"Looking for %@ in %@", meth, NSAllMapTableKeys(cls->factory_methods));
 	      proc = (SCM)NSMapGet(cls->factory_methods, meth);
 	    }
 	  else
 	    {
+NSLog(@"Looking for %@ in %@", meth, NSAllMapTableKeys(cls->instance_methods));
 	      proc = (SCM)NSMapGet(cls->instance_methods, meth);
 	    }
 	  if (proc == 0)
@@ -550,50 +556,53 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 static SCM
 gstep_class_info(Class objcClass, Module_t module)
 {
-    class_info	*cls;
-    SCM		wrap;
+  class_info	*cls;
+  SCM		wrap;
 
-    gh_defer_ints();
-    if (knownClasses == 0) {
-	knownClasses = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
-                      NSNonOwnedPointerMapValueCallBacks, 0);
+  gh_defer_ints();
+  if (knownClasses == 0)
+    {
+      knownClasses = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
+		    NSNonOwnedPointerMapValueCallBacks, 0);
     }
-    else if (module == 0) {
-	wrap = (SCM)NSMapGet(knownClasses, objcClass->name);
-	if (wrap != 0) {
-	    gh_allow_ints();
-	    return wrap;
+  else if (module == 0)
+    {
+      wrap = (SCM)NSMapGet(knownClasses, objcClass->name);
+      if (wrap != 0)
+	{
+	  gh_allow_ints();
+	  return wrap;
 	}
     }
 
-    /*
-     *	Create class information structure to hold info about new class.
-     */
-    cls = objc_malloc(sizeof(class_info));
-    cls->objc_runtime_info = module;
-    cls->instance_methods = NSCreateMapTable(NSObjectMapKeyCallBacks,
-                      NSNonOwnedPointerMapValueCallBacks, 0);
-    cls->factory_methods = NSCreateMapTable(NSObjectMapKeyCallBacks,
-                      NSNonOwnedPointerMapValueCallBacks, 0);
+  /*
+   *	Create class information structure to hold info about new class.
+   */
+  cls = objc_malloc(sizeof(class_info));
+  cls->objc_runtime_info = module;
+  cls->instance_methods = NSCreateMapTable(NSObjectMapKeyCallBacks,
+		    NSNonOwnedPointerMapValueCallBacks, 0);
+  cls->factory_methods = NSCreateMapTable(NSObjectMapKeyCallBacks,
+		    NSNonOwnedPointerMapValueCallBacks, 0);
 
-    /*
-     *	Create Gstep-Guile class wrapper to pass back into Guile.
-     *	This smob is responsible for ensuring that the Guile procedures
-     *	representing the methods of the class are never garbage collected.
-     */
-    SCM_NEWCELL(wrap);
-    SCM_SETCAR(wrap, gstep_scm_tc16_class); 
-    SCM_SETCDR(wrap, (SCM)cls); 
-    scm_permanent_object(wrap);	/* Don't let class be garbage collected. */
+  /*
+   *	Create Gstep-Guile class wrapper to pass back into Guile.
+   *	This smob is responsible for ensuring that the Guile procedures
+   *	representing the methods of the class are never garbage collected.
+   */
+  SCM_NEWCELL(wrap);
+  SCM_SETCAR(wrap, gstep_scm_tc16_class); 
+  SCM_SETCDR(wrap, (SCM)cls); 
+  scm_permanent_object(wrap);	/* Don't let class be garbage collected. */
 
-    /*
-     *	Insert info about our new class into lookup table so that
-     *	gstep_send_msg_to_guile() can perform lookups.
-     */
-    NSMapInsert(knownClasses, objcClass->name, (void*)wrap);
+  /*
+   *	Insert info about our new class into lookup table so that
+   *	gstep_send_msg_to_guile() can perform lookups.
+   */
+  NSMapInsert(knownClasses, objcClass->name, (void*)wrap);
 
-    gh_allow_ints();
-    return wrap;
+  gh_allow_ints();
+  return wrap;
 }
 
 /*
@@ -602,127 +611,152 @@ gstep_class_info(Class objcClass, Module_t module)
 static SCM
 gstep_add_methods(Class dest, SCM mlist, BOOL instance)
 {
-    extern objc_mutex_t __objc_runtime_mutex;
-    MethodList	*ml = 0;
-    SCM		classn = gh_str02scm((char*)dest->name);
-    SCM		tmp;
-    int		count;
-    class_info	*cls;
-    SCM		wrap;
-    NSAutoreleasePool	*arp;
-    BOOL	ok = YES;
+  extern objc_mutex_t __objc_runtime_mutex;
+  MethodList		*ml = 0;
+  SCM			classn = gh_str02scm((char*)dest->name);
+  SCM			tmp;
+  int			count;
+  class_info		*cls;
+  SCM			wrap;
+  NSAutoreleasePool	*arp;
+  BOOL			ok = YES;
 
-    wrap = gstep_class_info(dest, 0);
-    cls = (class_info*)gh_cdr(wrap);
+  wrap = gstep_class_info(dest, 0);
+  cls = (class_info*)gh_cdr(wrap);
 
-    if (mlist == SCM_EOL) {
-	return wrap;		/* Nothing to do.	*/
+  if (mlist == SCM_EOL)
+    {
+      return wrap;		/* Nothing to do.	*/
     }
 
-    for (tmp = mlist; tmp != SCM_EOL; tmp = gh_cdr(tmp)) {
-	SCM	list = gh_car(tmp);
-	SCM	val;
-	char	*type;
-	int	len;
+  for (tmp = mlist; tmp != SCM_EOL; tmp = gh_cdr(tmp))
+    {
+      SCM	list = gh_car(tmp);
+      SCM	val;
+      char	*type;
+      int	len;
 
-	if (list == 0 || gstep_guile_list_length(list) != 3) {
-	    gstep_scm_error("wrong number of items in method specification",
-		classn);
+      if (list == 0 || gstep_guile_list_length(list) != 3)
+	{
+	  gstep_scm_error("wrong number of items in method specification",
+	      classn);
 	}
-	val = gh_car(list);
-	if ((SCM_NIMP(val) && SCM_STRINGP(val)) == 0) {
-	    gstep_scm_error("method name is not a string", classn);
+      val = gh_car(list);
+      if ((SCM_NIMP(val) && SCM_STRINGP(val)) == 0)
+	{
+	  gstep_scm_error("method name is not a string", classn);
 	}
-	val = gh_cadr(list);
-	if ((SCM_NIMP(val) && SCM_STRINGP(val)) == 0) {
-	    gstep_scm_error("method type is not a string", classn);
+      val = gh_cadr(list);
+      if ((SCM_NIMP(val) && SCM_STRINGP(val)) == 0)
+	{
+	  gstep_scm_error("method type is not a string", classn);
 	}
-	gstep_scm2str(&type, &len, &val);
-	if (gstep_guile_check_types(type) == 0) {
-	    gstep_scm_error("method type is not legal", classn);
+      gstep_scm2str(&type, &len, &val);
+      if (gstep_guile_check_types(type) == 0)
+	{
+	  gstep_scm_error("method type is not legal", classn);
 	}
-	val = gh_caddr(list);
-	if (SCM_NIMP(val) && SCM_SYMBOLP(val)) {
-	    val = scm_symbol_to_string(val);
+      val = gh_caddr(list);
+      if (SCM_NIMP(val) && SCM_SYMBOLP(val))
+	{
+	  val = scm_symbol_to_string(val);
 	}
-	if (SCM_NIMP(val) && SCM_STRINGP(val)) {
-	    char *name = gh_scm2newstr(val, 0);
-	    val = gh_lookup((char*)name);
-	    free(name);
+      if (SCM_NIMP(val) && SCM_STRINGP(val))
+	{
+	  char *name = gh_scm2newstr(val, 0);
+	  val = gh_lookup((char*)name);
+	  free(name);
 	}
-	if (gh_procedure_p(val) == 0) {
-	    gstep_scm_error("method implementation is not a procedure", classn);
+      if (gh_procedure_p(val) == 0)
+	{
+	  gstep_scm_error("method implementation is not a procedure", classn);
 	}
     }
 
-    /*
-     *	Build method info from list.
-     */
-    arp = [NSAutoreleasePool new];
-    NS_DURING
-      {
-	count = gstep_guile_list_length(mlist);
-	if (count > 0) {
-	    int	extra = sizeof(struct objc_method) * (count - 1);
+  /*
+   *	Build method info from list.
+   */
+  arp = [NSAutoreleasePool new];
+  NS_DURING
+    {
+      count = gstep_guile_list_length(mlist);
+      if (count > 0)
+	{
+	  int	extra = sizeof(struct objc_method) * (count - 1);
 
-	    ml = objc_calloc(1, sizeof(MethodList) + extra);
-	    ml->method_count = count;
-	    count = 0;
-	    for (tmp = mlist; tmp != SCM_EOL; tmp = gh_cdr(tmp)) {
-		SCM	mname = gh_caar(tmp);
-		SCM	mtype = gh_cadar(tmp);
-		SCM	mimp = gh_car(gh_cddar(tmp));
-		NSMethodSignature	*sig;
-		char	*types = gh_scm2newstr(mtype, 0);
-		char	*mtypes;
+	  ml = objc_calloc(1, sizeof(MethodList) + extra);
+	  ml->method_count = count;
+	  count = 0;
+	  for (tmp = mlist; tmp != SCM_EOL; tmp = gh_cdr(tmp))
+	    {
+	      SCM	mname = gh_caar(tmp);
+	      SCM	mtype = gh_cadar(tmp);
+	      SCM	mimp = gh_car(gh_cddar(tmp));
+	      NSMethodSignature	*sig;
+	      char	*types = gh_scm2newstr(mtype, 0);
+	      char	*mtypes;
 
-		sig = [NSMethodSignature signatureWithObjCTypes: types];
-		free(types);
+	      sig = [NSMethodSignature signatureWithObjCTypes: types];
+	      free(types);
 #if	defined(GNUSTEP_BASE_VERSION)
-		types = (char*)[sig methodType];
+	      types = (char*)[sig methodType];
 #elif	defined(LIB_FOUNDATION_LIBRARY)
-		types = (char*)[sig types];
+	      types = (char*)[sig types];
 #else
 #include "DON'T KNOW HOW TO GET METHOD SIGNATURE INFO"
 #endif
-		mtypes = objc_malloc(strlen(types)+1);
-		strcpy(mtypes, types);
-		ml->method_list[count].method_name=(SEL)gh_scm2newstr(mname, 0);
-		ml->method_list[count].method_types=mtypes;
-		ml->method_list[count].method_imp=(IMP)gstep_send_msg_to_guile;
-		if (SCM_NIMP(mimp) && SCM_SYMBOLP(mimp)) {
-		    mimp = scm_symbol_to_string(mimp);
+	      mtypes = objc_malloc(strlen(types)+1);
+	      strcpy(mtypes, types);
+	      ml->method_list[count].method_name=(SEL)gh_scm2newstr(mname, 0);
+	      ml->method_list[count].method_types=mtypes;
+	      ml->method_list[count].method_imp=(IMP)gstep_send_msg_to_guile;
+	      if (SCM_NIMP(mimp) && SCM_SYMBOLP(mimp))
+		{
+		  mimp = scm_symbol_to_string(mimp);
 		}
-		if (SCM_NIMP(mimp) && SCM_STRINGP(mimp)) {
-		    char *name = gh_scm2newstr(mimp, 0);
-		    mimp = gh_lookup((char*)name);
-		    free(name);
+	      if (SCM_NIMP(mimp) && SCM_STRINGP(mimp))
+		{
+		  char *name = gh_scm2newstr(mimp, 0);
+		  mimp = gh_lookup((char*)name);
+		  free(name);
 		}
-		NSMapInsert(cls->instance_methods,
-		    [NSString stringWithCString: 
-			(char*)ml->method_list[count].method_name],
-			(void*)mimp);
-		count++;
+	      if (instance == YES)
+		{
+		  NSMapInsert(cls->instance_methods,
+		      [NSString stringWithCString: 
+			  (char*)ml->method_list[count].method_name],
+			  (void*)mimp);
+		}
+	      else
+		{
+		  NSMapInsert(cls->factory_methods,
+		      [NSString stringWithCString: 
+			  (char*)ml->method_list[count].method_name],
+			  (void*)mimp);
+		}
+	      count++;
 	    }
 	}
-      }
-    NS_HANDLER
-      {
-	ok = NO;
-      }
-    NS_ENDHANDLER
-    [arp release];
+    }
+  NS_HANDLER
+    {
+      ok = NO;
+    }
+  NS_ENDHANDLER
+  [arp release];
 
-    if (ok == NO) {
-	return gstep_id2scm(nil, 0);		/* Error! */
+  if (ok == NO)
+    {
+      return gstep_id2scm(nil, 0);		/* Error! */
     }
-    if (instance == NO) {
-	dest = (Class)dest->class_pointer;	/* Use meta class.	*/
+  if (instance == NO)
+    {
+      dest = (Class)dest->class_pointer;	/* Use meta class.	*/
     }
-    objc_mutex_lock(__objc_runtime_mutex);
-    class_add_method_list(dest, ml);
-    objc_mutex_unlock(__objc_runtime_mutex);
-    return wrap;
+  objc_mutex_lock(__objc_runtime_mutex);
+  class_add_method_list(dest, ml);
+  objc_mutex_unlock(__objc_runtime_mutex);
+  return wrap;
 }
 
 

@@ -533,7 +533,7 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 	{
 	  char	*name;
 	  int	len;
-	  id	class;
+	  Class	class;
 
 	  name = gh_scm2newstr(receiver, &len);
 	  class = (id) objc_lookup_class(name);
@@ -544,6 +544,10 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 	    }
 	  else
 	    {
+	      if (!CLS_ISRESOLV(class))
+		{
+		  __objc_resolve_class_links();
+		}
 	      receiver = gstep_id2scm(class, NO);
 	    }
 	}
@@ -626,7 +630,9 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
       method_types = m->method_types;
     }
   else
-    method_types = sel_get_type(selector);
+    {
+      method_types = sel_get_type(selector);
+    }
 
   if (!method_types)
     {
