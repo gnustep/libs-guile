@@ -1,3 +1,10 @@
+Tue Apr 17 13:01:57 2001  Nicola Pero  <nicola@brainstorm.co.uk>
+
+	* Tools: New directory containing the guile-base and guile-gui
+	executables, moved to here (with appropriate changes in the
+	makefiles) from the tests module.
+	* GNUmakefile (SUBPROJECTS): Compile Tools.
+
 2001-04-06  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 1.0.0
