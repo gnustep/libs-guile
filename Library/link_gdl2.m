@@ -28,9 +28,11 @@
 
 #if	HAVE_EOACCESS_EOACCESS_H
 #include	<EOAccess/EOAccess.h>
+#include	<EOAccess/EODeprecated.h>
 #endif
 #if	HAVE_EOCONTROL_EOCONTROL_H
 #include	<EOControl/EOControl.h>
+#include	<EOControl/EODeprecated.h>
 #endif
 #if	HAVE_EOINTERFACE_EOINTERFACE_H
 #include	<EOInterface/EOInterface.h>
