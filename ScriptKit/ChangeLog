@@ -1,3 +1,7 @@
+Thu Mar 25 23:31:42 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* README (4. ScriptKit Tutorial): Added tutorial.
+
 1999-03-12  Adam Fedor  <fedor@gnu.org>	
 
 	* GNUmakefile: Set install dir to GNUSTEP_SYSTEM_ROOT
