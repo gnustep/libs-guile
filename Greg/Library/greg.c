@@ -34,69 +34,78 @@
 static int
 pty_master(char* name, int len)
 {
-    int	master;
+  int	master;
 
-    /*
-     *	If we have grantpt(), assume we are using sysv-style pseudo-terminals,
-     *	otherwise assume bsd style.
-     */
+  /*
+   *	If we have grantpt(), assume we are using sysv-style pseudo-terminals,
+   *	otherwise assume bsd style.
+   */
 #ifdef	HAVE_GRANTPT
-    master = open("/dev/ptmx", O_RDWR);
-    if (master >= 0) {
-	const char	*slave;
+  master = open("/dev/ptmx", O_RDWR);
+  if (master >= 0)
+    {
+      const char	*slave;
 
-        grantpt(master);                   /* Change permission of slave.  */
-        unlockpt(master);                  /* Unlock slave.        */
-        slave = ptsname(master);
-	if (slave == 0 || strlen(slave) >= len) {
-	    close(master);
-	    master = -1;
+      grantpt(master);                   /* Change permission of slave.  */
+      unlockpt(master);                  /* Unlock slave.        */
+      slave = ptsname(master);
+      if (slave == 0 || strlen(slave) >= len)
+	{
+	  close(master);
+	  master = -1;
 	}
-	else {
-	    strcpy(name, (char*)slave);
+      else
+	{
+	  strcpy(name, (char*)slave);
 	}
     }
 #else
-    const char	*groups = "pqrstuvwxyzPQRSTUVWXYZ";
+  const char	*groups = "pqrstuvwxyzPQRSTUVWXYZ";
 
-    master = -1;
-    if (len > 10) {
-	strcpy(name, "/dev/ptyXX");
-	while (master < 0 && *groups != '\0') {
-	    int	i;
+  master = -1;
+  if (len > 10)
+    {
+      strcpy(name, "/dev/ptyXX");
+      while (master < 0 && *groups != '\0')
+	{
+	  int	i;
 
-	    name[8] = *groups++;
-	    for (i = 0; i < 16; i++) {
-		name[9] = "0123456789abcdef"[i];
-		master = open(name, O_RDWR);
-		if (master >= 0) {
-		    name[5] = 't';
-		    break;
+	  name[8] = *groups++;
+	  for (i = 0; i < 16; i++)
+	    {
+	      name[9] = "0123456789abcdef"[i];
+	      master = open(name, O_RDWR);
+	      if (master >= 0)
+		{
+		  name[5] = 't';
+		  break;
 		}
 	    }
 	}
     }
 #endif
-    return master;
+  return master;
 }
 
 static int
 pty_slave(const char* name)
 {
-    int	slave;
+  int	slave;
 
-    slave = open(name, O_RDWR);
+  slave = open(name, O_RDWR);
 #ifdef	HAVE_SYS_STROPTS_H
-    if (ioctl(slave, I_PUSH, "ptem") < 0) {
-        (void)close(slave);
-	slave = -1;
+  if (ioctl(slave, I_PUSH, "ptem") < 0)
+    {
+      (void)close(slave);
+      slave = -1;
     }
-    if (ioctl(slave, I_PUSH, "ldterm") < 0) {
-        (void)close(slave);
-	slave = -1;
+  if (ioctl(slave, I_PUSH, "ldterm") < 0)
+    {
+      (void)close(slave);
+      slave = -1;
     }
 #endif
-    return slave;
+  return slave;
 }
 
 static char	s_pty_child[] = "pty-child";
@@ -104,142 +113,169 @@ static char	s_pty_child[] = "pty-child";
 static SCM
 scm_pty_child(SCM args)
 {
-    SCM		ans = SCM_EOL;
-    SCM		prg;
-    char	slave_name[32];
-    int		master;
+  SCM	ans = SCM_EOL;
+  SCM	prg;
+  char	slave_name[32];
+  int	master;
 
-    prg = SCM_CAR(args);
-    /*
-     *	We permit this to be called either with multiple string arguments
-     *	or with a list of arguments.
-     */
-    while (scm_list_p(prg) == SCM_BOOL_T && SCM_CDR(args) == SCM_EOL) {
-	args = prg;
-	prg = SCM_CAR(args);
+  prg = SCM_CAR(args);
+  /*
+   *	We permit this to be called either with multiple string arguments
+   *	or with a list of arguments.
+   */
+  while (scm_list_p(prg) == SCM_BOOL_T && SCM_CDR(args) == SCM_EOL)
+    {
+      args = prg;
+      prg = SCM_CAR(args);
     }
-    SCM_ASSERT (SCM_NIMP(prg) && SCM_STRINGP(prg), prg, SCM_ARG1, s_pty_child);
+  SCM_ASSERT (SCM_NIMP(prg) && SCM_STRINGP(prg), prg, SCM_ARG1, s_pty_child);
 
-    master = pty_master(slave_name, sizeof(slave_name));
-    if (master >= 0) {
-	int	p[2];
-	int	pid;
+  master = pty_master(slave_name, sizeof(slave_name));
+  if (master >= 0)
+    {
+      int	p[2];
+      int	pid;
 
-	if (pipe(p) < 0) {
-	    (void)close(master);
-	    scm_misc_error("pty-child", "failed to open pipe", SCM_EOL);
+      if (pipe(p) < 0)
+	{
+	  (void)close(master);
+	  scm_misc_error("pty-child", "failed to open pipe", SCM_EOL);
 	}
-	pid = fork();
-	if (pid < 0) {
-	    (void)close(master);
-	    (void)close(p[0]);
-	    (void)close(p[1]);
-	    scm_misc_error("pty-child", "failed to fork child pipe", SCM_EOL);
+      pid = fork();
+      if (pid < 0)
+	{
+	  (void)close(master);
+	  (void)close(p[0]);
+	  (void)close(p[1]);
+	  scm_misc_error("pty-child", "failed to fork child pipe", SCM_EOL);
 	}
-	if (pid == 0) {
-	    int	i;
+      if (pid == 0)
+	{
+	  int	i;
 
-	    for (i = 1; i < 32; i++) {
-		signal(i, SIG_DFL);
+	  for (i = 1; i < 32; i++)
+	    {
+	      signal(i, SIG_DFL);
 	    }
-	    if (p[1] != 3) {
-	        (void)dup2(p[1], 3);
-		p[1] = 3;
+	  if (p[1] != 3)
+	    {
+	      (void)dup2(p[1], 3);
+	      p[1] = 3;
 	    }
-	    for (i = 0; i < MAX_OPEN; i++) {
-		if (i != 2 && i != p[1]) {
-		    (void)close(i);
+	  for (i = 0; i < MAX_OPEN; i++)
+	    {
+	      if (i != 2 && i != p[1])
+		{
+		  (void)close(i);
 		}
 	    }
-	    i = -1;
+	  i = -1;
 #ifdef	HAVE_SETSID
-	    i = setsid();
+	  i = setsid();
 #endif
 #ifdef	HAVE_SETPGID
-	    if (i < 0) {
-		i = getpid();
-		i = setpgid(i, i);
+	  if (i < 0)
+	    {
+	      i = getpid();
+	      i = setpgid(i, i);
 	    }
 #endif
 #ifdef	TIOCNOTTY
-	    i = open("/dev/tty", O_RDWR);
-	    if (i >= 0) {
-		(void)ioctl(i, TIOCNOTTY, 0);
-		(void)close(i);
+	  i = open("/dev/tty", O_RDWR);
+	  if (i >= 0)
+	    {
+	      (void)ioctl(i, TIOCNOTTY, 0);
+	      (void)close(i);
 	    }
 #endif
-	    i = pty_slave(slave_name);
-	    if (i < 0) {
-		exit(1);	/* Failed to open slave!	*/
+	  i = pty_slave(slave_name);
+	  if (i < 0)
+	    {
+	      write(p[1], "-", 1);	/* Tell parent we failed.	*/
+	      exit(1);			/* Failed to open slave!	*/
 	    }
-	    if (i != 0) {
-		(void)dup2(i, 0);
+	  if (i != 0)
+	    {
+	      (void)dup2(i, 0);
 	    }
-	    if (i != 1) {
-		(void)dup2(i, 1);
+	  if (i != 1)
+	    {
+	      (void)dup2(i, 1);
 	    }
-	    if (i > 1) {
-		(void)close(i);
+	  if (i > 1)
+	    {
+	      (void)close(i);
 	    }
-	    (void)write(p[1], "*", 1);	/* Tell parent we are ready.	*/
-	    (void)close(p[1]);
-	    (void)dup2(1, 2);
+	  (void)write(p[1], "*", 1);	/* Tell parent we are ready.	*/
+	  (void)close(p[1]);
+	  (void)dup2(1, 2);
 #if	HAVE_RECENT_GUILE
-	    if (scm_string_equal_p(prg, gh_str02scm("")) != SCM_BOOL_T) {
-		scm_execl(prg, args);
-		exit(1);
+	  if (scm_string_equal_p(prg, gh_str02scm("")) != SCM_BOOL_T)
+	    {
+	      scm_execl(prg, args);
+	      exit(1);
 	    }
 #else
-	    if (scm_string_equal_p(prg, gh_str02scm("")) != SCM_BOOL_T) {
-		scm_execl(scm_cons(prg, args));
-		exit(1);
+	  if (scm_string_equal_p(prg, gh_str02scm("")) != SCM_BOOL_T)
+	    {
+	      scm_execl(scm_cons(prg, args));
+	      exit(1);
 	    }
 #endif
-	    else {
-		/*
-		 *	Program name is an empty string - don't exec a
-		 *	child, just return a list containing 0 to mark
-		 *	this as a success (but in the child process).
-		 */
-		ans = scm_cons(SCM_MAKINUM(0), SCM_EOL);
+	  else
+	    {
+	      /*
+	       *	Program name is an empty string - don't exec a
+	       *	child, just return a list containing 0 to mark
+	       *	this as a success (but in the child process).
+	       */
+	      ans = scm_cons(SCM_MAKINUM(0), SCM_EOL);
 	    }
 	}
-	else {
-	    char	info;
-	    int		len;
-	    SCM		cpid;
-	    SCM		rport;
-	    SCM		wport;
+      else
+	{
+	  char	info;
+	  int	len;
+	  SCM	cpid;
+	  SCM	rport;
+	  SCM	wport;
 
-	    (void)close(p[1]);
-	    /*
-	     *	Synchronize with child process - it should send us a byte
-	     *	when everything is set up - immediately before the exec.
-	     */
-	    len = read(p[0], &info, 1);
-	    (void)close(p[0]);
-	    if (len != 1) {
-		(void)close(master);
+	  (void)close(p[1]);
+	  /*
+	   *	Synchronize with child process - it should send us a byte
+	   *	when everything is set up - immediately before the exec.
+	   */
+	  len = read(p[0], &info, 1);
+	  (void)close(p[0]);
+	  if (len != 1)
+	    {
+	      (void)close(master);
 #ifdef HAVE_WAITPID
-		{
-		    int	status;
-		    int	opts = 0;
-		    (void)waitpid(pid, &status, opts);
-		}
+	      {
+		int	status;
+		int	opts = 0;
+		(void)waitpid(pid, &status, opts);
+	      }
 #endif
-		scm_misc_error("pty-child", "failed to sync with child",
+	      scm_misc_error("pty-child", "failed to sync with child",
 			SCM_EOL);
 	    }
-	    cpid = SCM_MAKINUM(pid);
-	    rport = scm_fdopen(SCM_MAKINUM(master), scm_makfrom0str("r"));
-	    wport = scm_fdopen(SCM_MAKINUM(master), scm_makfrom0str("w"));
-	    ans = scm_cons(rport, scm_cons(wport, scm_cons(cpid, SCM_EOL)));
+	  if (info == '-')
+	    {
+	      scm_misc_error("pty-child", "child failed to open pty",
+			SCM_EOL);
+	    }
+	  cpid = SCM_MAKINUM(pid);
+	  rport = scm_fdopen(SCM_MAKINUM(master), scm_makfrom0str("r"));
+	  wport = scm_fdopen(SCM_MAKINUM(master), scm_makfrom0str("w"));
+	  ans = scm_cons(rport, scm_cons(wport, scm_cons(cpid, SCM_EOL)));
 	}
     }
-    else {
-	scm_misc_error("pty-child", "failed to get master pty", SCM_EOL);
+  else
+    {
+      scm_misc_error("pty-child", "failed to get master pty", SCM_EOL);
     }
-    return ans;
+  return ans;
 }
 
 void
