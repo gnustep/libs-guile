@@ -18,28 +18,34 @@
 # before-install::
 
 # Things to do after installing
-# Link each of the libraries to the scheme directory. Use the longest soname
-# for the link. Should be the soname of the library ...
+# Link each of the libraries to the scheme directory. Use the name of the
+# library to that the <libname>.so symlink points to. That should be the
+# shared object name of the library.
 after-install::
 	if [ "$(shared)" != "yes" ]; then exit 0; fi; \
 	DIRP=$(INSTALL_ROOT_DIR)`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`; \
-	$(GNUSTEP_MAKEFILES)/mkinstalldirs $$DIRP; \
-	if [ ! -d $$DIRP/languages ]; then mkdir $$DIRP/languages; fi; \
+	$(MKDIRS) $$DIRP/languages/gstep-guile; \
 	for i in $(SCHEME_FILES); do \
 	  $(INSTALL_DATA) $$i $$DIRP/languages/$$i; \
 	done; \
-	if [ ! -d $$DIRP/languages/gstep-guile ]; then \
-	  mkdir $$DIRP/languages/gstep-guile; \
-	fi; \
+	libdir=`expr $(GNUSTEP_LIBRARIES) : '$(INSTALL_ROOT_DIR)\(.*\)'`; \
 	for i in $(LIBRARY_NAME); do \
-	  m=`expr $$i : 'lib\(.*\)'`; \
+	  m=`expr "$$i" : 'lib\(.*\)'`; \
+	  echo module $$m; \
 	  if [ ! -d $$DIRP/languages/gstep-guile/$$m ]; then \
 	    mkdir $$DIRP/languages/gstep-guile/$$m; \
 	  fi; \
-	  lib=`cd $(GNUSTEP_OBJ_DIR); ls $$i*$(SHARED_LIBEXT)* | tail -1`; \
-	  rm -f $$DIRP/languages/gstep-guile/$$m/libcompiled.so; \
-	  $(LN_S) $(GNUSTEP_LIBRARIES)/$$lib \
-	    $$DIRP/languages/gstep-guile/$$m/libcompiled.so; \
+	  lib=$${i}$(LIBRARY_NAME_SUFFIX)$(SHARED_LIBEXT); \
+	  if [ -h $(GNUSTEP_LIBRARIES)/$$lib ]; then \
+	    tmp=`ls -l $(GNUSTEP_LIBRARIES)/$$lib`; \
+	    v=`expr "$$tmp" : ".*->.*$$lib.\(.*\)"`; \
+	  else \
+	    v=$(VERSION); \
+	  fi; \
+	  srcfile=libcompiled$(SHARED_LIBEXT); \
+	  rm -f $$DIRP/languages/gstep-guile/$$m/$$srcfile; \
+	  $(LN_S) $$libdir/$$lib.$$v \
+	    $$DIRP/languages/gstep-guile/$$m/$$srcfile; \
 	done
 
 # Things to do before uninstalling
