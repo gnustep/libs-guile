@@ -10,15 +10,20 @@
 static void
 inner_main(void* colsure, int argc, char **argv)
 {
-    gstep_init();
-    gstep_link_base();
-    gstep_link_gui();
-    scm_shell(argc, argv);
+  gstep_init();
+  gstep_link_base();
+  gstep_link_gui();
+  scm_shell(argc, argv);
 }
 
 int
 main(int argc, char** argv)
 {
+#if	defined(LIB_FOUNDATION_LIBRARY) || defined(GS_PASS_ARGUMENTS)
+  [NSProcessInfo initializeWithArguments: argv
+				   count: argc
+			     environment: envp];
+#endif
   scm_boot_guile (argc, argv, inner_main, 0);
   return 0;
 }	
