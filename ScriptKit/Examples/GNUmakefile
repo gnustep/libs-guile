@@ -1,6 +1,7 @@
--include ../config.mak
 
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+
+-include ../config.mak
 
 TEST_TOOL_NAME=hello helloX helloY \
                guilev guiled guilescm guilescm2 guile_proc guile_inv \
