@@ -1,13 +1,59 @@
 
-all:
-	#
-	# Make sure you have run 'configure' before doing anything else.
-	#
-	# type '(cd Library; make)' to build Greg.
-	# as root, type '(cd Library; make install)' to install Greg.
-	# type '(cd Test; make)' to run some simple tests.
-	# type '(cd Documentation; make)' to build the documentation.
-	#
+#
+#  Main Makefile for Greg (GNUstep REGrestation testing framework in Guile)
+#  
+#  Copyright (C) 1998 Free Software Foundation, Inc.
+#
+#  Written by:	Richard Frith-Macdonald <richard@brainstorm.co.uk>
+#
+#  This file is part of the GNUstep Base Library.
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Library General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
+#
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+#  Library General Public License for more details.
+#
+#  You should have received a copy of the GNU Library General Public
+#  License along with this library; if not, write to the Free
+#  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+
+
+#
+#  Greg MUST be installed before use so that Guile can load the modules from
+#  it's standard locations.
+#
+all:	library
+	echo "You must now install Greg in order to use it"
+
+#
+#  The 'configure' program MUST be run before building.
+#
+library:	config.cache
+	(cd Library; make);
+
+config.cache:	configure
+	echo "You must run configure before building Greg"
+	exit 1
+
+install: library
+	(cd Library; make install); \
+
+test:
+	(cd Test; make check); \
+
+documentation:
+	(cd Documentation; make)
+
+clean:
+	(cd Library; make clean); \
+	(cd Test; make clean); \
+	(cd Documentation; make clean)
 
 distclean:
 	rm -f config.cache config.log config.status; \
@@ -25,9 +71,9 @@ distrib:
 	(cd Test; make distclean); \
 	(cd Documentation; make distclean); \
 	. GREG-VERSION; \
-	mkdir /tmp/$$PACKAGE-$$VERSION; \
-	tar -cf - . | (cd /tmp/$$PACKAGE-$$VERSION; tar -xf -); \
-	cd /tmp; tar -cf $$PACKAGE-$$VERSION.tar $$PACKAGE-$$VERSION; \
-	gzip $$PACKAGE-$$VERSION.tar; \
-	rm -rf /tmp/$$PACKAGE-$$VERSION; \
+	mkdir /tmp/greg-$$VERSION; \
+	tar -cf - . | (cd /tmp/greg-$$VERSION; tar -xf -); \
+	cd /tmp; tar -cf greg-$$VERSION.tar greg-$$VERSION; \
+	gzip greg-$$VERSION.tar; \
+	rm -rf /tmp/greg-$$VERSION; \
 	)

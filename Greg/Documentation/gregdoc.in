@@ -214,16 +214,17 @@ specific code for handling those sorts of situations.
 
 The current version of Greg can normally be found on GNU ftp sites and
 at
-@uref{http://www.tiptree.demon.co.uk/gstep/guile/Greg-@VERSION@.tar.gz}
+@uref{http://www.tiptree.demon.co.uk/gstep/guile/greg-@VERSION@.tar.gz}
 with documentation online at
 @uref{http://www.tiptree.demon.co.uk/gstep/guile/gregdoc_toc.html}
 
-or, for the bleeding edge - availably by anonymous cvs -
+or, for the bleeding edge - availably by anonymous cvs as part of the
+GNUstep-Guile package in the GNUstep project -
 
 CVSROOT=":pserver:anoncvs@@cvs.net-community.com:/gnustep"@*
 export CVSROOT@*
 cvs login (password is `anoncvs')@*
-cvs -z3 checkout guile/Greg@*
+cvs -z3 checkout guile@*
 
 @menu
 * Running Tests::               How to run a Greg testsuite
@@ -510,7 +511,8 @@ Doing this will ensure that non-posix extensions are not used.
 @cindex requirements
 
 Greg needs to have Guile installed.  It should work with Guile-1.2
-or later.  You need to have the @emph{guile} program in your path in
+or later (it has been tested with 1,2 and 1.3).
+You need to have the @emph{guile} program in your path in
 order for the installation process to determine the proper locations
 for things.
 
@@ -544,9 +546,12 @@ test framework, which can be accessed using
 and a Guile script that you can use to run tests from the unix
 command-line (@emph{greg}).
 
+You @emph{MUST} install Greg before you attempt to use it (or run it's
+self-tests) because the Guile modules making it up must be in place in
+the standard Guile directories before Greg can work.
 
-You can type @emph{make check} in the Tests directory to get Greg to
-test itself.
+Once Greg is installed, you can type @emph{make check} in the Tests
+directory to get Greg to test itself.
 
 You can type @emph{make} in the Documentation directory to build the
 documentation in @emph{info}, @emph{html} and @emph{dvi} formats.
@@ -563,10 +568,10 @@ documentation in dvi format @*
 @cindex problems
 @cindex troubleshooting
 
-greg is quite simple, so there is not much to go wrong with it.
+Greg is quite simple, so there is not much to go wrong with it.
 Of course, you must have a working copy of Guile installed, and you need
 to make sure you ran the configure script to configure Greg for your system,
-but after that, most stuff should just work.
+and installed Greg, but after that, most stuff should just work.
 
 The single area where you are most likely to encounter problems is if you are
 using Greg to test external programs run in a child process using the

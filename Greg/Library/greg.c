@@ -284,8 +284,10 @@ scm_pty_child(SCM args)
 	    }
 	  if (info == '-')
 	    {
-	      scm_misc_error("pty-child", "child failed to open pty",
-			SCM_EOL);
+	      char	buf[128];
+
+	      sprintf(buf, "child failed to open %s", slave_name);
+	      scm_misc_error("pty-child", buf, SCM_EOL);
 	    }
 	  cpid = SCM_MAKINUM(pid);
 	  rport = scm_fdopen(SCM_MAKINUM(master), scm_makfrom0str("r"));
