@@ -70,5 +70,5 @@ AC_CHECK_HEADERS(EOInterface/EOInterface.h)
 AC_SUBST(ac_cv_header_EOInterface_EOInterface_h)
 CPPFLAGS="$save_CPPFLAGS"
 
-AC_CONFIG_SUBDIRS(Greg ScriptKit)
+AC_CONFIG_SUBDIRS(ScriptKit)
 AC_OUTPUT(AppKit.make EOF.make guile.make Library/gstep-guile.scm)

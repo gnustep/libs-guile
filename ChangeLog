@@ -1,3 +1,8 @@
+2005-02-24  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* The Greg subdirectory is now obsolete.
+	Greg now has its own project page at https://gna.org/projects/greg/
+
 2004-02-28  Adam Fedor  <fedor@gnu.org>
 
 	* Library/Makefile.postamble (header-links): Use -h not -L which

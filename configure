@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subdirs_all="$ac_subdirs_all Greg ScriptKit"
+ac_subdirs_all="$ac_subdirs_all ScriptKit"
 ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP GUILE GUILE_CONFIG GUILE_VERSION GUILE_CFLAGS GUILE_LIBS GUILE_MAKE_SMOB_TYPE EGREP ac_cv_header_AppKit_AppKit_h ac_cv_header_EOControl_EOControl_h ac_cv_header_EOAccess_EOAccess_h ac_cv_header_EOInterface_EOInterface_h subdirs LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
@@ -4422,7 +4422,7 @@ ac_configure="$SHELL $ac_aux_dir/configure" # This should be Cygnus configure.
 
 
 
-subdirs="$subdirs Greg ScriptKit"
+subdirs="$subdirs ScriptKit"
 
                                         ac_config_files="$ac_config_files AppKit.make EOF.make guile.make Library/gstep-guile.scm"
 cat >confcache <<\_ACEOF
