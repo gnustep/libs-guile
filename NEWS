@@ -1,9 +1,18 @@
+Noteworthy changes in version `1.0.2'
+=====================================
+
+   * Better configure/make/install support
+
+   * Bug fixes
+
 Noteworthy changes in version `1.0.1'
 =====================================
 
    * Fixes to allow subclassing.
 
    * guile-base and guile-gui moved here from testing package
+
+   * new procedure to list methods and types of an object.
 
 Noteworthy changes in version `1.0.0'
 =====================================
