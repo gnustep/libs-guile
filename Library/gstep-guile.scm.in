@@ -25,57 +25,70 @@
 
 (define-module (languages gstep-guile))
 
-(if (defined? 'load-extension)
-  (begin
-    (load-extension "libgstep_guile_d" "gstep_init")
-    (load-extension "libgg_base_d" "gstep_link_base")
-    (define-public (gstep-gui)
-      (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
-	(load-extension "libgg_gui_d" "gstep_link_gui")
-	(begin
-	  (display "GNUstep GUI not supported in this configuration\n")
-	  #f
+; Use either load-extension or dynamic-call to load in library.
+; Try both debug and non-debug version.
+(define (gstep-load init file)
+  (if (defined? 'load-extension)
+    (begin
+      (catch #t
+	(lambda ()
+	  (load-extension (string-append file "_d") init)
 	)
+        (lambda (key . args)
+	  #t
+        )
+      )
+      (catch #t
+	(lambda ()
+	  (load-extension file init)
+	)
+        (lambda (key . args)
+	  #t
+        )
       )
     )
-    (define-public (gstep-gdl2)
-      (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
-	(load-extension "libgg_gdl2_d" "gstep_link_gdl2")
-	(begin
-	  (display "GNUstep GDL2 not supported in this configuration\n")
-	  #f
+    (begin
+      (catch #t
+	(lambda ()
+	  (if (not (feature? (string->symbol init)))
+	    (dynamic-call init (dynamic-link (string-append file "_d.so")))
+	  )
 	)
+        (lambda (key . args)
+	  #t
+        )
+      )
+      (catch #t
+	(lambda ()
+	  (if (not (feature? (string->symbol init)))
+	    (dynamic-call init (dynamic-link (string-append file ".so")))
+	  )
+	)
+        (lambda (key . args)
+	  #t
+        )
       )
     )
   )
-  (begin
-    (if (not (feature? 'gstep-guile))
-      (dynamic-call "gstep_init" (dynamic-link "libgstep_guile_d.so"))
+)
+
+(gstep-load "gstep_init" "libgstep_guile")
+(gstep-load "gstep_link_base" "libgg_base")
+(define-public (gstep-gui)
+  (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
+    (gstep-load "gstep_link_gui" "libgg_gui")
+    (begin
+      (display "GNUstep GUI not supported in this configuration\n")
+      #f
     )
-    (if (not (feature? 'link_base))
-      (dynamic-call "gstep_link_base" (dynamic-link "libgg_base_d.so"))
-    )
-    (define-public (gstep-gui)
-      (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
-	(if (not (feature? 'link_gui))
-	  (dynamic-call "gstep_link_gui" (dynamic-link "libgg_gui_d.so"))
-	)
-	(begin
-	  (display "GNUstep GUI not supported in this configuration\n")
-	  #f
-	)
-      )
-    )
-    (define-public (gstep-gdl2)
-      (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
-	(if (not (feature? 'link_gdl2))
-	  (dynamic-call "gstep_link_gdl2" (dynamic-link "libgg_gdl2_d.so"))
-	)
-	(begin
-	  (display "GNUstep GDL2 not supported in this configuration\n")
-	  #f
-	)
-      )
+  )
+)
+(define-public (gstep-gdl2)
+  (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
+    (gstep-load "gstep_link_ggl2" "libgg_gdl2")
+    (begin
+      (display "GNUstep GDL2 not supported in this configuration\n")
+      #f
     )
   )
 )

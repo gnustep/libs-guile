@@ -295,7 +295,7 @@ gstep_link_gdl2()
       gstep_gdl2_functions();
       gstep_gdl2_classes();
 
-      scm_add_feature("link_gdl2");
+      scm_add_feature("gstep_link_gdl2");
 
 #ifdef  HAVE_SCM_C_RESOLVE_MODULE
       module = scm_set_current_module (module);

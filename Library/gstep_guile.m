@@ -85,7 +85,7 @@ gstep_init()
       scm_c_export("gstep-nil", 0);
 #endif
 
-      scm_add_feature("gstep-guile");
+      scm_add_feature("gstep-init");
 #ifdef	HAVE_SCM_C_RESOLVE_MODULE
       module = scm_set_current_module (module);
 #endif
