@@ -217,7 +217,7 @@ gstep_link_gdl2()
 #ifdef  HAVE_SCM_C_RESOLVE_MODULE
       module = scm_set_current_module (module);
 #endif
-      gstep_init();
+      gstep_link_base();
       gstep_gdl2_numeric_constants();
       gstep_gdl2_string_constants();
       gstep_gdl2_selector_constants();

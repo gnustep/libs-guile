@@ -191,7 +191,7 @@ gstep_link_gui()
 #ifdef  HAVE_SCM_C_RESOLVE_MODULE
       module = scm_set_current_module (module);
 #endif
-      gstep_init();
+      gstep_link_base();
       gstep_gui_numeric_constants();
       gstep_gui_string_constants();
       gstep_gui_functions();
