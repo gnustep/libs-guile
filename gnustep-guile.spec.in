@@ -6,6 +6,7 @@ Summary: 	GNUstep Guile Interface
 Packager:	Adam Fedor <fedor@gnu.org>
 Vendor:		The GNUstep Project
 URL:		http://www.gnustep.org/
+Requires:	gnustep-base
 
 %description
 The GNUstep Guile Interface lets you use (and extend) the GNUstep libraries
