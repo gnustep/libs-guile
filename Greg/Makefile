@@ -1,10 +1,10 @@
-
 #
 #  Main Makefile for Greg (GNUstep REGrestation testing framework in Guile)
 #  
-#  Copyright (C) 1998 Free Software Foundation, Inc.
+#  Copyright (C) 1998, 2001 Free Software Foundation, Inc.
 #
 #  Written by:	Richard Frith-Macdonald <rfm@gnu.org>
+#  Modified by: Nicola Pero <n.pero@mi.flashnet.it>
 #
 #  This file is part of Greg (part of the GNUstep project)
 #
@@ -28,42 +28,49 @@
 #  Greg MUST be installed before use so that Guile can load the modules from
 #  it's standard locations.
 #
-all:	library documentation
+all: config.status library documentation
 	@echo "You must now install Greg in order to use it"
 
-#
-#  The 'configure' program MUST be run before building.
-#
-library:	config.status
+config.status: configure
+	./configure
+	$(MAKE) clean
+
+configure: configure.in
+	autoreconf
+
+library: 
 	(cd Library; $(MAKE));
 
-config.status:	configure
-	@echo "You must run configure before building Greg"
-	exit 1
-
-install: library documentation
-	(cd Library; $(MAKE) install); \
-	(cd Documentation; $(MAKE) install); \
-
 test:
-	(cd Test; $(MAKE) check); \
+	(cd Test; $(MAKE) check);
+
+check:
+	(cd Test; $(MAKE) check);
 
 documentation:
 	(cd Documentation; $(MAKE))
 
-check:
+install: all
+	(cd Library; $(MAKE) install); \
+	(cd Documentation; $(MAKE) install);
 
+#
+# The clean and distclean targets have `-' because if `make distclean'
+# has been run in a subdirectory, then it is possible that not even the 
+# makefile will be found in that subdirectory.  We interpret the fact 
+# the makefile is not there as meaning the directory is already distclean.
+#
 clean:
-	(cd Library; $(MAKE) clean); \
-	(cd Test; $(MAKE) clean); \
-	(cd Documentation; $(MAKE) clean)
+	-(cd Library; $(MAKE) clean)
+	-(cd Test; $(MAKE) clean)
+	-(cd Documentation; $(MAKE) clean)
 
 distclean:
-	rm -f config.cache config.log config.status config.mak; \
-	rm -f Documentation/gregdoc; \
-	(cd Library; $(MAKE) distclean); \
-	(cd Test; $(MAKE) distclean); \
-	(cd Documentation; $(MAKE) distclean)
+	rm -f config.cache config.log config.status config.mak \
+	      Documentation/gregdoc.texi;
+	-(cd Library; $(MAKE) distclean); 
+	-(cd Test; $(MAKE) distclean); 
+	-(cd Documentation; $(MAKE) distclean)
 
 distrib:
 	( \

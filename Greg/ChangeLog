@@ -1,5 +1,14 @@
 2001-04-20  Nicola Pero  <nicola@brainstorm.co.uk>
 
+	* Makefile: Rearranged targets; cleaned up.  (config.status): Run
+	automatically configure if needed.  (configure): Rebuild
+	automatically the configure script from configure.in if needed.
+	(clean), (distclean): Do not abort if the Makefile is not found in
+	a subdirectory.  (distclean): Updated for change from gregdoc.in
+	to gregdoc.texi.in.
+
+2001-04-20  Nicola Pero  <nicola@brainstorm.co.uk>
+
 	* Documentation/Makefile.in: Removed sed for email, url since now
 	texinfo has support for it; do not rebuild everything each time
 	`make' is run; do not abort if any of the texinfo stuff does not
