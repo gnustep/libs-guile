@@ -24,7 +24,11 @@
 ;;;; along with this software; see the file COPYING.  If not, write to
 ;;;; the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-(use-modules (greg compiled))
+;;; Dynamically link the glue code for accessing the pty library,
+;;; but only when it isn't already present.
+(if (not (feature? 'greg-pty))
+    (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so")))
+
 (use-modules (ice-9 greg))
 (use-modules (ice-9 expect))
 

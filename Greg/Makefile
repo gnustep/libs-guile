@@ -28,7 +28,7 @@
 #  Greg MUST be installed before use so that Guile can load the modules from
 #  it's standard locations.
 #
-all:	library
+all:	library documentation
 	echo "You must now install Greg in order to use it"
 
 #
@@ -41,8 +41,9 @@ config.status:	configure
 	echo "You must run configure before building Greg"
 	exit 1
 
-install: library
+install: library documentation
 	(cd Library; $(MAKE) install); \
+	(cd Documentation; $(MAKE) install); \
 
 test:
 	(cd Test; $(MAKE) check); \

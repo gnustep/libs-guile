@@ -347,14 +347,9 @@ scm_pty_child(SCM args)
 }
 
 void
-greg_init()
+scm_init_greg()
 {
   scm_make_gsubr(s_pty_child, 0, 0, 1, scm_pty_child);
-}
-
-void
-scm_init_greg_compiled_module()
-{
-  scm_register_module_xxx ("greg compiled", greg_init);
+  scm_add_feature("greg-pty");
 }
 

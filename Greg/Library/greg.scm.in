@@ -66,7 +66,12 @@
 
 (define-module (ice-9 greg))
 
-(use-modules (greg compiled))
+;;; Dynamically link the glue code for accessing the pty library,
+;;; but only when it isn't already present.
+
+(if (not (feature? 'greg-pty))
+    (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so")))
+
 
 (define-public (greg-version)
     "@VERSION@"

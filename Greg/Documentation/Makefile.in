@@ -47,7 +47,9 @@ info:	gregdoc
 
 install-info: gregdoc.info
 	install-info gregdoc.info $(infodir)/dir
-	$(INSTALL_DATA) gregdoc.info $(infodir)greg.info
+	$(INSTALL_DATA) gregdoc.info $(infodir)/greg.info
+
+install:	install-info
 
 clean:
 	rm -f gregdoc.aux gregdoc.cp gregdoc.cps gregdoc.dvi \
