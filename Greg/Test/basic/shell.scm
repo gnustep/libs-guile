@@ -29,6 +29,6 @@
 (greg-testcase "A shell will echo hello" #t
 (lambda ()
   (greg-send "echo hello\n")
-  (greg-recv (" hello" #t))
+  (expect-strings ("hello\r" #t)("\r" #f))
 ))
 
