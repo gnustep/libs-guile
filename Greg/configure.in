@@ -5,6 +5,16 @@ AC_INIT(Library/greg.c)
 
 AC_CONFIG_HEADER(Library/config.h)
 
+#---------------------------------------------------------------------
+# If we are running under GNUstep, and no --prefix has been specified,
+# then install into GNUstep sytem root directory
+#---------------------------------------------------------------------
+AC_PREFIX_DEFAULT(`if test "x$GNUSTEP_SYSTEM_ROOT" = "x"; then
+echo /usr/local ;
+else
+echo $GNUSTEP_SYSTEM_ROOT ;
+fi`)
+
 #--------------------------------------------------------------------
 # Determine the host, build, and target systems
 #--------------------------------------------------------------------
