@@ -61,6 +61,7 @@ dnl   AC_SUBST(GUILE_CONFIG) 	path to "guile-config", eg. /usr/local/bin/guile-c
 dnl				or null string if build-guile is not found
 dnl   AC_SUBST(GUILE_CFLAGS)	cflags for guile
 dnl   AC_SUBST(GUILE_LIBS)	libs for guile
+dnl   AC_SUBST(GUILE_MAKE_SMOB_TYPE)	If recent guile with scm_make_smob_type
 dnl
 AC_DEFUN(AC_PATH_GUILE,
 [AC_ARG_WITH(guile-prefix, [  --with-guile-prefix=PFX	Prefix where Guile is installed (optional)],
@@ -95,6 +96,14 @@ if test -n "$GUILE"; then
 	ac_cv_misc_guile_libs="-L$guile_exec_prefix/lib `$GUILE_CONFIG link`"
     ])
     GUILE_LIBS="$ac_cv_misc_guile_libs"
+
+    AC_CHECK_LIB(guile, gh_apply)
+    AC_CHECK_FUNC(scm_make_smob_type)
+    if test $ac_cv_func_scm_make_smob_type = yes; then
+      GUILE_MAKE_SMOB_TYPE=1
+    else
+      GUILE_MAKE_SMOB_TYPE=0
+    fi
 
   else
     dnl hmm you are using old stock guile-1.2
@@ -139,6 +148,7 @@ if test -n "$GUILE"; then
 
     LIBS="$ac_save_LIBS"
     LDFLAGS="$ac_save_LDFLAGS"
+    GUILE_MAKE_SMOB_TYPE=0
   fi
 fi
 AC_SUBST(GUILE)
@@ -146,4 +156,5 @@ AC_SUBST(GUILE_VERSION)
 AC_SUBST(GUILE_CONFIG)
 AC_SUBST(GUILE_CFLAGS)
 AC_SUBST(GUILE_LIBS)
+AC_SUBST(GUILE_MAKE_SMOB_TYPE)
 ])

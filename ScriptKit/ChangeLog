@@ -1,3 +1,11 @@
+Sat Jun 24 17:27:00 2000  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Fixes for guile-1.4
+	* config.mak.in: Added GUILE_MAKE_SMOB_TYPE
+	* path_guile.m4: Generate GUILE_MAKE_SMOB_TYPE
+	* Library/GuileSCM.m: Use GUILE_MAKE_SMOB_TYPE
+	* Library/Makefile.preamble: pass it
+
 Thu Mar 25 23:31:42 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
 
 	* README (4. ScriptKit Tutorial): Added tutorial.

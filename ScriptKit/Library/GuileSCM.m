@@ -396,13 +396,6 @@ map_SCM_describe(NSMapTable * table, SCM i)
  */
 static int scm_tc16_mapper_dummy;
 static SCM mark_mapper_dummy (SCM mapper_dummy);
-static scm_smobfuns mapper_dummy_smob = 
-{
-  mark_mapper_dummy, 
-  0, 
-  0, 
-  0
-};
 
 static SCM
 mark_mapper_dummy (SCM mapper_dummy)
@@ -432,7 +425,23 @@ static void
 GuileSCM_mapper_init ()
 {
   SCM	mapper_dummy;
+#if	GUILE_MAKE_SMOB_TYPE
+  scm_tc16_mapper_dummy = scm_make_smob_type ("mapper_dummy", 0);
+  scm_set_smob_mark(scm_tc16_mapper_dummy, mark_mapper_dummy);
+  scm_set_smob_free(gstep_scm_tc16_class, 0);
+  scm_set_smob_print(gstep_scm_tc16_class, 0);
+  scm_set_smob_equalp(gstep_scm_tc16_class, 0);
+#else
+  static scm_smobfuns mapper_dummy_smob = 
+  {
+    mark_mapper_dummy, 
+    0, 
+    0, 
+    0
+  };
+
   scm_tc16_mapper_dummy = scm_newsmob (&mapper_dummy_smob);
+#endif
   
   SCM_NEWCELL(mapper_dummy);
   SCM_SETCAR (mapper_dummy, scm_tc16_mapper_dummy);
