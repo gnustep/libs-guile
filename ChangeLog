@@ -2,6 +2,7 @@
 
 	* configure.in: Fix for new path locations (gnustep-make-1.7.0)
 	(patch from Damien Genet <damien.genet@free.fr>).
+	Add -x objective-c to CPPFLAGS.
 
 2003-06-02 Richard Frith-Macdonald <rfm@gnu.org>
 
