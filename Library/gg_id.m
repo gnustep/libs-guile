@@ -292,65 +292,78 @@ static char gstep_get_ivar_n[] = "gstep-get-ivar";
 static SCM 
 gstep_get_ivar_fn (SCM receiver, SCM ivarname)
 {
-    char	*name;
-    Class	class;
-    id		self = nil;
-    struct objc_ivar_list	*ivars;
-    struct objc_ivar		*ivar = 0;
-    SCM	item;
-    int		offset;
-    const char	*type;
+  char				*name;
+  Class				class;
+  id				self = nil;
+  struct	objc_ivar_list	*ivars;
+  struct 	objc_ivar	*ivar = 0;
+  SCM				item;
+  int				offset;
+  const char			*type;
 
-    if (SCM_NIMP(receiver) && OBJC_ID_P(receiver)) {
-	self = (id)gh_cdr(receiver);
-	if (!self) {
-	    return receiver;	/* objc nil */
+  if (SCM_NIMP(receiver) && OBJC_ID_P(receiver))
+    {
+      self = (id)gh_cdr(receiver);
+      if (!self)
+	{
+	  return receiver;	/* objc nil */
 	}
-	if (gstep_guile_object_is_class(self)) {
-	    self = nil;
+      if (gstep_guile_object_is_class(self))
+	{
+	  self = nil;
 	}
     }
-    if (self == nil) {
-	gstep_scm_error("not an object instance", receiver);
+  if (self == nil)
+    {
+      gstep_scm_error("not an object instance", receiver);
     }
 
-    if (SCM_NIMP(ivarname) && SCM_SYMBOLP(ivarname)) {
-	ivarname = scm_symbol_to_string(ivarname);
+  if (SCM_NIMP(ivarname) && SCM_SYMBOLP(ivarname))
+    {
+      ivarname = scm_symbol_to_string(ivarname);
     }
-    if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname)) {
-	int	len;
+  if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname))
+    {
+      int	len;
 
-	name = gh_scm2newstr(ivarname, &len);
+      name = gh_scm2newstr(ivarname, &len);
     }
-    else {
-	gstep_scm_error("not a symbol or string", ivarname);
+  else
+    {
+      gstep_scm_error("not a symbol or string", ivarname);
     }
 
-    class = self->class_pointer;
-    while (class != nil && ivar == 0) {
-	ivars = class->ivars;
-	class = class->super_class;
-	if (ivars) {
-	    int	i;
+  class = self->class_pointer;
+  while (class != nil && ivar == 0)
+    {
+      ivars = class->ivars;
+      class = class->super_class;
+      if (ivars)
+	{
+	  int	i;
 
-	    for (i = 0; i < ivars->ivar_count; i++) {
-		if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0) {
-		    ivar = &ivars->ivar_list[i];
-		    break;
+	  for (i = 0; i < ivars->ivar_count; i++)
+	    {
+	      if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0)
+		{
+		  ivar = &ivars->ivar_list[i];
+		  break;
 		}
 	    }
 	}
     }
-    free(name);
-    if (ivar == 0) {
-	gstep_scm_error("not defined for object", ivarname);
+  free(name);
+  if (ivar == 0)
+    {
+      gstep_scm_error("not defined for object", ivarname);
     }
 
-    offset = ivar->ivar_offset;
-    type = ivar->ivar_type;
+  offset = ivar->ivar_offset;
+  type = ivar->ivar_type;
 
-    item = gstep_guile_encode_item((void*)self, &offset, &type, NO, NO, nil, 0);
-    return item;
+  item = gstep_guile_encode_item((void*)self, &offset, &type, NO, NO, nil, 0);
+
+  return item;
 }
 
 
@@ -360,65 +373,76 @@ static char gstep_ptr_ivar_n[] = "gstep-ptr-ivar";
 static SCM 
 gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
 {
-    char	*name;
-    Class	class;
-    id		self = nil;
-    struct objc_ivar_list	*ivars;
-    struct objc_ivar		*ivar = 0;
-    int		offset;
-    const char	*type;
-    void	*addr;
+  char			*name;
+  Class			class;
+  id			self = nil;
+  struct objc_ivar_list	*ivars;
+  struct objc_ivar	*ivar = 0;
+  int			offset;
+  const char		*type;
+  void			*addr;
 
-    if (SCM_NIMP(receiver) && OBJC_ID_P(receiver)) {
-	self = (id)gh_cdr(receiver);
-	if (!self) {
-	    return gstep_voidp2scm(0, NO, YES, 0);	// nul pointer
+  if (SCM_NIMP(receiver) && OBJC_ID_P(receiver))
+    {
+      self = (id)gh_cdr(receiver);
+      if (!self)
+	{
+	  return gstep_voidp2scm(0, NO, YES, 0);	// nul pointer
 	}
-	if (gstep_guile_object_is_class(self)) {
-	    self = nil;
+      if (gstep_guile_object_is_class(self))
+	{
+	  self = nil;
 	}
     }
-    if (self == nil) {
-	gstep_scm_error("not an object instance", receiver);
+  if (self == nil)
+    {
+      gstep_scm_error("not an object instance", receiver);
     }
 
-    if (SCM_NIMP(ivarname) && SCM_SYMBOLP(ivarname)) {
-	ivarname = scm_symbol_to_string(ivarname);
+  if (SCM_NIMP(ivarname) && SCM_SYMBOLP(ivarname))
+    {
+      ivarname = scm_symbol_to_string(ivarname);
     }
-    if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname)) {
-	int	len;
+  if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname))
+    {
+      int	len;
 
-	name = gh_scm2newstr(ivarname, &len);
+      name = gh_scm2newstr(ivarname, &len);
     }
-    else {
-	gstep_scm_error("not a symbol or string", ivarname);
+  else
+    {
+      gstep_scm_error("not a symbol or string", ivarname);
     }
 
-    class = self->class_pointer;
-    while (class != nil && ivar == 0) {
-	ivars = class->ivars;
-	class = class->super_class;
-	if (ivars) {
-	    int	i;
+  class = self->class_pointer;
+  while (class != nil && ivar == 0)
+    {
+      ivars = class->ivars;
+      class = class->super_class;
+      if (ivars)
+	{
+	  int	i;
 
-	    for (i = 0; i < ivars->ivar_count; i++) {
-		if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0) {
-		    ivar = &ivars->ivar_list[i];
-		    break;
+	  for (i = 0; i < ivars->ivar_count; i++)
+	    {
+	      if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0)
+		{
+		  ivar = &ivars->ivar_list[i];
+		  break;
 		}
 	    }
 	}
     }
-    free(name);
-    if (ivar == 0) {
-	gstep_scm_error("not defined for object", ivarname);
-    }
+  free(name);
+  if (ivar == 0) {
+      gstep_scm_error("not defined for object", ivarname);
+  }
 
-    offset = ivar->ivar_offset;
-    addr = ((void*)self)+offset;
-    type = ivar->ivar_type;
+  offset = ivar->ivar_offset;
+  addr = ((void*)self)+offset;
+  type = ivar->ivar_type;
 
-    return gstep_voidp2scm(addr, NO, YES, objc_sizeof_type(type));
+  return gstep_voidp2scm(addr, NO, YES, objc_sizeof_type(type));
 }
 
 
@@ -427,65 +451,81 @@ static char gstep_set_ivar_n[] = "gstep-set-ivar";
 static SCM 
 gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
 {
-    char	*name;
-    Class	class;
-    id		self = nil;
-    struct objc_ivar_list	*ivars;
-    struct objc_ivar		*ivar = 0;
-    int		offset;
-    const char	*type;
+  char			*name;
+  Class			class;
+  id			self = nil;
+  struct objc_ivar_list	*ivars;
+  struct objc_ivar	*ivar = 0;
+  int			offset;
+  const char		*type;
 
-    if (SCM_NIMP(receiver) && OBJC_ID_P(receiver)) {
-	self = (id)gh_cdr(receiver);
-	if (!self) {
-	    return receiver;	/* objc nil */
+  if (SCM_NIMP(receiver) && OBJC_ID_P(receiver))
+    {
+      self = (id)gh_cdr(receiver);
+      if (!self)
+	{
+	  return receiver;	/* objc nil */
 	}
-	if (gstep_guile_object_is_class(self)) {
-	    self = nil;
+      if (gstep_guile_object_is_class(self))
+	{
+	  self = nil;
 	}
     }
-    if (self == nil) {
-	gstep_scm_error("not an object instance", receiver);
+  if (self == nil)
+    {
+      gstep_scm_error("not an object instance", receiver);
     }
 
-    if (SCM_NIMP(ivarname) && SCM_SYMBOLP(ivarname)) {
-	ivarname = scm_symbol_to_string(ivarname);
+  if (SCM_NIMP(ivarname) && SCM_SYMBOLP(ivarname))
+    {
+      ivarname = scm_symbol_to_string(ivarname);
     }
-    if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname)) {
-	int	len;
+  if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname))
+    {
+      int	len;
 
-	name = gh_scm2newstr(ivarname, &len);
+      name = gh_scm2newstr(ivarname, &len);
     }
-    else {
-	gstep_scm_error("not a symbol or string", ivarname);
+  else
+    {
+      gstep_scm_error("not a symbol or string", ivarname);
     }
 
-    class = self->class_pointer;
-    while (class != nil && ivar == 0) {
-	ivars = class->ivars;
-	class = class->super_class;
-	if (ivars) {
-	    int	i;
+  class = self->class_pointer;
+  while (class != nil && ivar == 0)
+    {
+      ivars = class->ivars;
+      class = class->super_class;
+      if (ivars)
+	{
+	  int	i;
 
-	    for (i = 0; i < ivars->ivar_count; i++) {
-		if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0) {
-		    ivar = &ivars->ivar_list[i];
-		    break;
+	  for (i = 0; i < ivars->ivar_count; i++)
+	    {
+	      if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0)
+		{
+		  ivar = &ivars->ivar_list[i];
+		  break;
 		}
 	    }
 	}
     }
-    if (ivar == 0) {
-	gstep_scm_error("not defined for object", ivarname);
+  if (ivar == 0)
+    {
+      gstep_scm_error("not defined for object", ivarname);
     }
 
-    offset = ivar->ivar_offset;
-    type = ivar->ivar_type;
+  offset = ivar->ivar_offset;
+  type = ivar->ivar_type;
 
-    if (gstep_guile_decode_item(value, (void*)self, &offset, &type))
-	return SCM_BOOL_T;
-    else
-	return SCM_BOOL_F;
+  if (gstep_guile_decode_item(value, (void*)self, &offset, &type))
+    {
+      return SCM_BOOL_T;
+    }
+  else
+    {
+      return SCM_BOOL_F;
+    }
 }
 
 

@@ -49,3 +49,35 @@
 
 @end
 
+#include <Foundation/NSAutoreleasePool.h>
+#include <Foundation/NSMapTable.h>
+#include <Foundation/NSMethodSignature.h>
+#include <Foundation/NSProxy.h>
+#include <objc/objc-api.h>
+
+/*
+ *	Catagory of the 'NSProxy' class for GNUstep-Guile
+ */
+
+@implementation NSProxy (GNUstepGuile)
+
+- (void) printForGuile: (SCM)port
+{
+  CREATE_AUTORELEASE_POOL(pool);
+
+  if (print_for_guile == NULL)
+    {
+      scm_display(gh_str02scm(" string=\""), port);
+      scm_display(gh_str02scm((char *)[[self description] cString]), port); 
+      scm_display(gh_str02scm("\""), port);
+    }
+  else
+    {
+      print_for_guile(self, _cmd, port);
+    }
+
+  DESTROY(pool);
+}
+
+@end
+

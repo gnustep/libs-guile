@@ -146,6 +146,8 @@ proc_wrapper(void* data, SCM jmpbuf)
 SCM
 proc_error(void *data, SCM tag, SCM throw_args)
 {
+  gh_display(tag);
+  gh_display(throw_args);
   [NSException raise: NSGenericException
 	      format: @"%s: guile threw an exception", (char*)data];
   return gh_bool2scm(0);
@@ -285,12 +287,10 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 	  cls = (class_info*)gh_cdr(val);
 	  if (rcvIsClass)
 	    {
-NSLog(@"Looking for %@ in %@", meth, NSAllMapTableKeys(cls->factory_methods));
 	      proc = (SCM)NSMapGet(cls->factory_methods, meth);
 	    }
 	  else
 	    {
-NSLog(@"Looking for %@ in %@", meth, NSAllMapTableKeys(cls->instance_methods));
 	      proc = (SCM)NSMapGet(cls->instance_methods, meth);
 	    }
 	  if (proc == 0)
@@ -728,6 +728,7 @@ gstep_add_methods(Class dest, SCM mlist, BOOL instance)
 		    mimp = gh_lookup((char*)name);
 		    free(name);
 		  }
+		scm_protect_object(mimp);	// Protect from GC
 		if (instance == YES)
 		  {
 		    NSMapInsert(cls->instance_methods,
