@@ -56,7 +56,7 @@ clean:
 	(cd Documentation; $(MAKE) clean)
 
 distclean:
-	rm -f config.cache config.log config.status; \
+	rm -f config.cache config.log config.status config.mak; \
 	(cd Library; $(MAKE) distclean); \
 	(cd Test; $(MAKE) distclean); \
 	(cd Documentation; $(MAKE) distclean)
@@ -66,7 +66,7 @@ distrib:
 	autoconf; \
 	./configure; \
 	(cd Documentation; $(MAKE)); \
-	rm -f config.cache config.log config.status; \
+	rm -f config.cache config.log config.status config.mak; \
 	(cd Library; $(MAKE) distclean); \
 	(cd Test; $(MAKE) distclean); \
 	(cd Documentation; $(MAKE) distclean); \
