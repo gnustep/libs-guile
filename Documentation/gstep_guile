@@ -60,8 +60,8 @@ Free Software Foundation instead of in the original English.
 @title Guide to the
 @title GNUstep-Guile interface library
 @sp 3
-@c @subtitle last updated September 28, 1998
-@subtitle Version 0.5.12
+@c @subtitle last updated October 27, 1998
+@subtitle Version 0.5.13
 @subtitle (for use with @samp{gstep-base} version 0.5.xxx
 @subtitle and @samp{libguile} version 1.2 (or greater)
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
@@ -155,6 +155,13 @@ with libFoundation  and performed valuable testing.
 Available from
 @url{http://www.tiptree.demon.co.uk/gstep/guile/gstep-guile.tar.gz} @*
 
+or, for the bleeding edge - availably by anonymous cvs -
+
+CVSROOT=":pserver:anoncvs@@cvs.net-community.com:/gnustep"@*
+export CVSROOT@*
+cvs login (password is `anoncvs')@*
+cvs -z3 checkout guile@*
+
 @item guile-1.2		@*
 Should be available from any GNU ftp site @*
 
@@ -224,6 +231,14 @@ I think that things have stabilised now and future releases will be more
 in the way of bug/portability fixes than the addition of new features.
 @*
 @*
+Version 0.5.13 (unreleased)
+@itemize @bullet
+
+@item Added @samp{gstep-ptr-ivar} to return a voidp that points to an instance
+variable in an object.
+
+@end itemize
+
 Version 0.5.12
 @itemize @bullet
 
@@ -791,6 +806,12 @@ of the instance variables of an object of that class.
 @samp{(gstep-get-ivar obj name)}
 is used to return the value of the instance variable @samp{name} in the
 object @samp{obj}.  The object must be an instance, not a class.
+
+@item
+@findex ptr-ivar
+@samp{(gstep-ptr-ivar obj name)}
+is used to return a voidp which points to the instance variable @samp{name}
+in the object @samp{obj}.  The object must be an instance, not a class.
 
 @item
 @findex set-ivar
