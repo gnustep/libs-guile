@@ -221,15 +221,30 @@ your program along with the standard Guile library (libguile) and the
 GNUstep foundation library (gstep-base).  You will probably also want to
 link in the libgg_base library (to ensure that all the Foundation classes
 get linked into your application) and possibly the libgg_gui and the gstep_gui
-libraries (to get the AppKit classes).
+libraries (to get the AppKit classes) and libgg_gdl2 and associated classes
+for GDL2 (EOF) support.
+
+If you are using shared libraries (the default) then you probably don't
+need to link in libgg_base, libgg_gui or libgg_gdl2 explicitly, and
+don't even need to link libgstep_guile, as the guile software can load
+these libraries (and the main GNUstel libraries) automatically at runtime.
+If this is the case, you can ignore the instructions about linking below,
+and just do a
+@samp{(use-modules (languages gstep-guile gstep-guile))}
+command to load the gstep-guile module.  This will autom atomatically
+make the GNUstep base library available.  To make the gui library
+and gdl2 library available
+you need to do
+@samp{(gstep-gui)} and
+@samp{(gstep-gdl2)} to load those libraries.
 
 When you install gstep-guile, a copy of the library is put in the Guile
 modules directory so that you can use the guile command
 @samp{(use-modules (languages gstep-guile gstep-guile))}
 to get it dynamically loaded rather than having to link it into your program
-at compile-time.  This only works if you have not built the library for
-static linking.  You must also have the gstep-base library linked into your
-program anyway, so I'm not sure how useful this really is.
+at compile-time.  This will not work if you have built the library for
+static linking (in which case you need to link the libraries into your
+program explicitly).
 
 It is also possible for you to work with other Foundation libraries such as
 libFoundation.
@@ -239,8 +254,9 @@ The library also depends upon an NSMethodSignature extension
 available in a gstep-base and in libFoundation.  I don't know if
 Rhapsody has a similar undocumented extension.
 
-Your program must call the function 'gstep_init()' to tell the guile
-library about the gstep_guile stuff.  This should be done near the start of
+Your program (if static linked) must call the function 'gstep_init()'
+to tell the guile library about the gstep_guile stuff.
+This should be done near the start of
 the 'main' function whose address is passed as the third parameter to
 'gh_enter()' when you invoke the guile system.  If this means nothing to
 you - please read the Guile documentation for information on how to call
@@ -379,8 +395,8 @@ scheme object @samp{obj} encapsulates a pointer to memory or not.
 @node Programming, Primitives, ObjectiveC, Usage
 @section Programming
 
-Once you have linked gstep-base and gstep_guile into your program and have
-loaded the gstep-guile module (using the
+Once you have linked gstep-base and gstep_guile into your program
+(if necessary) and have loaded the gstep-guile module (using the
 @samp{(use-modules (languages gstep-guile))} command),
 you can start programming with GNUstep objects from within Guile.
 
@@ -393,24 +409,34 @@ specific facilities to help you use the OpenStep libraries.
 @item
 The classes defined in the OpenStep Foundation API are defined as Guile
 variables so that you may use them directly.  This definition is performed
-in link_base.m.
+in link_base.m, and should automatically be available.
 
 @item
 The numeric constants used by the OpenStep Foundation API are defined as
 Guile variables so that you may pass them to objc methods.  This definition
-is performed in link_base.m.
+is performed in link_base.m, and should automatically be available.
 
 @item
 The string constants used by the OpenStep Foundation API are defined as
 Guile variables so that you may pass them to objc methods.  This definition
-is performed in link_base.m.
+is performed in link_base.m, and should automatically be available.
 
 @item
 Most of the functions used by the OpenStep Foundation API are defined as
-Guile primitives.  Their definitions are performed in link_base.m.
+Guile primitives.  Their definitions are performed in link_base.m, and
+should automatically be available.
 
 @item
-link_gui.m does the same job as link_base.m, but for the OpenStep AppKit API.
+If the GNUstep GUI library was available on the system where gstep-guile
+was configured and built, you can use
+@samp{(gstep-gui)} to dynamically link that library and make its classes
+and constants available for use.
+
+@item
+If the GNUstep GDL2 library was available on the system where gstep-guile
+was configured and built, you can use
+@samp{(gstep-gdl2)} to dynamically link that library and make its classes
+and constants available for use.
 
 @item
 The new type @samp{voidp} permits pointers to be passed to and from

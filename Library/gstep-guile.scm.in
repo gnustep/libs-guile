@@ -34,11 +34,23 @@
 ;;; IF NEW_GUILE
     (load-extension "libgstep_guile_d" "gstep_init")
     (load-extension "libgg_base_d" "gstep_link_base")
-    (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
-      (load-extension "libgg_gui_d" "gstep_link_gui")
+    (define-public (gstep-gui)
+      (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
+	(load-extension "libgg_gui_d" "gstep_link_gui")
+	(begin
+	  (display "GNUstep GUI not supported in this configuration\n")
+	  #f
+	)
+      )
     )
-    (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
-      (load-extension "libgg_gdl2_d" "gstep_link_gdl2")
+    (define-public (gstep-gdl2)
+      (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
+	(load-extension "libgg_gdl2_d" "gstep_link_gdl2")
+	(begin
+	  (display "GNUstep GDL2 not supported in this configuration\n")
+	  #f
+	)
+      )
     )
   )
   (begin
@@ -49,14 +61,26 @@
     (if (not (feature? 'link_base))
       (dynamic-call "gstep_link_base" (dynamic-link "libgg_base_d.so"))
     )
-    (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
-      (if (not (feature? 'link_gui))
-	(dynamic-call "gstep_link_gui" (dynamic-link "libgg_gui_d.so"))
+    (define-public (gstep-gui)
+      (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
+	(if (not (feature? 'link_gui))
+	  (dynamic-call "gstep_link_gui" (dynamic-link "libgg_gui_d.so"))
+	)
+	(begin
+	  (display "GNUstep GUI not supported in this configuration\n")
+	  #f
+	)
       )
     )
-    (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
-      (if (not (feature? 'link_gdl2))
-	(dynamic-call "gstep_link_gdl2" (dynamic-link "libgg_gdl2_d.so"))
+    (define-public (gstep-gdl2)
+      (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
+	(if (not (feature? 'link_gdl2))
+	  (dynamic-call "gstep_link_gdl2" (dynamic-link "libgg_gdl2_d.so"))
+	)
+	(begin
+	  (display "GNUstep GDL2 not supported in this configuration\n")
+	  #f
+	)
       )
     )
   )
