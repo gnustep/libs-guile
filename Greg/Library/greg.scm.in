@@ -85,6 +85,7 @@
 (define-public greg-obj-dir "")
 (define-public greg-out-dir "")
 (define-public greg-src-dir ".")
+(define-public greg-script-dir "")
 (define-public greg-files ())
 (define-public greg-tools ())
 (define-public greg-paths ())
@@ -138,6 +139,10 @@
 (define-public (greg-failures) greg-total-failures)
 (define-public (greg-upasses) greg-total-upasses)
 (define-public (greg-ufailures) greg-total-ufailures)
+;
+; Access the current script directory path
+;
+(define-public (greg-directory) greg-script-dir)
 
 (define (insert list elem)
   (if (eq? list ())
@@ -152,6 +157,25 @@
   )
 )
 	
+(define (abspath path)
+  (begin
+    (set! path
+      (if (string=? (substring path 0 1) "/")
+	path
+	(string-append (getcwd) "/" path)
+      )
+    )
+    (set! greg-script-dir path)
+    (do
+      ()
+      ((equal? (substring greg-script-dir (- (string-length greg-script-dir) 1) (string-length greg-script-dir)) "/"))
+      (begin
+	(set! greg-script-dir (substring greg-script-dir 0 (- (string-length greg-script-dir) 1)))
+      )
+    )
+    path
+  )
+)
 ;
 ; Procedure to start a test run
 ;
@@ -519,12 +543,7 @@
 	  (catch #t
 	    (lambda ()
 	      (greg-vlog 3 "Loading " path " ...\n")
-	      (load
-		(if (string=? (substring path 0 1) "/")
-		  path
-		  (string-append (getcwd) "/" path)
-		)
-	      )
+	      (load (abspath path))
 	      (greg-vlog 3 "Loaded " path "\n")
 	    )
 	    (lambda key
@@ -552,12 +571,7 @@
 	      (catch #t
 		(lambda ()
 		  (set! path (string-append name "/" greg-file-name))
-		  (load
-		    (if (string=? (substring path 0 1) "/")
-		      path
-		      (string-append (getcwd) "/" path)
-		    )
-		  )
+		  (load (abspath path))
 		)
 		(lambda key
 		  (begin
@@ -582,12 +596,7 @@
 	  (catch #t
 	    (lambda ()
 	      (greg-vlog 3 "Loading " path " ...\n")
-	      (load
-		(if (string=? (substring path 0 1) "/")
-		  path
-		  (string-append (getcwd) "/" path)
-		)
-	      )
+	      (load (abspath path))
 	      (greg-vlog 3 "Loaded " path "\n")
 	    )
 	    (lambda key
@@ -783,12 +792,7 @@
 	  (catch #t
 	    (lambda ()
 	      (greg-vlog 3 "Loading " path " ...\n")
-	      (load
-		(if (string=? (substring path 0 1) "/")
-		  path
-		  (string-append (getcwd) "/" path)
-		)
-	      )
+	      (load (abspath path))
 	      (greg-vlog 3 "Loaded " path "\n")
 	    )
 	    (lambda key
@@ -835,12 +839,7 @@
 		  (catch #t
 		    (lambda ()
 		      (set! path greg-file-name)
-		      (load
-			(if (string=? (substring path 0 1) "/")
-			  path
-			  (string-append (getcwd) "/" path)
-			)
-		      )
+		      (load (abspath path))
 		    )
 		    (lambda key
 		      (begin
@@ -867,12 +866,7 @@
 	  (catch #t
 	    (lambda ()
 	      (greg-vlog 3 "Loading " path " ...\n")
-	      (load
-		(if (string=? (substring path 0 1) "/")
-		  path
-		  (string-append (getcwd) "/" path)
-		)
-	      )
+	      (load (abspath path))
 	      (greg-vlog 3 "Loaded " path "\n")
 	    )
 	    (lambda key
