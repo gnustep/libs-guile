@@ -27,10 +27,10 @@
 # the same distribution terms that you use for the rest of that program.
 
 # This program was configured as follows,
-# on host tori:
+# on host ultra:
 #
 # CC="gcc" CFLAGS="-g -O2" CPPFLAGS="" \
-# LD="/usr/ccs/bin/ld" NM="/usr/ccs/bin/nm -p" RANLIB="ranlib" LN_S="ln -s" \
+# LD="/usr/local/lib/gcc-lib/sparc-sun-solaris2.6/egcs-2.90.23/ld" NM="/usr/ccs/bin/nm -p" RANLIB="ranlib" LN_S="ln -s" \
 #   ./ltconfig --with-gcc --no-verify ./ltmain.sh sparc-sun-solaris2.6
 #
 # Compiler and other test output produced by ltconfig, useful for
@@ -44,7 +44,7 @@ Xsed="sed -e s/^X//"
 if test "${CDPATH+set}" = set; then CDPATH=; export CDPATH; fi
 
 # An echo program that does not interpret backslashes.
-echo="printf %s\\n"
+echo="echo"
 
 # The version of ltconfig that generated this script.
 LTCONFIG_VERSION="1.2"
@@ -69,7 +69,7 @@ AR="ar"
 CC="gcc"
 
 # The linker used to build libraries.
-LD="/usr/ccs/bin/ld"
+LD="/usr/local/lib/gcc-lib/sparc-sun-solaris2.6/egcs-2.90.23/ld"
 
 # Whether we need hard or soft links.
 LN_S="ln -s"
