@@ -45,8 +45,12 @@
 extern int	errno;
 #endif
 
+#ifdef __MINGW32__
+#define __GUILE_IMPORT__ 1
+#else
 #ifdef __WIN32__
 #define __GUILE_IMPORT__ 1
+#endif
 #endif
 
 #include <libguile.h>

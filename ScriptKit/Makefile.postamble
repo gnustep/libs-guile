@@ -64,8 +64,13 @@ endif
 # after-uninstall::
 
 # Things to do before cleaning
+ifeq ($(GNUSTEP_TARGET_OS), mingw32)
+before-clean::
+	-rm -rf ScriptKit
+else
 before-clean::
 	rm -f ScriptKit
+endif
 
 # Things to do after cleaning
 # after-clean::
@@ -95,38 +100,6 @@ stamp-regenerate: ChangeLog configure
 	  (cd $$i; $(MAKE) $(MAKEDEFINES) regenerate); \
 	done
 	touch stamp-regenerate
-
-snapshot: 
-	@echo Making $(PACKAGE) snapshot
-	cvs export -r snapshot-`date +%y%m%d` $(PACKAGE)
-	(cd $(PACKAGE) && autoconf)
-	rm -f .name
-	echo $(PACKAGE)-`date +%y%m%d` >.name
-	rm -rf `cat .name`
-	mv $(PACKAGE) `cat .name`
-	tar -chvf `cat .name`.tar `cat .name`
-	rm -f `cat .name`.tar.gz
-	gzip -9 `cat .name`.tar
-	rm -rf `cat .name`
-
-dist: 
-	@echo Making $(PACKAGE) release $(VERSION)
-	cvs export -r release-`echo $(VERSION) | tr . -` $(PACKAGE)
-	(cd $(PACKAGE) && autoconf)
-	mv $(PACKAGE) $(PACKAGE)-$(VERSION)
-	tar -chvf $(PACKAGE)-$(VERSION).tar \
-		$(PACKAGE)-$(VERSION)
-	rm -f $(PACKAGE)-$(VERSION).tar.gz
-	gzip -9 $(PACKAGE)-$(VERSION).tar
-	rm -rf $(PACKAGE)-$(VERSION)
-
-snapshot-rtag:
-	@echo Tagging current base HEAD for snapshot `date +%y%m%d`
-	cvs rtag snapshot-`date +%y%m%d` $(PACKAGE)
-
-dist-rtag:
-	@echo Tagging current base HEAD for release $(VERSION)
-	cvs rtag release-`echo $(VERSION) | tr . -` $(PACKAGE)
 
 rdiff:
 	cvs rdiff -u -r $(OLD) $(PACKAGE)
