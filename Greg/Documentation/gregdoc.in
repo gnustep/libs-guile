@@ -521,7 +521,7 @@ You can get Guile from any GNU ftp site.
 You can get Greg either as part of the GNUstep-Guile package at
 @url{http://www.tiptree.demon.co.uk/gstep/guile/gstep-guile.tar.gz}
 or separately at
-@url{http://www.tiptree.demon.co.uk/gstep/guile/greg.tar.gz}
+@url{http://www.tiptree.demon.co.uk/gstep/guile/greg-@VERSION@.tar.gz}
 
 @subsection Building
 @cindex building Greg
