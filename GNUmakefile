@@ -3,6 +3,17 @@ GNUSTEP_MAKEFILES = $(GNUSTEP_SYSTEM_ROOT)/Makefiles
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+PACKAGE_NAME=gnustep-guile
+include Version
+
+RPM_DISABLE_RELOCATABLE=YES
+PACKAGE_NEEDS_CONFIGURE=YES
+
+# 
+# Pass it down to Greg
+#
+export INSTALL_ROOT_DIR
+
 #
 # The list of subproject directories
 #
