@@ -1,3 +1,10 @@
+2003-07-31  David Ayers  <d.ayers@inode.at>
+2003-07-31  Alexander Malmberg  <alexander@malmberg.org>
+
+	* Library/CompatibilityHeaders.make: New file.
+	* Library/GNUmakefile: Include CompatibilityHeaders.make to create
+	dummy headers for at least one release.
+
 Tue Jul 29 15:46:40 2003  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* Library/Makefile.postamble: Changed rules to create temporary
