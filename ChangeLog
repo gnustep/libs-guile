@@ -1,4 +1,11 @@
-Tue Feb 22 08:56:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+2000-03-25  Adam Fedor  <fedor@gnu.org>
+
+	* Version 0.6.5 released.
+
+	* README, NEWS, INSTALL: Update
+	* GNUmakefile: Don't make documentation by default.
+
+Tue Feb 22 08:56:00 2000  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Updated documentation and version numbering to match new release
 	of GNUstep core.

@@ -3,9 +3,8 @@ from within Guile.  This effectively provides you with scripting
 language for GNUstep and an interactive system for developing GNUstep
 applications.
 
-   You can find out more about GNUstep at `http://www.gnustep.org'
-You can find out more about Guile at `http://www.red-bean.com/guile/' or
-`http://www.fsf.org/software/guile/guile.html'
+   You can find out more about GNUstep at <http://www.gnustep.org>
+You can find out more about Guile at <http://www.fsf.org/software/guile>
 
    The package provides a (trivial) program which, when compiled and
 linked with libguile, libgstep_guile, and the GNUstep toolkit

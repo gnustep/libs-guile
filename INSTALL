@@ -2,7 +2,7 @@ Required software
 -----------------
 
    * gstep-guile	
-     Available from `ftp://ftp.gnustep.org/pub/gnustep/libs'
+     Available from <ftp://ftp.gnustep.org/pub/gnustep/libs>
 
      or, for the bleeding edge - availably by anonymous cvs -
 
@@ -10,33 +10,33 @@ Required software
      export CVSROOT
      cvs login (password is `anoncvs')
      cvs -z3 checkout guile
-   * guile-1.2		
+
+   * guile-1.3.4		
      Should be available from any GNU ftp site
-     guile-1.3.1 (via anon cvs - see
-     `http://www.red-bean.com/guile/guile-anon-cvs.html'
      NB. guile 1.3 contains bugs that prevent gstep-guile from working
      fully.
 
-   * gstep-core-0.5.5	
-     Available from `ftp://ftp.gnu.org/gnu/gstep' or see
-     `http://www.gnustep.org/' for further information.	
+   * gstep-core-0.6.5	
+     Available from <ftp://ftp.gnu.org/gnu/gstep> or see
+     <http://www.gnustep.org/> for further information.
+
    * gcc-2.8.*
      Gcc should be available from any GNU ftp site
      You may also use a recent version of egcs.
      NB. For debugging, you need gdb-4.17 with the objc patch.  The
      patch for gdb-4.17 is available at
-     `ftp://alpha.gnu.org/gnu/gnustep/contrib/'
+     <ftp://alpha.gnu.org/gnu/gnustep/contrib/>
+
 Build and Install
 -----------------
 
    * Make sure you have gcc-2.8.* installed.
 
-   * Make sure you have Guile-1.2 or Guile-1.3.1 or later built and
-     installed.  This library will has been tested with both 1.2 and
-     recent developer snapshots of Guile.  The library does not work
+   * Make sure you have Guile-1.3.4 or later built and installed.  This
+     library has been tested with 1.3.4.  The library does not work
      fully with Guile-1.3
 
-   * Make sure you have gstep-core-0.5.5 (or later) installed and have
+   * Make sure you have gstep-core-0.6.5 (or later) installed and have
      your account properly set up to use GNUstep.sh from the gstep-make
      package to set up your environment.
 
@@ -54,16 +54,29 @@ Build and Install
      Alternatively - you can run the 'go' program directly and work
      interactively.
 
+
 Trouble
 -------
 
    This package has only been used by me on a GNU/Linux/Intel system -
 I would love to hear about success/failures on other systems.
 
-   Likely problems - structure return is likely to fail on other
-systems.  it should be possible for you to fix things for your system
-by adding a config file in the src/mframe directory in gstep-base and
-re-running 'configure' and rebuilding the base library.
+   Likely problems -
+
+   * If you install gstep-guile in a non-standard location, it's
+     possible that guile will not be able to find the dynamic libraries
+     to load them.  In this case, you will need to change/set the
+     `LD_LIBRARY_PATH' environment variable (or whatever other
+     environment variable your operating system uses to list the places
+     in which dynamic libraries may be found) to include the directory
+     in which the libraries have been installed.
+
+   * Structure return is likely to fail on other systems.  It should be
+     possible for you to fix things for your system by adding a config
+     file in the src/mframe directory in gstep-base and re-running
+     'configure' and rebuilding the base library - however, getting a
+     working system for your machine/operatins system is likely to be
+     quite tricky.
 
    Try to fix the problem.  Send patches to <richard@brainstorm.co.uk>.
 
