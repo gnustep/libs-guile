@@ -117,7 +117,7 @@ gstep_protocolnames_fn()
 		  if ([set containsObject: nsstr] == NO)
 		    {
 		      [set addObject: nsstr];
-		      answer = scm_cons(scm_makfrom0str([nsstr cString]), 
+		      answer = scm_cons(scm_makfrom0str([nsstr lossyCString]), 
 			answer);
 		    }
 		  nsstr = nil;

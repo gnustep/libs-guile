@@ -69,8 +69,8 @@ gstep_gui_string_constants()
     }\
     NS_HANDLER\
     {\
-	const char *name   = [[localException name] cString];\
-	const char *reason = [[localException reason] cString];\
+	const char *name   = [[localException name] lossyCString];\
+	const char *reason = [[localException reason] lossyCString];\
 \
 	s_name = gh_symbol2scm((char*)name);\
 	s_reason = gh_str02scm((char*)reason);\
