@@ -47,8 +47,10 @@ libgstep_guile_OBJC_FILES =	gstep_guile.m \
 libgstep_guile_HEADER_FILES_DIR = .
 
 libgstep_guile_HEADER_FILES = \
-gstep_guile.h gg_Object.h
+	gstep_guile.h gg_Object.h
 
+SCHEME_FILES = \
+	gstep-guile.scm
 
 -include Makefile.preamble
 
