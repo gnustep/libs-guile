@@ -23,7 +23,11 @@
    License along with this library; if not, write to the Free
    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
+/* Because guile uses `id' as variable name sometime,
+   while it is an Objective-C reserved keyword. */
+#define id id_x_
 #include <guile/gh.h>
+#undef id
 #include "Guile.h"
 #include <Foundation/NSException.h>
 #include <Foundation/NSArray.h>

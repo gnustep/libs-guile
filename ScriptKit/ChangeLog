@@ -1,3 +1,8 @@
+2001-05-04  Adam Fedor  <fedor@gnu.org>
+
+	* Library/GuileProcedure.m: Redefine id when including gh.h to
+	* Library/GuileInterpreter.m: Likewise.
+
 Sat Jun 24 17:27:00 2000  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Fixes for guile-1.4
