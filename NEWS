@@ -1,3 +1,13 @@
+Noteworthy changes in version `1.1.0'
+=====================================
+
+   * Updated to support guile 1.6 and to support the latest GNUstep
+     base and gui libraries.
+
+   * Added support for gdl2 by David Ayers.
+
+   * Handle either debug or non-debug libraries (preferably debug)
+
 Noteworthy changes in version `1.0.3'
 =====================================
 
