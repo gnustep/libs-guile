@@ -212,9 +212,7 @@ site so much that an attempt at a generic solution is pretty pointless.
 What Greg does do, is provide hooks to let you easily introduce site
 specific code for handling those sorts of situations.
 
-The current version of Greg can normally be found on GNU ftp sites and
-at
-@uref{http://www.tiptree.demon.co.uk/gstep/guile/greg-@VERSION@.tar.gz}
+The current version of Greg can normally be found on GNU ftp sites,
 with documentation online at
 @uref{http://www.tiptree.demon.co.uk/gstep/guile/gregdoc_toc.html}
 
@@ -518,10 +516,17 @@ for things.
 
 You can get Guile from any GNU ftp site.
 
-You can get Greg either as part of the GNUstep-Guile package at
-@url{http://www.tiptree.demon.co.uk/gstep/guile/gstep-guile.tar.gz}
-or separately at
-@url{http://www.tiptree.demon.co.uk/gstep/guile/greg-@VERSION@.tar.gz}
+The current version of Greg can normally be found on GNU ftp sites,
+with documentation online at
+@uref{http://www.tiptree.demon.co.uk/gstep/guile/gregdoc_toc.html}
+
+or, for the bleeding edge - availably by anonymous cvs as part of the
+GNUstep-Guile package in the GNUstep project -
+
+CVSROOT=":pserver:anoncvs@@cvs.net-community.com:/gnustep"@*
+export CVSROOT@*
+cvs login (password is `anoncvs')@*
+cvs -z3 checkout guile@*
 
 @subsection Building
 @cindex building Greg
@@ -997,9 +1002,20 @@ generate stubs to import your library functions into Guile.  The home
 page of this tool is at @url{http://www.cs.cmu.edu/~chrislee/g-wrap/}
 
 For testing Objective-C libraries, you should use the GNUstep-Guile
-interface library (@url{http://www.tiptree.demon.co.uk/gstep}) which
+interface library (documented online at
+@url{http://www.tiptree.demon.co.uk/gstep/guile/gstep_guile_toc.html}) which
 provides a fairly complete interface between the Guile and Objective-C
 languages (using the GNU objective-C runtime).
+
+You csan get hold of this as part of the GNUstep core package (from any GNU
+ftp site) or, for the bleeding edge - by anonymous cvs as the
+GNUstep-Guile package in the GNUstep project -
+
+CVSROOT=":pserver:anoncvs@@cvs.net-community.com:/gnustep"@*
+export CVSROOT@*
+cvs login (password is `anoncvs')@*
+cvs -z3 checkout guile@*
+
 
 @item
 External testing@*
