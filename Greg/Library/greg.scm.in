@@ -578,7 +578,9 @@
       (define testcase-result
         (catch #t
 	  (lambda ()
-	    (thunk)
+	    (define tmpval (thunk))
+	    (gc)
+	    tmpval
 	  )
 	  (lambda key
 	    (set! testcase-handled #t)
