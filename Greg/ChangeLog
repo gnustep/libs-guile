@@ -1,3 +1,11 @@
+2001-04-17  Nicola Pero  <nicola@brainstorm.co.uk>
+
+	* configure.in: If we are running under GNUstep, and no --prefix
+	option has been given, default to installing into
+	GNUSTEP_SYSTEM_ROOT.
+	* configure: Regenerated.
+	* Makefile (all), (config.status): Use @ before echo.
+	
 2001-04-13  Adam Fedor  <fedor@gnu.org>
 
 	* configure.in: Check for texi programs.
