@@ -40,7 +40,7 @@ after-clean::
 # after-distclean::
 
 # Things to do before checking
-before-check:: all
+before-check:: go
 	$(GNUSTEP_OBJ_DIR)/go -c '(load "test.scm")'
 
 # Things to do after checking
