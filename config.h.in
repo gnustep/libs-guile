@@ -18,8 +18,8 @@
 /* Define if you have the <AppKit/AppKit.h> header file.  */
 #undef HAVE_APPKIT_APPKIT_H
 
-/* Define if you have the GDL2 header file.  */
-#undef HAVE_EOACCESS_EOACCESS_H
+/* Define if you have the EOF header files.  */
 #undef HAVE_EOCONTROL_EOCONTROL_H
+#undef HAVE_EOACCESS_EOACCESS_H
 #undef HAVE_EOINTERFACE_EOINTERFACE_H
 
