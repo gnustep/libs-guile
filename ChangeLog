@@ -1,3 +1,9 @@
+2001-02-12  Adam Fedor  <fedor@gnu.org>
+
+	* Library/gg_class.m (gstep_send_msg_to_guile): Set the va_arg
+	type to the actual type after default promotion, to avoid type
+	violation error.
+
 Tue Jan 23 14:43:49 2001  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* GNUmakefile: Install into GNUSTEP_SYSTEM_ROOT by default.
