@@ -169,7 +169,8 @@ does seem to work.
 The code to run a child process in a pseudo-terminal works for
 GNU/Linux and SysV4.2 systems - it probably needs work to make it
 more portable -
-Please email bugfixes and comments to <richard@@brainstorm.co.uk>
+Please email bugfixes and comments to <bug-gnustep@@gnu.org> or directly to
+me <richard@@brainstorm.co.uk>
 
 @node Overview, Installation, News, Top
 @chapter Greg in brief
@@ -583,7 +584,8 @@ using Greg to test external programs run in a child process using the
 system-dependent and has only been tested on a few operating systems.
 If you have problems with this, look at @emph{greg.c} in the Library
 directory.  Please attempt to make a patch to fix things on your
-operating-system and send it to me - <richard@@brainstorm.co.uk>
+operating-system and send it to me - <richard@@brainstorm.co.uk> or to
+<bug-gnustep@@gnu.org>
 
 @node Invoking Greg, Writing tests, Installation, Top
 @chapter Using @code{greg}
@@ -1006,7 +1008,7 @@ interface library (documented online at
 provides a fairly complete interface between the Guile and Objective-C
 languages (using the GNU objective-C runtime).
 
-You csan get hold of this as part of the GNUstep core package (from any GNU
+You can get hold of this as part of the GNUstep core package (from any GNU
 ftp site) or, for the bleeding edge - by anonymous cvs as the
 GNUstep-Guile package in the GNUstep project -
 
