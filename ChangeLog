@@ -1,3 +1,8 @@
+2001-03-23 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/gg_voidp.m: Reformat to coding standards ... just because
+	I happened to be looking at the code.
+
 Tue Mar 13 15:36:52 2001  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* Library/gg_id.m (free_gstep_id): Enclose the call to
