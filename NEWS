@@ -1,7 +1,12 @@
+Noteworthy changes in version `1.1.4'
+=====================================
+
+Bug fixes for header changes.
+
 Noteworthy changes in version `1.1.2'
 =====================================
 
-Conform to new GNUstep header structure
+   Conform to new GNUstep header structure
 
 Noteworthy changes in version `1.1.1'
 =====================================

@@ -1,7 +1,7 @@
 Announcement
 ************
 
-The GNUstep Guile Library, version 1.1.2, is now available.
+The GNUstep Guile Library, version 1.1.4, is now available.
 
 What is the GNUstep Guile Library?
 ==================================
@@ -11,14 +11,14 @@ libraries from within Guile.  This effectively provides you with
 scripting language for GNUstep and an interactive system for developing
 GNUstep applications.
 
-Noteworthy changes in version `1.1.2'
+Noteworthy changes in version `1.1.4'
 =====================================
 
-   Conform to new GNUstep header structure
+   Bug fixes for header changes.
 
 Where can you get it?  How can you compile it?
 ==============================================
 
-   The gnustep-guile-1.1.2.tar.gz distribution file has been placed at
+   The gnustep-guile-1.1.4.tar.gz distribution file has been placed at
 <ftp://ftp.gnustep.org/pub/gnustep/libs>.
 
