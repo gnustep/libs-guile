@@ -30,7 +30,7 @@ endif
 # install scm files which load the debug libararies, othewrwise, we use
 # sed to edit the files to use the non-debug libraries as we install them.
 after-install::
-	@DIRP=$(GNUSTEP_SYSTEM_ROOT)/Libraries/Guile; \
+	@DIRP=$(GNUSTEP_LIBRARIES)/Guile; \
 	$(MKINSTALLDIRS) $$DIRP/languages/gstep-guile; \
 	for i in $(SCHEME_FILES); do \
 	  if [ "$(debug)" = "no" ]; then \

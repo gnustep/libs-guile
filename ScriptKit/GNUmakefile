@@ -2,7 +2,7 @@
 
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+include $(GNUSTEP_MAKEFILES)/common.make
 include SCRIPT_KIT_VERSION
 
 #
@@ -12,6 +12,6 @@ SUBPROJECTS = Library Examples
 
 -include Makefile.preamble
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/aggregate.make
+include $(GNUSTEP_MAKEFILES)/aggregate.make
 
 -include Makefile.postamble

@@ -2,7 +2,7 @@
 include ../config.mak
 GUILE_MAKE_LOADED = yes
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+include $(GNUSTEP_MAKEFILES)/common.make
 
 TEST_TOOL_NAME = hello helloX helloY \
                  guilev guiled guilescm guilescm2 guile_proc guile_inv \
@@ -21,6 +21,6 @@ guilescm2_OBJC_FILES = guilescm2.m
 
 -include Makefile.preamble
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/test-tool.make
+include $(GNUSTEP_MAKEFILES)/test-tool.make
 
 -include Makefile.postamble
