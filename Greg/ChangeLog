@@ -1,3 +1,7 @@
+Thu Mar  4 20:13:36 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* Makefile (library): Test config.status, not config.cache.
+
 Thu Jan 28 13:10o00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Patch by Takaaki MORIYAMA <taka@airlab.cs.ritsumei.ac.jp> plus some
