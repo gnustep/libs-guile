@@ -147,9 +147,11 @@ gstep_gui_classes()
     CCLS(NSMatrix);
     CCLS(NSMenu);
     CCLS(NSMenuItem);
+    CCLS(NSMutableParagraphStyle);
     CCLS(NSOpenPanel);
     CCLS(NSPageLayout);
     CCLS(NSPanel);
+    CCLS(NSParagraphStyle);
     CCLS(NSPasteboard);
     CCLS(NSPopUpButton);
     CCLS(NSPrintInfo);
