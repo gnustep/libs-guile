@@ -36,6 +36,15 @@ ADDITIONAL_TOOL_LIBS += -lgstep_guile $(GUILE_LIBS)
 # Additional libraries when linking applications
 ADDITIONAL_GUI_LIBS +=
 
+ifeq ($(GNUSTEP_TARGET_OS),mingw32)
+libgstep_guile_LIBRARIES_DEPEND_UPON += -lgnustep-base -lobjc $(GUILE_LIBS)
+libgg_base_LIBRARIES_DEPEND_UPON += -lgstep_guile -lgnustep-base -lobjc $(GUILE_LIBS)
+endif
+ifeq ($(GNUSTEP_TARGET_OS),cygwin)
+libgstep_guile_LIBRARIES_DEPEND_UPON += -lgnustep-base -lobjc $(GUILE_LIBS)
+libgg_base_LIBRARIES_DEPEND_UPON += -lgstep_guile -lgnustep-base -lobjc $(GUILE_LIBS)
+endif
+
 #
 # Flags dealing with installing and uninstalling
 #
