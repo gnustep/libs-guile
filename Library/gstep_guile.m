@@ -81,7 +81,9 @@ gstep_init()
        *	Create a variable 'gstep-nil' as a conveniance to users.
        */
       gh_define("gstep-nil", gstep_id2scm(nil, 0));
+#ifdef	HAVE_SCM_C_EXPORT
       scm_c_export("gstep-nil", 0);
+#endif
 
       scm_add_feature("gstep-guile");
 #ifdef	HAVE_SCM_C_RESOLVE_MODULE
