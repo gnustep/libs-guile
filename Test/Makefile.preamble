@@ -33,7 +33,7 @@ ADDITIONAL_LIB_DIRS += -L../Library/$(GNUSTEP_OBJ_DIR)
 ADDITIONAL_TOOL_LIBS += -lgstep_guile -lgg_base $(GUILE_LDFLAGS)
 
 # Additional libraries when linking applications
-ADDITIONAL_GUI_LIBS += -lgg_gui -lFoundationExt
+ADDITIONAL_GUI_LIBS += -lgg_gui
 
 #
 # Flags dealing with installing and uninstalling
