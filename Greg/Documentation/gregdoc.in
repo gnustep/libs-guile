@@ -238,7 +238,7 @@ specific code for handling those sorts of situations.
 
 The current version of Greg can normally be found on GNU ftp sites,
 with documentation online at
-@uref{http://www.tiptree.demon.co.uk/gstep/guile/gregdoc_toc.html}
+@uref{http://www.gnu.org/software/greg/gregdoc.html}
 
 or, for the bleeding edge - availably by anonymous cvs as part of the
 GNUstep-Guile package in the GNUstep project -
@@ -541,7 +541,7 @@ You can get Guile from any GNU ftp site.
 
 The current version of Greg can normally be found on GNU ftp sites,
 with documentation online at
-@uref{http://www.tiptree.demon.co.uk/gstep/guile/gregdoc_toc.html}
+@uref{http://www.gnu.org/software/greg/gregdoc.html}
 
 or, for the bleeding edge - availably by anonymous cvs as part of the
 GNUstep-Guile package in the GNUstep project -
@@ -1326,6 +1326,33 @@ override Gregs end-of-file handler.
 @printindex cp
 
 @contents
+
+@ifhtml
+
+<P>
+Return to <A HREF="/home.html">GNU's home page</A>.
+<P>
+
+Please send FSF &amp; GNU inquiries &amp; questions to 
+
+<A HREF="mailto:gnu@gnu.org"><EM>gnu@gnu.org</EM></A>.
+There are also <A HREF="/home.html#ContactInfo">other ways to
+contact</A> the FSF.
+<P>
+
+Please send comments on these web pages to
+
+<A HREF="mailto:webmasters@gnu.org"><EM>webmasters@gnu.org</EM></A>,
+send other questions to
+<A HREF="mailto:gnu@gnu.org"><EM>gnu@gnu.org</EM></A>.
+<P>
+Copyright (C) 2000 Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111,  USA
+<P>
+Verbatim copying and distribution of this entire article is
+permitted in any medium, provided this notice is preserved.
+
+@end ifhtml
 
 @bye
 
