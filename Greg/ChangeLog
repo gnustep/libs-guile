@@ -3,6 +3,7 @@
 	* Library/greg.scm.in: Allow the names in 'greg-files' to be supplied
 	with or without the '.scm' extension.
 	Add new 'greg-paths' variable and support for loading tests by filename
+	Add greg-pass and greg-fail macros.
 	* Library/greg.in: Add support for --path option.
 	* Documentation/gregdoc: Document above change.
 	* VERSION: Update in preparation for next release.

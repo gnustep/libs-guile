@@ -114,6 +114,8 @@ extension or not.
 @item
 Added @code{greg-paths} variable to permit direct running of named files
 rather than using the DejaGNU-like tools directory structure.
+@item
+Added @code{greg-pass} and @code{greg-fail} macros.
 @end itemize
 
 New in 1.1
@@ -304,6 +306,13 @@ directory by typing  -
 greg
 @end example
 
+Finally, if you just want to run the tests that are in a specific file
+(or files), you can get the @code{greg} script to run them by using the
+@samp{--path} command-line option -
+
+@example
+greg --path a-file-to-run another-file-to-run
+@end example
 
 If you have a test suite that is intended to be used for `embedded' testing -
 You need to start the application to be tested, gain access to it's Guile
@@ -370,6 +379,24 @@ The code -
 appeared outside the testcase, but that would have been less safe.
 
 @end itemize
+ 
+Here is the same example in a slightly different form - using the
+@code{greg-pass} macro -
+
+@cartouche
+@smallexample
+;
+; GNUstep-guile interface library test
+;
+; Create an object using the NSString [stringWithCString:] method and
+; check that the resulting object is of the correct class.
+;
+(greg-pass "The `stringWithCString:' method creates an NSString object"
+  (define obj ([] "NSString" stringWithCString: "Hello world"))
+  (gstep-bool ([] obj isKindOfClass: ([] "NSString" class)))
+)
+@end smallexample
+@end cartouche
 
 @node Design Goals
 @section Why Greg does what it does
@@ -565,13 +592,13 @@ The current version of Greg can normally be found on GNU ftp sites,
 with documentation online at
 @uref{http://www.gnu.org/software/greg/gregdoc.html}
 
-or, for the bleeding edge - availably by anonymous cvs as part of the
-GNUstep-Guile package in the GNUstep project -
+or, for the bleeding edge - availably by anonymous cvs from the
+GNUstep project (@url{http://www.gnustep.org/}) -
 
 CVSROOT=":pserver:anoncvs@@cvs.net-community.com:/gnustep"@*
 export CVSROOT@*
 cvs login (password is `anoncvs')@*
-cvs -z3 checkout guile@*
+cvs -z3 checkout guile/Greg@*
 
 @subsection Building
 @cindex building Greg
@@ -1064,6 +1091,46 @@ exits without running any tests.
 @cindex writing tests
 @cindex testcase
 
+@subsection getting started
+@cindex getting started writing a test
+
+The simplest way to get started is to write a file (say @samp{myTests}) and
+type @code{greg --path myTests --verbose} to run the tests in it.
+
+Your file might contain code like -
+
+@cartouche
+@smallexample
+; A simple test that basic arithmetic works
+
+(greg-pass "one plus one is two"
+  (eq? (+ 1 1) 2)
+)
+
+(greg-pass "one minus one is zero"
+  (eq? (- 1 1) 0)
+)
+@end smallexample
+@end cartouche
+
+And would produce output like -
+@cartouche
+@smallexample
+PASS: one plus one is two
+PASS: one minus one is zero
+
+# of testcases attempted   2
+# of expected passes       2
+# of expected failures     0
+# of unexpected passes     0
+# of unexpected failures   0
+# of unresolved testcases  0
+# of unsupported testcases 0
+# of untested testcases    0
+@end smallexample
+@end cartouche
+
+
 @subsection types of testsuite
 
 There are three types of situation where Greg may be used as a test
@@ -1142,7 +1209,53 @@ language to write most tests.
 A script file will contain one or more testcases - each of which
 constitutes a test of a single well defined feature of the @emph{tool}
 that the script is meant to test.  A testcase is always written
-using the @code{greg-testcase} procedure.
+using the @code{greg-testcase} procedure, though this procedure could
+be invoked by a convenience macro.
+
+@subsection greg-pass
+@cindex greg-pass
+
+The @code{greg-pass} macro is a shorthand method of writing the most usual
+sort of testcase - where a fragment of Guile code is run and is expected to
+return a @emph{true} result.  It passes an assertion and a fragment of Guile
+code that performs a test to the @code{greg-testcase} procedure -
+@cartouche
+@smallexample
+; A simple test that basic arithmetic works
+
+(greg-pass "one plus one is two" (eq? (+ 1 1) 2))
+
+is equivalent to -
+
+(greg-testcase "one plus one is two" #t
+  (lambda ()
+    (eq? (+ 1 1) 2)
+  )
+)
+@end smallexample
+@end cartouche
+
+@subsection greg-fail
+@cindex greg-fail
+
+The @code{greg-fail} macro is a shorthand method of writing a testcase to
+confirm that a known bug is still present in the code being tested.  Once
+the bug is fixed, it would be altered to be a @code{greg-pass} testcase.
+@cartouche
+@smallexample
+; A test that basic arithmetic DOESN'T work!
+
+(greg-fail "one plus one is two" (eq? (+ 1 1) 2))
+
+is equivalent to -
+
+(greg-testcase "one plus one is two" #f
+  (lambda ()
+    (eq? (+ 1 1) 2)
+  )
+)
+@end smallexample
+@end cartouche
 
 @subsection greg-testcase
 @cindex greg-testcase
