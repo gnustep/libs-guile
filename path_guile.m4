@@ -93,7 +93,7 @@ if test -n "$GUILE"; then
     GUILE_CFLAGS="$ac_cv_misc_guile_cflags"
 
     AC_CACHE_CHECK(for guile libs, ac_cv_misc_guile_libs, [
-	ac_cv_misc_guile_libs="-L$guile_exec_prefix/lib `$GUILE_CONFIG link`"
+	ac_cv_misc_guile_libs="`$GUILE_CONFIG link`"
     ])
     GUILE_LIBS="$ac_cv_misc_guile_libs"
 

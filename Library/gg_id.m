@@ -95,16 +95,16 @@ free_gstep_id (SCM obj)
 
   if (o != nil)
     {
+      CREATE_AUTORELEASE_POOL(pool);
       /* Use an autorelease pool here because both `repondsTo:' and
 	 `release' could autorelease objects. */
-      NSAutoreleasePool	*pool = [NSAutoreleasePool new];
 
       NSMapRemove(knownObjects, (void*)o);
-      if ([o respondsTo: @selector(release)])
+      if ([o respondsToSelector: @selector(release)])
 	{
 	  [o release];
 	}
-      [pool release];
+      DESTROY(pool);
     }
   return (scm_sizet)0;
 }
@@ -130,7 +130,7 @@ print_gstep_id (SCM exp, SCM port, scm_print_state *pstate)
   else
     scm_display(gh_str02scm((char*)class_get_class_name([o class])), port);
 
-  if ([o respondsTo:@selector(printForGuile:)])
+  if ([o respondsToSelector: @selector(printForGuile:)])
     [o printForGuile:port];
 
   scm_display(gh_str02scm(">"), port);
@@ -197,7 +197,7 @@ gstep_id2scm(id o, BOOL shouldRetain)
       SCM_SETCAR(answer, gstep_scm_tc16_id); 
       SCM_SETCDR(answer, (SCM)o); 
       NSMapInsertKnownAbsent(knownObjects, (void*)o, (void*)answer);
-      if (shouldRetain && [o respondsTo: @selector(retain)])
+      if (shouldRetain && [o respondsToSelector: @selector(retain)])
 	{
 	  [o retain];
 	}

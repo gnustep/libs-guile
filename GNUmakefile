@@ -18,7 +18,7 @@ export INSTALL_ROOT_DIR
 #
 # The list of subproject directories
 #
-SUBPROJECTS = Library Tools Greg Test ScriptKit
+SUBPROJECTS = Greg Library Tools Test ScriptKit
 
 -include GNUmakefile.preamble
 

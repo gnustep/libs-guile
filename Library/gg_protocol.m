@@ -53,70 +53,82 @@ static char gstep_protocolnames_n[] = "gstep-protocolnames";
 static SCM
 gstep_protocolnames_fn()
 {
+/*
+ * This implementation may be slow. I should use something 
+ * like `assoc' in the elisp. - masatake
+ */
+  void				*enum_state = NULL;
+  Class				class;
+  struct objc_protocol_list	*top_list;
+  SCM				answer = SCM_EOL;
+  NSMutableSet			*set = nil;
+  unsigned			num_of_protocol = 0;
+  NSString			*nsstr = nil;
+  CREATE_AUTORELEASE_POOL(arp);
+
   /*
-   * This implementation may be slow. I should use something 
-   * like `assoc' in the elisp. - masatake
+   * Count
    */
-    void * enum_state = NULL;
-    Class class;
-    struct objc_protocol_list * top_list;
-    SCM answer 	       		   = SCM_EOL;
-    NSMutableSet * set 		   = nil;
-    unsigned num_of_protocol 	   = 0;
-    NSAutoreleasePool *arp = nil;
-    NSString * nsstr 		   = nil;
-    /*
-     * Count
-     */
-    while ((class = objc_next_class(&enum_state)))
-      {
-	top_list = class->protocols;
-	if (top_list == NULL)
-	  continue ;
-	else
-	  {
-	    int i;
-	    struct objc_protocol_list* sub_list;
-	    for (sub_list = top_list; sub_list; sub_list = sub_list->next)
-	      for (i = 0; i < sub_list->count; i++)
-		num_of_protocol++;
-	  }
-      }
-    
-    /*
-     * Pick up
-     */
-    // init
-    arp = [[NSAutoreleasePool alloc] init];
-    set = [NSMutableSet setWithCapacity: num_of_protocol];
-    // body
-    while ((class = objc_next_class(&enum_state)))
-      {
-	top_list = class -> protocols;
-	if (top_list == NULL)
-	  continue ;
-	else
-	  {
-	    int i;
-	    struct objc_protocol_list* sub_list;
-	    for (sub_list = top_list; sub_list; sub_list = sub_list->next)
+  while ((class = objc_next_class(&enum_state)))
+    {
+      top_list = class->protocols;
+      if (top_list == NULL)
+	{
+	  continue;
+	}
+      else
+	{
+	  int				i;
+	  struct objc_protocol_list	*sub_list;
+
+	  for (sub_list = top_list; sub_list; sub_list = sub_list->next)
+	    {
 	      for (i = 0; i < sub_list->count; i++)
 		{
-		  nsstr = [NSString stringWithCString: [sub_list->list[i] name]];
-		  if (![set containsObject: nsstr])
+		  num_of_protocol++;
+		}
+	    }
+	}
+    }
+  
+  /*
+   * Pick up
+   */
+  set = [NSMutableSet setWithCapacity: num_of_protocol];
+
+  while ((class = objc_next_class(&enum_state)))
+    {
+      top_list = class -> protocols;
+      if (top_list == NULL)
+	{
+	  continue;
+	}
+      else
+	{
+	  int i;
+	  struct objc_protocol_list* sub_list;
+
+	  for (sub_list = top_list; sub_list; sub_list = sub_list->next)
+	    {
+	      for (i = 0; i < sub_list->count; i++)
+		{
+		  nsstr = [NSString stringWithCString:
+		    [sub_list->list[i] name]];
+		  if ([set containsObject: nsstr] == NO)
 		    {
 		      [set addObject: nsstr];
 		      answer = scm_cons(scm_makfrom0str([nsstr cString]), 
-					answer);
+			answer);
 		    }
 		  nsstr = nil;
 		}
-	  }
-      }
-    // finalize
-    set = nil;
-    [arp release], arp = nil;
-    return answer;
+	    }
+	}
+    }
+  // finalize
+  set = nil;
+  DESTROY(arp);
+  return answer;
 }
 
 static char gstep_lookup_protocol_n[] = "gstep-lookup-protocol";
@@ -128,35 +140,42 @@ lookup_protocol_over_protocols_list(char * const name,
 static SCM 
 gstep_lookup_protocol_fn (SCM protocolname)
 {
-    if (SCM_NIMP(protocolname) && SCM_SYMBOLP(protocolname)) {
-	protocolname = scm_symbol_to_string(protocolname);
+  if (SCM_NIMP(protocolname) && SCM_SYMBOLP(protocolname))
+    {
+      protocolname = scm_symbol_to_string(protocolname);
     }
-    if (SCM_NIMP(protocolname) && SCM_STRINGP(protocolname)) {
-	char	*name;
-	int	len;
-	id	protocol;
+  if (SCM_NIMP(protocolname) && SCM_STRINGP(protocolname))
+    {
+      char	*name;
+      int	len;
+      id	protocol;
 
-	gstep_scm2str(&name, &len, &protocolname);
-	protocol = (id)lookup_protocol_over_all_classes(name);
-	return gstep_id2scm(protocol, NO);
+      gstep_scm2str(&name, &len, &protocolname);
+      protocol = (id)lookup_protocol_over_all_classes(name);
+      return gstep_id2scm(protocol, NO);
     }
-    else {
-	gstep_scm_error("not a symbol or string", protocolname);
+  else
+    {
+      gstep_scm_error("not a symbol or string", protocolname);
+      return SCM_UNDEFINED;
     }
 }
 
 static Protocol * 
 lookup_protocol_over_all_classes(char * const name)
 {
-  void * enum_state = NULL;
-  Class class;
-  struct objc_protocol_list *protocols;
-  Protocol * the_protocol = NULL;
+  void				*enum_state = NULL;
+  Class				class;
+  struct objc_protocol_list	*protocols;
+  Protocol			*the_protocol = NULL;
+
   while ((class = objc_next_class(&enum_state)))
     {
       protocols = class -> protocols;
       if (protocols == NULL)
-	continue ;
+	{
+	  continue;
+	}
       else
 	{
 	  the_protocol = lookup_protocol_over_protocols_list(name, protocols);
@@ -173,12 +192,19 @@ static Protocol *
 lookup_protocol_over_protocols_list(char * const name,
 				    struct objc_protocol_list * protocols)
 {
-  int i;
-  struct objc_protocol_list* proto_list;
+  int				i;
+  struct objc_protocol_list	*proto_list;
+
   for (proto_list = protocols; proto_list; proto_list = proto_list->next)
-    for (i = 0; i < proto_list->count; i++)
-      if (!strcmp([proto_list->list[i] name], name))
-	return [proto_list->list[i] self];
+    {
+      for (i = 0; i < proto_list->count; i++)
+	{
+	  if (!strcmp([proto_list->list[i] name], name))
+	    {
+	      return [proto_list->list[i] self];
+	    }
+	}
+    }
   return nil; 
 }
 

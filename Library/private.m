@@ -456,13 +456,14 @@ gstep_guile_encode_item(void* datum, int *position, const char** typespec, BOOL 
 int
 gstep_guile_list_length(SCM list)
 {
-    int	l = 0;
+  int	l = 0;
 
-    while (list != SCM_EOL) {
-	l++;
-	list = gh_cdr(list);
+  while (list != SCM_EOL)
+    {
+      l++;
+      list = gh_cdr(list);
     }
-    return l;
+  return l;
 }
 
 /* But, metaclasses return YES too? */
