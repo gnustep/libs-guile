@@ -27,7 +27,7 @@ endif
 # library to that the <libname>.so symlink points to. That should be the
 # shared object name of the library.
 after-install::
-	@DIRP=$(INSTALL_ROOT_DIR)`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`; \
+	@DIRP=$(GNUSTEP_SYSTEM_ROOT)/Libraries/Guile; \
 	$(MKINSTALLDIRS) $$DIRP/languages/gstep-guile; \
 	for i in $(SCHEME_FILES); do \
 	  $(INSTALL_DATA) $$i $$DIRP/languages/$$i; \

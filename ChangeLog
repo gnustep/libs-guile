@@ -1,3 +1,10 @@
+2002-01-05 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/Makefile.postamble (after-install): Place guile
+	modules in GNUSTEP_SYSTEM_ROOT/Libraries/Guile ... depend
+	on environment variables set up by stuff in make package
+	to tell guile where to look.
+
 Thu Dec 13 11:44:30 2001  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* Library/Makefile.postamble (after-install): Use MKINSTALLDIRS
