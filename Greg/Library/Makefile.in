@@ -91,13 +91,15 @@ libgreg.la: $(LIB_OBJECTS)
 
 install: libgreg.la
 	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(GUILE_SCM_PATH); \
-	$(MKINSTDIRS) $(libdir); \
-	$(MKINSTDIRS) $(bindir); \
+	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(libdir); \
+	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(bindir); \
 	if test -f ${LIB}; then \
-	  $(INSTALL_DATA) .libs/libgreg.so $(libdir)/libgreg.so; \
+	  $(INSTALL_DATA) .libs/libgreg.so \
+	                  $(INSTALL_ROOT_DIR)$(libdir)/libgreg.so; \
 	fi; \
-	$(INSTALL_DATA) greg.scm $(INSTALL_ROOT_DIR)${GUILE_SCM_PATH}/greg.scm; \
-	$(INSTALL_SCRIPT) greg ${bindir}/greg;
+	$(INSTALL_DATA) greg.scm \
+	                  $(INSTALL_ROOT_DIR)${GUILE_SCM_PATH}/greg.scm; \
+	$(INSTALL_SCRIPT) greg $(INSTALL_ROOT_DIR)${bindir}/greg;
 
 clean:
 	rm -rf core *.o *.lo *.la .libs *.log *.dbg
