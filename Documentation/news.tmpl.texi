@@ -14,7 +14,7 @@ Version 0.6.5
 
 @itemize @bullet
 
-@item Minor updates to work with Guile-0.3.4.
+@item Minor updates to work with Guile-1.3.4.
 
 @item Version updated to be inline with current GNUstep core release.
 
