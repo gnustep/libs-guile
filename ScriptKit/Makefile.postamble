@@ -36,7 +36,10 @@
 #
 
 # Things to do before compiling
-# before-all::
+# Make link to to use as an include directory
+before-all::
+	rm -f ScriptKit
+	$(LN_S) Library ScriptKit
 
 # Things to do after compiling
 # after-all::
@@ -54,7 +57,8 @@
 # after-uninstall::
 
 # Things to do before cleaning
-# before-clean::
+before-clean::
+	rm -f ScriptKit
 
 # Things to do after cleaning
 # after-clean::
