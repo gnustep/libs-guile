@@ -1,4 +1,6 @@
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+GNUSTEP_MAKEFILES = $(GNUSTEP_SYSTEM_ROOT)/Makefiles
+
+include $(GNUSTEP_MAKEFILES)/common.make
 
 # The application to be compiled
 ifneq ($(GUI_LIB),nil)
@@ -13,8 +15,10 @@ go_OBJC_FILES = go.m
 
 -include Makefile.preamble
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/tool.make
+-include GNUmakefile.local
+
+include $(GNUSTEP_MAKEFILES)/tool.make
 ifneq ($(GUI_LIB),nil)
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/application.make
+include $(GNUSTEP_MAKEFILES)/application.make
 endif
 -include Makefile.postamble

@@ -88,13 +88,14 @@ libgreg.la: $(LIB_OBJECTS)
 	$(LTCOMPILE) -c $<
 
 install: libgreg.la
-	$(MKINSTDIRS) $(GUILE_BIN_PATH); \
-	$(MKINSTDIRS) $(GUILE_SCM_PATH); \
+	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(GUILE_BIN_PATH); \
+	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(GUILE_SCM_PATH); \
 	$(MKINSTDIRS) $(bindir); \
 	if test -f ${LIB}; then \
-	  $(INSTALL_DATA) .libs/libgreg.so ${GUILE_BIN_PATH}/libcompiled.so; \
+	  $(INSTALL_DATA) .libs/libgreg.so \
+	    $(INSTALL_ROOT_DIR)${GUILE_BIN_PATH}/libcompiled.so; \
 	fi; \
-	$(INSTALL_DATA) greg.scm ${GUILE_SCM_PATH}/greg.scm; \
+	$(INSTALL_DATA) greg.scm $(INSTALL_ROOT_DIR)${GUILE_SCM_PATH}/greg.scm; \
 	$(INSTALL_SCRIPT) greg ${bindir}/greg;
 
 clean:

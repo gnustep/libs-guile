@@ -20,9 +20,10 @@
 # Things to do after installing
 after-install::
 	if [ "$(shared)" = "yes" ]; then \
-	    ( DIRP=`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`; \
+	    ( DIRP=$(INSTALL_ROOT_DIR)`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`; \
+	      $(GNUSTEP_MAKEFILES)/mkinstalldirs $$DIRP; \
 	      if [ ! -d $$DIRP/languages ]; then mkdir $$DIRP/languages; fi; \
-	      $(INSTALL_PROGRAM) gstep-guile.scm $$DIRP/languages/gstep-guile.scm; \
+	      $(INSTALL_DATA) gstep-guile.scm $$DIRP/languages/gstep-guile.scm; \
 	      if [ ! -d $$DIRP/languages/gstep-guile ]; then mkdir $$DIRP/languages/gstep-guile; fi; \
 	      for i in $(LIBRARY_NAME); do \
 		$(INSTALL_PROGRAM) $(GNUSTEP_OBJ_DIR)/$${i}$(LIBRARY_NAME_SUFFIX).so $$DIRP/languages/gstep-guile/$${i}.so; \

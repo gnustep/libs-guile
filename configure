@@ -2,7 +2,7 @@
 if [ -d Greg -a -x Greg -a -r Greg ]
 then
   cd Greg
-  exec ./configure
+  exec ./configure "$@"
 else
   echo "Can't configure in the 'Greg' subdirectory"
 fi

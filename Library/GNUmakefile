@@ -21,7 +21,9 @@
 
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+GNUSTEP_MAKEFILES = $(GNUSTEP_SYSTEM_ROOT)/Makefiles
+
+include $(GNUSTEP_MAKEFILES)/common.make
 
 LIBRARY_NAME=libgstep_guile libgg_base
 
@@ -50,7 +52,9 @@ gstep_guile.h gg_Object.h
 
 -include Makefile.preamble
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/library.make
+-include GNUmakefile.local
+
+include $(GNUSTEP_MAKEFILES)/library.make
 
 -include Makefile.postamble
 
