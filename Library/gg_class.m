@@ -624,7 +624,6 @@ gstep_add_methods(Class dest, SCM mlist, BOOL instance)
   int			count;
   class_info		*cls;
   SCM			wrap;
-  NSAutoreleasePool	*arp;
   BOOL			ok = YES;
 
   wrap = gstep_class_info(dest, 0);
@@ -682,74 +681,77 @@ gstep_add_methods(Class dest, SCM mlist, BOOL instance)
   /*
    *	Build method info from list.
    */
-  arp = [NSAutoreleasePool new];
-  NS_DURING
-    {
-      count = gstep_guile_list_length(mlist);
-      if (count > 0)
-	{
-	  int	extra = sizeof(struct objc_method) * (count - 1);
+  {
+    CREATE_AUTORELEASE_POOL(arp);
 
-	  ml = objc_calloc(1, sizeof(MethodList) + extra);
-	  ml->method_count = count;
-	  count = 0;
-	  for (tmp = mlist; tmp != SCM_EOL; tmp = gh_cdr(tmp))
-	    {
-	      SCM	mname = gh_caar(tmp);
-	      SCM	mtype = gh_cadar(tmp);
-	      SCM	mimp = gh_car(gh_cddar(tmp));
-	      NSMethodSignature	*sig;
-	      char	*types = gh_scm2newstr(mtype, 0);
-	      char	*mtypes;
+    NS_DURING
+      {
+	count = gstep_guile_list_length(mlist);
+	if (count > 0)
+	  {
+	    int	extra = sizeof(struct objc_method) * (count - 1);
 
-	      sig = [NSMethodSignature signatureWithObjCTypes: types];
-	      free(types);
-#if	defined(GNUSTEP_BASE_VERSION)
-	      types = (char*)[sig methodType];
-#elif	defined(LIB_FOUNDATION_LIBRARY)
-	      types = (char*)[sig types];
-#else
-#include "DON'T KNOW HOW TO GET METHOD SIGNATURE INFO"
-#endif
-	      mtypes = objc_malloc(strlen(types)+1);
-	      strcpy(mtypes, types);
-	      ml->method_list[count].method_name=(SEL)gh_scm2newstr(mname, 0);
-	      ml->method_list[count].method_types=mtypes;
-	      ml->method_list[count].method_imp=(IMP)gstep_send_msg_to_guile;
-	      if (SCM_NIMP(mimp) && SCM_SYMBOLP(mimp))
-		{
-		  mimp = scm_symbol_to_string(mimp);
-		}
-	      if (SCM_NIMP(mimp) && SCM_STRINGP(mimp))
-		{
-		  char *name = gh_scm2newstr(mimp, 0);
-		  mimp = gh_lookup((char*)name);
-		  free(name);
-		}
-	      if (instance == YES)
-		{
-		  NSMapInsert(cls->instance_methods,
-		      [NSString stringWithCString: 
-			  (char*)ml->method_list[count].method_name],
-			  (void*)mimp);
-		}
-	      else
-		{
-		  NSMapInsert(cls->factory_methods,
-		      [NSString stringWithCString: 
-			  (char*)ml->method_list[count].method_name],
-			  (void*)mimp);
-		}
-	      count++;
-	    }
-	}
-    }
-  NS_HANDLER
-    {
-      ok = NO;
-    }
-  NS_ENDHANDLER
-  [arp release];
+	    ml = objc_calloc(1, sizeof(MethodList) + extra);
+	    ml->method_count = count;
+	    count = 0;
+	    for (tmp = mlist; tmp != SCM_EOL; tmp = gh_cdr(tmp))
+	      {
+		SCM	mname = gh_caar(tmp);
+		SCM	mtype = gh_cadar(tmp);
+		SCM	mimp = gh_car(gh_cddar(tmp));
+		NSMethodSignature	*sig;
+		char	*types = gh_scm2newstr(mtype, 0);
+		char	*mtypes;
+
+		sig = [NSMethodSignature signatureWithObjCTypes: types];
+		free(types);
+  #if	defined(GNUSTEP_BASE_VERSION)
+		types = (char*)[sig methodType];
+  #elif	defined(LIB_FOUNDATION_LIBRARY)
+		types = (char*)[sig types];
+  #else
+  #include "DON'T KNOW HOW TO GET METHOD SIGNATURE INFO"
+  #endif
+		mtypes = objc_malloc(strlen(types)+1);
+		strcpy(mtypes, types);
+		ml->method_list[count].method_name=(SEL)gh_scm2newstr(mname, 0);
+		ml->method_list[count].method_types=mtypes;
+		ml->method_list[count].method_imp=(IMP)gstep_send_msg_to_guile;
+		if (SCM_NIMP(mimp) && SCM_SYMBOLP(mimp))
+		  {
+		    mimp = scm_symbol_to_string(mimp);
+		  }
+		if (SCM_NIMP(mimp) && SCM_STRINGP(mimp))
+		  {
+		    char *name = gh_scm2newstr(mimp, 0);
+		    mimp = gh_lookup((char*)name);
+		    free(name);
+		  }
+		if (instance == YES)
+		  {
+		    NSMapInsert(cls->instance_methods,
+			[NSString stringWithCString: 
+			    (char*)ml->method_list[count].method_name],
+			    (void*)mimp);
+		  }
+		else
+		  {
+		    NSMapInsert(cls->factory_methods,
+			[NSString stringWithCString: 
+			    (char*)ml->method_list[count].method_name],
+			    (void*)mimp);
+		  }
+		count++;
+	      }
+	  }
+      }
+    NS_HANDLER
+      {
+	ok = NO;
+      }
+    NS_ENDHANDLER
+    DESTROY(arp);
+  }
 
   if (ok == NO)
     {

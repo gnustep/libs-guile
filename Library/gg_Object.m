@@ -64,11 +64,23 @@ static NSMapTable	*objectMap = 0;
 
 - (void) printForGuile: (SCM)port
 {
-  NSAutoreleasePool	*pool = [NSAutoreleasePool new];
+  CREATE_AUTORELEASE_POOL(pool);
 
-  if (print_for_guile != NULL)
-    print_for_guile(self, _cmd, port);
-  [pool release];
+  if (print_for_guile == NULL)
+    {
+      char	buf[BUFSIZ];
+
+      sprintf(buf, " string=\"<%s: %lx>\"", object_get_class_name(self),
+	(unsigned long)self);
+
+      scm_display(gh_str02scm(buf), port);
+    }
+  else
+    {
+      print_for_guile(self, _cmd, port);
+    }
+
+  DESTROY(pool);
 }
 
 /*
@@ -93,6 +105,11 @@ static NSMapTable	*objectMap = 0;
     } 
   [gstep_guile_object_lock unlock];
   [self free];
+}
+
+- (BOOL) respondsToSelector: (SEL)aSelector
+{
+  return __objc_responds_to(self, aSelector);
 }
 
 - (id) retain

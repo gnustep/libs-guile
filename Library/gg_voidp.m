@@ -175,6 +175,7 @@ gstep_string_voidp_fn(SCM str)
 
   s = gh_scm2newstr(str, &l);
   v = gstep_voidp2scm(s, YES, YES, l);
+  return v;
 }
 
 

@@ -1,3 +1,17 @@
+2001-05-10 Richard Frith-Macdonald <rfm@gnu.org>
+
+	Various minor tidyps (some changes to conform to coding standards)
+	but mostly, updates to permit automated testing of the NSProxy class
+	for GNUstep-base.
+
+	* Source/gg_NSObject.m: Added category for NSProxy to add the
+	essential methods for testing it using Guile.  Normally a
+	subclass of NSProxy would be expected to override these.
+	* Source/gg_Object.m: Implement ([respondsToSelector:])
+	* Source/gg_id.m: Use the modern respondsToSelector rather
+	than the old respondsTo
+	* Source/gg_voidp.m: Fix missing return value from one function.
+
 Tue Apr 17 13:01:57 2001  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* Tools: New directory containing the guile-base and guile-gui
