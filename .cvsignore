@@ -8,3 +8,4 @@ config.cache
 config.status
 AppKit.make
 tests.*
+EOF.make
