@@ -25,6 +25,9 @@
 
 (define-module (languages gstep-guile))
 
+(if (not (feature? 'gstep-guile))
+    (dynamic-call "gstep_init" (dynamic-link "libgstep_guile.so")))
+
 ; I want to be able to do -
 ;
 ;(define-module (languages gstep-guile)
