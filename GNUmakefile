@@ -1,4 +1,3 @@
-GNUSTEP_INSTALLATION_DIR = /brains99
 
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
 
