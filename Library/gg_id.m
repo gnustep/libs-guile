@@ -95,14 +95,16 @@ free_gstep_id (SCM obj)
 
   if (o != nil)
     {
+      /* Use an autorelease pool here because both `repondsTo:' and
+	 `release' could autorelease objects. */
+      NSAutoreleasePool	*pool = [NSAutoreleasePool new];
+
       NSMapRemove(knownObjects, (void*)o);
       if ([o respondsTo: @selector(release)])
 	{
-	  NSAutoreleasePool	*pool = [NSAutoreleasePool new];
-
 	  [o release];
-	  [pool release];
 	}
+      [pool release];
     }
   return (scm_sizet)0;
 }
@@ -754,6 +756,7 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 	scm_throw(s_name, s_reason);
       }
   }
+
   return ret;
 }
 
