@@ -1,3 +1,9 @@
+Tue Dec 15 11:20:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Library/gg_class.m: Added code to catch guile exceptions and
+	convert them to NSExceptions.  Inspired by ScriptKit from the gyve
+	project.
+
 Wed Dec 02 20:20:54 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Library/gg_NSObject.m: Added autorelease pool 
