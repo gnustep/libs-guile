@@ -37,7 +37,7 @@ all:	library
 library:	config.cache
 	(cd Library; make);
 
-config.cache:	configure
+config.status:	configure
 	echo "You must run configure before building Greg"
 	exit 1
 
