@@ -23,7 +23,9 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-infodir=/usr/info
+prefix = @prefix@
+infodir=$(prefix)/info
+
 INSTALL_DATA = install -m 644
 
 all:	info html dvi
