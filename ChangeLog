@@ -1,3 +1,8 @@
+Tue Mar  5 17:53:45 2002  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* Library/link_gui.m (gstep_gui_classes): Do not try to access
+	NSCStringText.
+
 Wed Feb  6 16:41:43 2002  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* GNUmakefile (configure): Rule removed - was causing problems
