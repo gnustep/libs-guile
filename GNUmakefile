@@ -37,3 +37,10 @@ before-install::
 	$(INSTALL_DATA) guile.make \
 	  $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional
 
+configure: configure.in
+	autoreconf
+
+config.status: configure
+	./configure
+
+before-all:: config.status
