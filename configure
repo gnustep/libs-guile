@@ -1680,7 +1680,7 @@ EOF
 
 
 save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -I$GNUSTEP_SYSTEM_ROOT/Headers"
+CPPFLAGS="$CPPFLAGS -I$GNUSTEP_SYSTEM_ROOT/Headers -I$GNUSTEP_SYSTEM_ROOT/Headers/gnustep -I$GNUSTEP_SYSTEM_ROOT/Headers/$GNUSTEP_HOST_CPU/$GNUSTEP_HOST_OS"
 for ac_hdr in AppKit/AppKit.h
 do
 ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
