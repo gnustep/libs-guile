@@ -1,3 +1,10 @@
+Fri Aug 24 09:53:57 2001  Nicola Pero  <nicola@brainstorm.co.uk>
+
+	* configure.in: Abort immediately complaining to the user if
+	GNUSTEP_SYSTEM_ROOT is undefined.
+	(AC_PREFIX_DEFAULT): Assume that GNUSTEP_SYSTEM_ROOT is defined,
+	don't attempt to use /usr/GNUstep as a fallback.
+
 Tue Aug  7 04:12:46 2001  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* GNUmakefile (before-all): New rule - depend on config.status.
