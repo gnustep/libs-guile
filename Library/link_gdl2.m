@@ -41,10 +41,8 @@
 static void
 gstep_gdl2_numeric_constants()
 {
-#define	CNUM(X) gh_define(#X, gh_long2scm(X))
-
 #if	HAVE_EOCONTROL_EOCONTROL_H
-    CNUM(EOObserverNumberOfPriorities);
+  CNUM(EOObserverNumberOfPriorities);
 #endif
 
 }
@@ -54,8 +52,6 @@ gstep_gdl2_numeric_constants()
 static void
 gstep_gdl2_string_constants()
 {
-#define	CSTR(X) gh_define(#X, gstep_id2scm(X, NO))
-
 }
 
 
@@ -65,8 +61,6 @@ gstep_gdl2_selector_constants()
 {
   NSAutoreleasePool *arp;
   arp = [NSAutoreleasePool new];
-
-#define	CSEL(X) gh_define(#X, gh_str02scm((char*)sel_get_name(X)))
 
 #if	HAVE_EOCONTROL_EOCONTROL_H
   CSEL(EOQualifierOperatorEqual);
@@ -147,7 +141,6 @@ static void
 gstep_gdl2_classes()
 {
   NSAutoreleasePool	*arp = [NSAutoreleasePool new];
-#define	CCLS(X) gh_define(#X, gstep_id2scm([X class], NO))
 
   /*EOAccess*/
 #if	HAVE_EOACCESS_EOACCESS_H
@@ -212,12 +205,31 @@ gstep_gdl2_classes()
 void
 gstep_link_gdl2()
 {
-  gstep_init();
-  gstep_gdl2_numeric_constants();
-  gstep_gdl2_string_constants();
-  gstep_gdl2_selector_constants();
-  gstep_gdl2_functions();
-  gstep_gdl2_classes();
+  static BOOL beenHere = NO;
+
+  if (beenHere == NO)
+    {
+#ifdef  HAVE_SCM_C_RESOLVE_MODULE
+      SCM module = scm_c_resolve_module ("languages gstep-guile");
+#endif
+
+      beenHere = YES;
+#ifdef  HAVE_SCM_C_RESOLVE_MODULE
+      module = scm_set_current_module (module);
+#endif
+      gstep_init();
+      gstep_gdl2_numeric_constants();
+      gstep_gdl2_string_constants();
+      gstep_gdl2_selector_constants();
+      gstep_gdl2_functions();
+      gstep_gdl2_classes();
+
+      scm_add_feature("link_gdl2");
+
+#ifdef  HAVE_SCM_C_RESOLVE_MODULE
+      module = scm_set_current_module (module);
+#endif
+    }
 }
 
 

@@ -14,6 +14,13 @@
 @c Keep the next line just below the list of changes in most recent version.
 @ifclear ANNOUNCE-ONLY
 
+@section Noteworthy changes in version @samp{1.1.0}
+
+@itemize @bullet
+@item Updated to support guile 1.6 and to support the latest GNUstep
+basae and gui libraries.  Also added support for gdl2 by David Ayers.
+@end itemize
+
 @section Noteworthy changes in version @samp{1.0.2}
 
 @itemize @bullet

@@ -30,11 +30,35 @@
 )
 
 (if (> gversion 104)
+  (begin
 ;;; IF NEW_GUILE
-  (load-extension "libgstep_guile_d" "gstep_init")
+    (load-extension "libgstep_guile_d" "gstep_init")
+    (load-extension "libgg_base_d" "gstep_link_base")
+    (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
+      (load-extension "libgg_gui_d" "gstep_link_gui")
+    )
+    (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
+      (load-extension "libgg_gdl2_d" "gstep_link_gdl2")
+    )
+  )
+  (begin
 ;;; ELSE /* OLD_GUILE */
-  (if (not (feature? 'gstep-guile))
-    (dynamic-call "gstep_init" (dynamic-link "libgstep_guile_d.so"))
+    (if (not (feature? 'gstep-guile))
+      (dynamic-call "gstep_init" (dynamic-link "libgstep_guile_d.so"))
+    )
+    (if (not (feature? 'link_base))
+      (dynamic-call "gstep_link_base" (dynamic-link "libgg_base_d.so"))
+    )
+    (if (eq? '@ac_cv_header_AppKit_AppKit_h@ 'yes)
+      (if (not (feature? 'link_gui))
+	(dynamic-call "gstep_link_gui" (dynamic-link "libgg_gui_d.so"))
+      )
+    )
+    (if (eq? '@ac_cv_header_EOAccess_EOAccess_h@ 'yes)
+      (if (not (feature? 'link_gdl2))
+	(dynamic-call "gstep_link_gdl2" (dynamic-link "libgg_gdl2_d.so"))
+      )
+    )
   )
 )
 
