@@ -3322,7 +3322,7 @@ _ACEOF
 
 
 save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -I$GNUSTEP_SYSTEM_ROOT/Library/Headers -I$GNUSTEP_SYSTEM_ROOT/Library/Headers/gnustep -I$GNUSTEP_SYSTEM_ROOT/Library/Headers/$GNUSTEP_HOST_CPU/$GNUSTEP_HOST_OS"
+CPPFLAGS="$CPPFLAGS -x objective-c -I$GNUSTEP_SYSTEM_ROOT/Library/Headers -I$GNUSTEP_SYSTEM_ROOT/Library/Headers/gnustep -I$GNUSTEP_SYSTEM_ROOT/Library/Headers/$GNUSTEP_HOST_CPU/$GNUSTEP_HOST_OS"
 
 echo "$as_me:$LINENO: checking for ANSI C header files" >&5
 echo $ECHO_N "checking for ANSI C header files... $ECHO_C" >&6
