@@ -26,7 +26,7 @@
 #ifndef SK_GUILE_H
 #define SK_GUILE_H 
 
-#include <gnustep/guile/gstep_guile.h>
+#include <GNUstepGuile/gstep_guile.h>
 
 #include "ScriptKit.h"
 #include "GuileSCM.h"
