@@ -1,0 +1,21 @@
+@chapter Announcement
+
+@include version.texi
+
+The GNUstep Guile Library, version @value{GNUSTEP-GUILE-VERSION}, is now
+available.
+
+@section What is the GNUstep Guile Library?
+
+The gnustep_guile library lets you use (and extend) the GNUstep libraries
+from within Guile.  This effectively provides you with scripting language for
+GNUstep and an interactive system for developing GNUstep applications.
+
+@set ANNOUNCE-ONLY
+@include news.texi
+@clear ANNOUNCE-ONLY
+
+@section Where can you get it?  How can you compile it?
+
+The gnustep-guile-@value{GNUSTEP-GUILE-VERSION}.tar.gz distribution file has 
+been placed at @url{ftp://ftp.gnustep.org/pub/gnustep/libs}.

@@ -8,7 +8,7 @@ include ../Version
 # The application to be compiled
 DOCUMENT_NAME = gstep_guile
 
-DOCUMENT_TEXT_NAME = README NEWS INSTALL
+DOCUMENT_TEXT_NAME = README NEWS INSTALL ANNOUNCE
 
 # The texinfo source files to be used
 gstep_guile_TEXI_FILES = install.texi news.texi gstep_guile.texi
@@ -21,6 +21,9 @@ INSTALL_TEXI_FILES = version.texi
 
 NEWS_TEXT_MAIN = news.texi
 NEWS_TEXI_FILES = version.texi
+
+ANNOUNCE_TEXT_MAIN = announce.texi
+ANNOUNCE_TEXI_FILES = version.texi
 
 -include Makefile.preamble
 
