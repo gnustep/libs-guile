@@ -35,7 +35,7 @@
 
 (set! greg-debug #f)
 (set! greg-verbose 0)
-(set! greg-paths ())
+(set! greg-paths '())
 
 (define greg-ok-to-proceed #t)
 (define greg-last-option "")
@@ -116,7 +116,7 @@
 	(set! greg-debug #t)
       )
       ((string=? s "--file")
-	(set! greg-files ())
+	(set! greg-files '())
 	(set! args (get-files args))
 	(if (= (length greg-files) 0)
 	  (display "No 'files' specified\n")
@@ -140,7 +140,7 @@
 	(display "        --version (-V)           Output version numbers\n")
 	(display "\n")
 	(set! greg-ok-to-proceed #f)
-	(set! args ())	; End loop
+	(set! args '())	; End loop
       )
       ((string=? s "--objdir")
 	(if (> (length args) 0)
@@ -173,7 +173,7 @@
 	)
       )
       ((string=? s "--tool")
-	(set! greg-tools ())
+	(set! greg-tools '())
 	(set! args (get-tools args))
 	(if (= (length greg-tools) 0)
 	  (display "No 'tools' directories specified\n")
@@ -191,14 +191,14 @@
 	(display (version))
 	(display "\n")
 	(set! greg-ok-to-proceed #f)
-	(set! args ())	; End loop
+	(set! args '())	; End loop
       )
       (else
 	(display "Unknown option - '")
 	(display s)
 	(display "'\n")
 	(set! greg-ok-to-proceed #f)
-	(set! args ())	; End loop
+	(set! args '())	; End loop
       )
     )
     (if (> (string-length s) 1)
@@ -210,7 +210,7 @@
     )
   )
   (options args)
-)))())
+)))'())
 
 (if (> (length greg-paths) 0)
   (begin
@@ -218,13 +218,13 @@
     (if (> (length greg-tools) 0)
       (begin
 	(display "Use of filename in command-line args overrides --tool\n")
-	(set! greg-tools ())
+	(set! greg-tools '())
       )
     )
     (if (> (length greg-files) 0)
       (begin
 	(display "Use of filename in command-line args overrides --file\n")
-	(set! greg-files ())
+	(set! greg-files '())
       )
     )
   )
