@@ -1,0 +1,9 @@
+
+LIBRARY libScriptKit
+EXPORTS
+__objc_class_name_GuileProcedure
+__objc_class_name_GuileSCM
+__objc_class_name_GuileScript
+__objc_class_name_GuileInvocation
+__objc_class_name_GuileInterpreter
+
