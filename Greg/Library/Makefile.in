@@ -30,8 +30,8 @@ CFLAGS = -g
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
+libdir = @libdir@
 
-GUILE_BIN_PATH = @GUILE_BIN_PATH@
 GUILE_SCM_PATH = @GUILE_SCM_PATH@
 
 MAJOR_VERSION = @MAJOR_VERSION@
@@ -79,7 +79,7 @@ all: $(LIB)
 	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
 
 libgreg.la: $(LIB_OBJECTS)
-	$(LINK) -rpath $(GUILE_BIN_PATH) $(LIB_LDFLAGS) $(LIB_OBJECTS) $(LIBS)
+	$(LINK) -rpath $(libdir) $(LIB_LDFLAGS) $(LIB_OBJECTS) $(LIBS)
 
 %.o: %.c
 	@echo '$(COMPILE) -c $<'; \
@@ -90,12 +90,11 @@ libgreg.la: $(LIB_OBJECTS)
 	$(LTCOMPILE) -c $<
 
 install: libgreg.la
-	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(GUILE_BIN_PATH); \
 	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(GUILE_SCM_PATH); \
+	$(MKINSTDIRS) $(libdir); \
 	$(MKINSTDIRS) $(bindir); \
 	if test -f ${LIB}; then \
-	  $(INSTALL_DATA) .libs/libgreg.so \
-	    $(INSTALL_ROOT_DIR)${GUILE_BIN_PATH}/libcompiled.so; \
+	  $(INSTALL_DATA) .libs/libgreg.so $(libdir)/libgreg.so; \
 	fi; \
 	$(INSTALL_DATA) greg.scm $(INSTALL_ROOT_DIR)${GUILE_SCM_PATH}/greg.scm; \
 	$(INSTALL_SCRIPT) greg ${bindir}/greg;
