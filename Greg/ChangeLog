@@ -1,10 +1,15 @@
+2000-03-24  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	* Documentation/gregdoc.in: Replaced `@emph' w/ `@code',
+	`@file' and `@dfn', where appropriate.
+
 2000-03-24 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/greg.scm.in: Allow the names in 'greg-files' to be supplied
 	with or without the '.scm' extension.
 	Add new 'greg-paths' variable and support for loading tests by filename
 	Add greg-expect-pass and greg-expect-fail macros.
-	* Library/greg.in: Add support for --path option.
+	* Library/greg.in: Add support for putting files in the greg-paths var.
 	* Documentation/gregdoc: Document above change.
 	* VERSION: Update in preparation for next release.
 
