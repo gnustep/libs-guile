@@ -7,14 +7,14 @@ include ../EOF.make
 include $(GNUSTEP_MAKEFILES)/common.make
 
 # The application to be compiled
-ifneq ($(HAVE_APPKIT),no)
+ifneq ($(strip $(HAVE_APPKIT)),no)
   APP_NAME = gui
   gui_OBJC_FILES = gui.m
 endif
 
 #The tools to be compiled
 TOOL_NAME = go
-ifneq ($(HAVE_GDL2),no)
+ifneq ($(strip $(HAVE_EOF)),no)
   TOOL_NAME += gdl2
   gdl2_OBJC_FILES = gdl2.m
 endif
