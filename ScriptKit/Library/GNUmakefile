@@ -45,6 +45,3 @@ include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/library.make
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/test-tool.make
 
 include Makefile.postamble
-
-# I need this.  test-tool.make bug?		eiichi
-# internal-testtool-install::
