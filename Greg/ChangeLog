@@ -1,3 +1,8 @@
+2001-01-03 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Documentation/gregdoc.in: Add some help on use withe the expect
+	routines.
+
 2000-10-26 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/greg.scm.in: Add greg-directory procedure to return the
