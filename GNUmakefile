@@ -29,12 +29,16 @@ include $(GNUSTEP_MAKEFILES)/aggregate.make
 
 -include GNUmakefile.postamble
 
+# Compatibility with gnustep-make <= 1.2.0
+ifeq ($(MKINSTALLDIRS),)
+ MKINSTALLDIRS = $(MKDIRS)
+endif
+
 after-distclean::
 	rm -f config.status config.log config.cache TAGS
 
-# Things to do before installing
 before-install::
-	$(MKDIRS) $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional
+	$(MKINSTALLDIRS) $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional
 	$(INSTALL_DATA) guile.make \
 	  $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional
 

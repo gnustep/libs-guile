@@ -1,3 +1,10 @@
+Thu Dec 13 11:44:30 2001  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* Library/Makefile.postamble (after-install): Use MKINSTALLDIRS
+	not MKDIRS to create installation directories; added fall-back
+	definition of MKINSTALLDIRS for older gnustep-makes.
+	* GNUmakefile (before-install): Idem.
+	
 Thu Nov 22 01:09:56 2001  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* GNUmakefile (CVS_MODULE_NAME): Deinfe.
