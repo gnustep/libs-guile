@@ -38,7 +38,7 @@ html:	gregdoc
 	texi2html -split_chapter -expandinfo gregdoc
 
 info:	gregdoc
-	makeinfo -D NO-TEXI2HTML --no-header -o gregdoc.info gregdoc
+	makeinfo -D NO-TEXI2HTML -o gregdoc.info gregdoc
 
 
 clean:
