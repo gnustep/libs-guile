@@ -27,6 +27,9 @@ prefix = @prefix@
 infodir=$(prefix)/info
 
 INSTALL_DATA = install -m 644
+TEXI2HTML=@TEXI2HTML@
+TEXI2DVI=@TEXI2DVI@
+MAKEINFO=@MAKEINFO@
 
 all:	info html dvi
 
@@ -37,19 +40,19 @@ gregdoc.texi:	gregdoc
         | sed -e 's,@url{\([^}]*\)},@emph{\1},g' > gregdoc.texi
 
 dvi:	gregdoc.texi
-	texi2dvi gregdoc.texi
+	$(TEXI2DVI) gregdoc.texi
 
 html:	gregdoc
-	texi2html -monolithic -expandinfo gregdoc
+	$(TEXI2HTML) -monolithic -expandinfo gregdoc
 
 info:	gregdoc
-	makeinfo -D NO-TEXI2HTML -o gregdoc.info gregdoc
+	$(MAKEINFO) -D NO-TEXI2HTML -o gregdoc.info gregdoc
 
 install-info: gregdoc.info
 	../mkinstalldirs $(INSTALL_ROOT_DIR)$(infodir)
-	install-info --quiet -r Greg $(INSTALL_ROOT_DIR)$(infodir)/dir
-	install-info gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/dir
-	$(INSTALL_DATA) gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/greg.info
+	-install-info --quiet -r Greg $(INSTALL_ROOT_DIR)$(infodir)/dir
+	-install-info gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/dir
+	-$(INSTALL_DATA) gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/greg.info
 
 install:	install-info
 
