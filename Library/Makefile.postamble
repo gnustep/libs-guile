@@ -34,7 +34,7 @@ after-install::
 	done; \
 	echo "#############################################################"; \
 	echo "The gstep-guile libraries have been installed in -"; \
-	echo "$(GNUSTEP_LIBRARIES)"; \
+	echo "$(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR)"; \
 	echo "It is possible that Guile may not be able to find them there "; \
 	echo "in which case, you will need to change/set the LD_LIBRARY_PATH"; \
 	echo " environment variable (or whatever other environment variable "; \
@@ -42,7 +42,7 @@ after-install::
 	echo "dynamic libraries may be found) to include the directory in "; \
 	echo "which the libraries have been installed."; \
 	echo "eg."; \
-	echo " LD_LIBRARY_PATH=$(GNUSTEP_LIBRARIES)"; \
+	echo " LD_LIBRARY_PATH=$(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR)"; \
 	echo " export LD_LIBRARY_PATH"; \
 	echo "#############################################################"; \
 

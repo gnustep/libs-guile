@@ -38,25 +38,25 @@ main(int argc, char **argv, char ** envp)
 void
 go_main(int argc, char **argv)
 {
-    gstep_init();
-    gstep_link_base();
-    scm_set_program_arguments (argc, argv, argv[0]);
+  gstep_init();
+  gstep_link_base();
+  scm_set_program_arguments (argc, argv, argv[0]);
 
-    /* Load gstep_guile.scm. */
-    gh_eval_str("(if (not (defined? 'use-modules)) (primitive-load-path \"ice-9/boot-9.scm\"))");
-  
-    if (argc > 2 && strcmp(argv[1], "-c") == 0) {
-	gh_eval_str(argv[2]);
-    }
-    else {
-	/* Display the introduction */
-	gh_eval_str(gstep_guile_introduction_scm_code);
+  /* Load gstep_guile.scm. */
+  gh_eval_str("(if (not (defined? 'use-modules)) (primitive-load-path \"ice-9/boot-9.scm\"))");
 
-	/* Set the prompt. */
-	gh_eval_str(gstep_guile_set_prompt_scm_code);
+  if (argc > 2 && strcmp(argv[1], "-c") == 0) {
+      gh_eval_str(argv[2]);
+  }
+  else {
+      /* Display the introduction */
+      gh_eval_str(gstep_guile_introduction_scm_code);
 
-	/* Go go! */ 
-	gh_eval_str("(top-repl)");
-    }
+      /* Set the prompt. */
+      gh_eval_str(gstep_guile_set_prompt_scm_code);
+
+      /* Go go! */ 
+      gh_eval_str("(top-repl)");
+  }
 }
 

@@ -46,7 +46,7 @@
 	(list "numb" "i@:" foo->numb)
 	(list "echo:" "*@:*" foo->echo:)
 	(list "show:" "v@:*" foo->show:))
-    ())
+    '())
 #t
 ))
 

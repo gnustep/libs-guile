@@ -21,11 +21,9 @@
    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
    */
 
-#include "../config.h"
+#include "private.h"
 
 #if	HAVE_APPKIT_APPKIT_H
-
-#include "gstep_guile.h"
 
 #include	<Foundation/Foundation.h>
 #include	<AppKit/AppKit.h>
@@ -106,77 +104,77 @@ gstep_gui_functions()
 static void
 gstep_gui_classes()
 {
-    NSAutoreleasePool	*arp = [NSAutoreleasePool new];
+  NSAutoreleasePool	*arp = [NSAutoreleasePool new];
 #define	CCLS(X) gh_define(#X, gstep_id2scm([X class], NO))
 
-    CCLS(NSActionCell);
-    CCLS(NSApplication);
-    CCLS(NSBitmapImageRep);
-    CCLS(NSBox);
-    CCLS(NSBrowser);
-    CCLS(NSBrowserCell);
-    CCLS(NSBundle);
-    CCLS(NSButton);
-    CCLS(NSButtonCell);
-    CCLS(NSCachedImageRep);
-    CCLS(NSCell);
-    CCLS(NSClipView);
-    CCLS(NSCoder);
-    CCLS(NSColor);
-    CCLS(NSColorList);
-    CCLS(NSColorPanel);
-    CCLS(NSColorPicker);
-    CCLS(NSColorWell);
-    CCLS(NSControl);
-    CCLS(NSCursor);
-    CCLS(NSCustomImageRep);
-    CCLS(NSDataLink);
-    CCLS(NSDataLinkManager);
-    CCLS(NSDataLinkPanel);
-    CCLS(NSEPSImageRep);
-    CCLS(NSEvent);
-    CCLS(NSFont);
-    CCLS(NSFontManager);
-    CCLS(NSFontPanel);
-    CCLS(NSForm);
-    CCLS(NSFormCell);
-    CCLS(NSHelpPanel);
-    CCLS(NSImage);
-    CCLS(NSImageRep);
-    CCLS(NSImageView);
-    CCLS(NSMatrix);
-    CCLS(NSMenu);
-    CCLS(NSMenuItem);
-    CCLS(NSMutableParagraphStyle);
-    CCLS(NSOpenPanel);
-    CCLS(NSPageLayout);
-    CCLS(NSPanel);
-    CCLS(NSParagraphStyle);
-    CCLS(NSPasteboard);
-    CCLS(NSPopUpButton);
-    CCLS(NSPrintInfo);
-    CCLS(NSPrintOperation);
-    CCLS(NSPrintPanel);
-    CCLS(NSPrinter);
-    CCLS(NSResponder);
-    CCLS(NSSavePanel);
-    CCLS(NSScreen);
-    CCLS(NSScrollView);
-    CCLS(NSScroller);
-    CCLS(NSSelection);
-    CCLS(NSSlider);
-    CCLS(NSSliderCell);
-    CCLS(NSSpellChecker);
-    CCLS(NSSpellServer);
-    CCLS(NSSplitView);
-    CCLS(NSText);
-    CCLS(NSTextField);
-    CCLS(NSTextFieldCell);
-    CCLS(NSTextView);
-    CCLS(NSView);
-    CCLS(NSWindow);
-    CCLS(NSWorkspace);
-    [arp release];
+  CCLS(NSActionCell);
+  CCLS(NSApplication);
+  CCLS(NSBitmapImageRep);
+  CCLS(NSBox);
+  CCLS(NSBrowser);
+  CCLS(NSBrowserCell);
+  CCLS(NSBundle);
+  CCLS(NSButton);
+  CCLS(NSButtonCell);
+  CCLS(NSCachedImageRep);
+  CCLS(NSCell);
+  CCLS(NSClipView);
+  CCLS(NSCoder);
+  CCLS(NSColor);
+  CCLS(NSColorList);
+  CCLS(NSColorPanel);
+  CCLS(NSColorPicker);
+  CCLS(NSColorWell);
+  CCLS(NSControl);
+  CCLS(NSCursor);
+  CCLS(NSCustomImageRep);
+  CCLS(NSDataLink);
+  CCLS(NSDataLinkManager);
+  CCLS(NSDataLinkPanel);
+  CCLS(NSEPSImageRep);
+  CCLS(NSEvent);
+  CCLS(NSFont);
+  CCLS(NSFontManager);
+  CCLS(NSFontPanel);
+  CCLS(NSForm);
+  CCLS(NSFormCell);
+  CCLS(NSHelpPanel);
+  CCLS(NSImage);
+  CCLS(NSImageRep);
+  CCLS(NSImageView);
+  CCLS(NSMatrix);
+  CCLS(NSMenu);
+  CCLS(NSMenuItem);
+  CCLS(NSMutableParagraphStyle);
+  CCLS(NSOpenPanel);
+  CCLS(NSPageLayout);
+  CCLS(NSPanel);
+  CCLS(NSParagraphStyle);
+  CCLS(NSPasteboard);
+  CCLS(NSPopUpButton);
+  CCLS(NSPrintInfo);
+  CCLS(NSPrintOperation);
+  CCLS(NSPrintPanel);
+  CCLS(NSPrinter);
+  CCLS(NSResponder);
+  CCLS(NSSavePanel);
+  CCLS(NSScreen);
+  CCLS(NSScrollView);
+  CCLS(NSScroller);
+  CCLS(NSSelection);
+  CCLS(NSSlider);
+  CCLS(NSSliderCell);
+  CCLS(NSSpellChecker);
+  CCLS(NSSpellServer);
+  CCLS(NSSplitView);
+  CCLS(NSText);
+  CCLS(NSTextField);
+  CCLS(NSTextFieldCell);
+  CCLS(NSTextView);
+  CCLS(NSView);
+  CCLS(NSWindow);
+  CCLS(NSWorkspace);
+  [arp release];
 }
 
 
@@ -184,10 +182,11 @@ gstep_gui_classes()
 void
 gstep_link_gui()
 {
-    gstep_gui_numeric_constants();
-    gstep_gui_string_constants();
-    gstep_gui_functions();
-    gstep_gui_classes();
+  gstep_init();
+  gstep_gui_numeric_constants();
+  gstep_gui_string_constants();
+  gstep_gui_functions();
+  gstep_gui_classes();
 }
 
 #else

@@ -25,8 +25,6 @@
 
 #include <string.h>		// #ifdef .. #endif
 
-#include "../config.h"
-#include "gstep_guile.h"
 #include "private.h"
 
 
@@ -559,23 +557,23 @@ gstep_init_voidp()
   /*
    *	Plain voidp functions.
    */
-  scm_make_gsubr(gstep_string_voidp_n, 1, 0, 0, gstep_string_voidp_fn);
-  scm_make_gsubr(gstep_voidp_p_n, 1, 0, 0, gstep_scm_voidp_p);
-  scm_make_gsubr(gstep_voidp_nil_n, 0, 0, 0, gstep_voidp_nil_fn);
-  scm_make_gsubr(gstep_voidp_set_n, 3, 0, 0, gstep_voidp_set_fn);
-  scm_make_gsubr(gstep_voidp_string_n, 3, 0, 0, gstep_voidp_string_fn);
-  scm_make_gsubr(gstep_voidp_length_n, 1, 0, 0, gstep_voidp_length_fn);
-  scm_make_gsubr(gstep_voidp_lengthp_n, 1, 0, 0, gstep_voidp_lengthp_fn);
-  scm_make_gsubr(gstep_voidp_setlength_n, 2, 0, 0, gstep_voidp_setlength_fn);
-  scm_make_gsubr(gstep_voidp_mallocp_n, 1, 0, 0, gstep_voidp_mallocp_fn);
-  scm_make_gsubr(gstep_voidp_setmalloc_n, 2, 0, 0, gstep_voidp_setmalloc_fn);
-  scm_make_gsubr(gstep_voidp_list_n, 3, 0, 0, gstep_voidp_list_fn);
-  scm_make_gsubr(gstep_list_voidp_n, 2, 0, 0, gstep_list_voidp_fn);
+  CFUN(gstep_string_voidp_n, 1, 0, 0, gstep_string_voidp_fn);
+  CFUN(gstep_voidp_p_n, 1, 0, 0, gstep_scm_voidp_p);
+  CFUN(gstep_voidp_nil_n, 0, 0, 0, gstep_voidp_nil_fn);
+  CFUN(gstep_voidp_set_n, 3, 0, 0, gstep_voidp_set_fn);
+  CFUN(gstep_voidp_string_n, 3, 0, 0, gstep_voidp_string_fn);
+  CFUN(gstep_voidp_length_n, 1, 0, 0, gstep_voidp_length_fn);
+  CFUN(gstep_voidp_lengthp_n, 1, 0, 0, gstep_voidp_lengthp_fn);
+  CFUN(gstep_voidp_setlength_n, 2, 0, 0, gstep_voidp_setlength_fn);
+  CFUN(gstep_voidp_mallocp_n, 1, 0, 0, gstep_voidp_mallocp_fn);
+  CFUN(gstep_voidp_setmalloc_n, 2, 0, 0, gstep_voidp_setmalloc_fn);
+  CFUN(gstep_voidp_list_n, 3, 0, 0, gstep_voidp_list_fn);
+  CFUN(gstep_list_voidp_n, 2, 0, 0, gstep_list_voidp_fn);
 
   /*
    *	Convert between voidp and id
    */
-  scm_make_gsubr(gstep_voidp_id_n, 1, 0, 0, gstep_voidp_id_fn);
-  scm_make_gsubr(gstep_id_voidp_n, 1, 0, 0, gstep_id_voidp_fn);
+  CFUN(gstep_voidp_id_n, 1, 0, 0, gstep_voidp_id_fn);
+  CFUN(gstep_id_voidp_n, 1, 0, 0, gstep_id_voidp_fn);
 }
 

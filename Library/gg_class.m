@@ -47,8 +47,6 @@ extern void __objc_resolve_class_links();
 
 #include <string.h>		// #ifdef .. #endif
 
-#include "../config.h"
-#include "gstep_guile.h"
 #include "private.h"
 
 
@@ -1083,10 +1081,10 @@ gstep_init_class()
   /*
    *	Stuff to do with classes
    */
-  scm_make_gsubr(gstep_lookup_class_n, 1, 0, 0, gstep_lookup_class_fn);
-  scm_make_gsubr(gstep_classnames_n, 0, 0, 0, gstep_classnames_fn);
-  scm_make_gsubr(gstep_new_class_n, 5, 0, 0, gstep_new_class_fn);
-  scm_make_gsubr(gstep_class_methods_n, 2, 0, 0, gstep_class_methods_fn);
-  scm_make_gsubr(gstep_instance_methods_n, 2, 0, 0, gstep_instance_methods_fn);
+  CFUN(gstep_lookup_class_n, 1, 0, 0, gstep_lookup_class_fn);
+  CFUN(gstep_classnames_n, 0, 0, 0, gstep_classnames_fn);
+  CFUN(gstep_new_class_n, 5, 0, 0, gstep_new_class_fn);
+  CFUN(gstep_class_methods_n, 2, 0, 0, gstep_class_methods_fn);
+  CFUN(gstep_instance_methods_n, 2, 0, 0, gstep_instance_methods_fn);
 }
 

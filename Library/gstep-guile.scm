@@ -25,8 +25,18 @@
 
 (define-module (languages gstep-guile))
 
-(if (not (feature? 'gstep-guile))
-  (dynamic-call "gstep_init" (dynamic-link "libgstep_guile.so"))
+(define gversion
+  (+ (* 100 (string->number (major-version))) (string->number (minor-version)))
+)
+
+(dynamic-call "gstep_init" (dynamic-link "libgstep_guile_d.so"))
+(if (> gversion 104)
+;;; IF NEW_GUILE
+  (load-extension "libgstep_guile_d" "gstep_init")
+;;; ELSE /* OLD_GUILE */
+  (if (not (feature? 'gstep-guile))
+    (dynamic-call "gstep_init" (dynamic-link "libgstep_guile_d.so"))
+  )
 )
 
 ;
@@ -234,13 +244,13 @@
 ;; NSString handler
 ;;
 (define-public ($$ scmstr)
-  ([] "NSString" stringWithCString: scmstr)
+  (gstep-msg-send (gstep-lookup-class "NSString") "stringWithCString:" scmstr)
 )
 (define-public (gstep-nsstring->string objstr)
-  ([] objstr cString)
+  (gstep-msg-send objstr "cString")
 )
 (define-public (string->gstep-nsstring scmstr)
-  ([] "NSString" stringWithCString: scmstr)
+  (gstep-msg-send (gstep-lookup-class "NSString") "stringWithCString:" scmstr)
 )
 (define-public (gstep-nsstring obj)
   (if (string? obj)
@@ -250,7 +260,7 @@
 )
 (define-public (gstep-nsstring? obj)
   (and (gstep-id? obj)
-       (gstep-bool->bool (gstep-msg-send obj "isKindOfClass:" (gstep-lookup-class "NSString")))
+  (gstep-bool->bool (gstep-msg-send obj "isKindOfClass:" (gstep-lookup-class "NSString")))
   )
 )
 

@@ -31,8 +31,6 @@
 #include	<Foundation/NSData.h>
 #include	<objc/encoding.h>
 
-#include "../config.h"
-#include "gstep_guile.h"
 #include "private.h"
 
 /*
@@ -43,69 +41,70 @@
 const char*
 gstep_guile_check_type(const char* type)
 {
-    switch (*type) {
-	case _C_ID:
-	case _C_CLASS:
-	case _C_SEL:
-	case _C_CHR:
-	case _C_UCHR:
-	case _C_SHT:
-	case _C_USHT:
-	case _C_INT:
-	case _C_UINT:
-	case _C_LNG:
-	case _C_ULNG:
-	case _C_FLT:
-	case _C_DBL:
-	case _C_CHARPTR:
-	case _C_PTR:
-	    type = objc_skip_typespec(type);
-	    return type;
-	case _C_STRUCT_B:
-	    type++;
-	    if (*type == _C_STRUCT_E) {
-		type = 0;		/* Empty struct are illegal */
-	    }
-	    while (type && *type && *type != _C_STRUCT_E) {
-		type = gstep_guile_check_type(type);
-	    }
-	    if (type != 0 && *type == _C_STRUCT_E) {
-		return ++type;
-	    }
-	    return 0;
+  switch (*type)
+    {
+      case _C_ID:
+      case _C_CLASS:
+      case _C_SEL:
+      case _C_CHR:
+      case _C_UCHR:
+      case _C_SHT:
+      case _C_USHT:
+      case _C_INT:
+      case _C_UINT:
+      case _C_LNG:
+      case _C_ULNG:
+      case _C_FLT:
+      case _C_DBL:
+      case _C_CHARPTR:
+      case _C_PTR:
+	  type = objc_skip_typespec(type);
+	  return type;
+      case _C_STRUCT_B:
+	  type++;
+	  if (*type == _C_STRUCT_E) {
+	      type = 0;		/* Empty struct are illegal */
+	  }
+	  while (type && *type && *type != _C_STRUCT_E) {
+	      type = gstep_guile_check_type(type);
+	  }
+	  if (type != 0 && *type == _C_STRUCT_E) {
+	      return ++type;
+	  }
+	  return 0;
 
-	default:
-	    return 0;
+      default:
+	  return 0;
     }
 }
 
 const char*
 gstep_guile_check_types(const char* type)
 {
-    if (*type == _C_VOID) {
-	type++;
-    }
-    else {
-	type = gstep_guile_check_type(type);
-    }
-    if (type) {
-	if (*type != _C_ID && *type != _C_CLASS) {
-	    type = 0;
-	}
-	else {
-	    type++;
-	    if (*type != _C_SEL) {
-		type = 0;
-	    }
-	    else {
-		type++;
-		while (type && *type) {
-		    type = gstep_guile_check_type(type);
-		}
-	    }
-	}
-    }
-    return type;
+  if (*type == _C_VOID) {
+      type++;
+  }
+  else {
+      type = gstep_guile_check_type(type);
+  }
+  if (type) {
+      if (*type != _C_ID && *type != _C_CLASS) {
+	  type = 0;
+      }
+      else {
+	  type++;
+	  if (*type != _C_SEL) {
+	      type = 0;
+	  }
+	  else {
+	      type++;
+	      while (type && *type) {
+		  type = gstep_guile_check_type(type);
+	      }
+	  }
+      }
+  }
+  return type;
 }
 
 BOOL
@@ -539,7 +538,7 @@ gstep_scm_error(char *message, SCM args)
   SCM errsym;
   SCM str;
 
-  errsym = gh_car(scm_intern ("error", 5));
+  errsym = scm_string_to_symbol (scm_makfrom0str ("error"));
   str = scm_makfrom0str (message);
   scm_throw (errsym, scm_cons (str, args));
 }

@@ -50,8 +50,6 @@
 
 #include <string.h>		// #ifdef .. #endif
 
-#include "../config.h"
-#include "gstep_guile.h"
 #include "private.h"
 
 void (*print_for_guile)(id obj, SEL sel, SCM port) = NULL;
@@ -61,21 +59,34 @@ void (*print_for_guile)(id obj, SEL sel, SCM port) = NULL;
  */
 NSLock	*gstep_guile_object_lock = nil;
 
-
 void
 gstep_init()
 {
-  gstep_guile_object_lock = [NSLock new];
+  if (gstep_guile_object_lock == nil)
+    {
+#ifdef	HAVE_SCM_C_RESOLVE_MODULE
+      SCM module = scm_c_resolve_module ("languages gstep-guile");
+#endif
+      gstep_guile_object_lock = [NSLock new];
 
-  gstep_init_id();
-  gstep_init_class();
-  gstep_init_protocol();
-  gstep_init_voidp();
+#ifdef	HAVE_SCM_C_RESOLVE_MODULE
+      module = scm_set_current_module (module);
+#endif
+      gstep_init_id();
+      gstep_init_class();
+      gstep_init_protocol();
+      gstep_init_voidp();
 
-  /*
-   *	Create a variable 'gstep-nil' as a conveniance to users.
-   */
-  gh_define("gstep-nil", gstep_id2scm(nil, 0));
-  scm_add_feature("gstep-guile");
+      /*
+       *	Create a variable 'gstep-nil' as a conveniance to users.
+       */
+      gh_define("gstep-nil", gstep_id2scm(nil, 0));
+      scm_c_export("gstep-nil", 0);
+
+      scm_add_feature("gstep-guile");
+#ifdef	HAVE_SCM_C_RESOLVE_MODULE
+      module = scm_set_current_module (module);
+#endif
+    }
 }
 

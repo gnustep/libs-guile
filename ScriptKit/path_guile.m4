@@ -117,6 +117,8 @@ if test -n "$GUILE"; then
       GUILE_MAKE_SMOB_TYPE=0
     fi
 
+    AC_CHECK_FUNCS(scm_c_define_gsubr scm_gc_protect_object scm_c_export scm_c_resolve_module)
+
     LIBS="$ac_save_LIBS"
     CPPFLAGS="$ac_save_CPPFLAGS"
 

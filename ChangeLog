@@ -1,3 +1,31 @@
+2003-03-15 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* config.h.in:
+	* configure:
+	* Greg/libtool:
+	* Library/Makefile.postamble:
+	* Library/Makefile.preamble:
+	* Library/gg_NSObject.m:
+	* Library/gg_Object.m:
+	* Library/gg_class.m:
+	* Library/gg_id.m:
+	* Library/gg_protocol.m:
+	* Library/gg_voidp.m:
+	* Library/gstep-guile.scm:
+	* Library/gstep_guile.m:
+	* Library/link_base.m:
+	* Library/link_gdl2.m:
+	* Library/link_gui.m:
+	* Library/private.h:
+	* Library/private.m:
+	* ScriptKit/path_guile.m4:
+	* Test/go.m:
+	* Test/tests/basic01.scm:
+	* Test/tests/basic03.scm:
+	* Test/tests/class.scm:
+	Updates to work with guile 1.6 ... some bugfixes but mostly changes
+	to cope with the way the guile module system has changed.
+
 2003-02-25  David Ayers  <d.ayers@inode.at>
 
 	* Library/link_base.m: Added NSNull to the list of classes.

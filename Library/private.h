@@ -25,7 +25,41 @@
 #ifndef __private_h_INCLUDE
 #define __private_h_INCLUDE 
 
+#include "../config.h"
+#include "gstep_guile.h"
+
 #include <Foundation/NSLock.h>
+
+#ifdef HAVE_SCM_C_EXPORT
+
+#ifdef HAVE_SCM_C_DEFINE_GSUBR
+#define CFUN(X,A1,A2,A3,P) scm_c_define_gsubr(X,A1,A2,A3,P); scm_c_export(X, 0)
+#else
+#define CFUN(X,A1,A2,A3,P) scm_make_gsubr(X,A1,A2,A3,P); scm_c_export(X, 0)
+#endif
+#define	CCLS(X) gh_define(#X, gstep_id2scm([X class], NO)); scm_c_export(#X, 0)
+#define	CNUM(X) gh_define(#X, gh_long2scm(X)); scm_c_export(#X, 0)
+#define	CSTR(X) gh_define(#X, gstep_id2scm(X, NO)); scm_c_export(#X, 0)
+#define	CPTR(X) gh_define(#X, gstep_voidp2scm((void*)X, NO, YES, 0)); scm_c_export(#X, 0)
+
+#else
+
+#ifdef HAVE_SCM_C_DEFINE_GSUBR
+#define CFUN(X,A1,A2,A3,P) scm_c_define_gsubr(X,A1,A2,A3,P)
+#else
+#define CFUN(X,A1,A2,A3,P) scm_make_gsubr(X,A1,A2,A3,P)
+#endif
+#define	CCLS(X) gh_define(#X, gstep_id2scm([X class], NO))
+#define	CNUM(X) gh_define(#X, gh_long2scm(X))
+#define	CSTR(X) gh_define(#X, gstep_id2scm(X, NO))
+#define	CPTR(X) gh_define(#X, gstep_voidp2scm((void*)X, NO, YES, 0))
+
+#endif
+
+#ifdef HAVE_SCM_GC_PROTECT_OBJECT
+#define	scm_protect_object	scm_gc_protect_object
+#endif
+
 
 /*
  *	NOTE - OBJC_VERSION needs to be defined to be the version of the

@@ -1,8 +1,19 @@
-/* config.h.in.  Generated automatically from configure.in by autoheader.  */
 
 #ifdef libguile_ISDLL
 #define __GUILE_IMPORT__ 1
 #endif
+
+/* Define if you have the scm_c_export function. */
+#undef HAVE_SCM_C_EXPORT
+
+/* Define if you have the scm_c_resolve_module function. */
+#undef HAVE_SCM_C_RESOLVE_MODULE
+
+/* Define if you have the scm_c_define_gsubr function. */
+#undef HAVE_SCM_C_DEFINE_GSUBR
+
+/* Define if you have the scm_gc_protect_object function. */
+#undef HAVE_SCM_GC_PROTECT_OBJECT
 
 /* Define if you have the <AppKit/AppKit.h> header file.  */
 #undef HAVE_APPKIT_APPKIT_H
