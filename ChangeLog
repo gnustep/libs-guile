@@ -1,3 +1,9 @@
+Wed Feb  6 16:41:43 2002  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* GNUmakefile (configure): Rule removed - was causing problems
+	on systems without autoconf.
+	(config.status): Do not depend on configure.
+	
 2002-02-04  Adam Fedor  <fedor@gnu.org>
 
 	* gnustep-guile.spec.in: Requires gnustep-base.
