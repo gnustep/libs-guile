@@ -29,7 +29,7 @@ END-INFO-DIR-ENTRY
 @title The Greg testing framework
 @subtitle for Greg Version @VERSION@
 @sp 1
-@subtitle October 2000
+@subtitle January 2001
 @author Richard Frith-Macdonald <rfm@@gnu.org>
 @page
 
@@ -1520,12 +1520,47 @@ The @code{greg-recv} macro expects one or more lists as arguments -
 each list containing a string (a pattern to match)
 and a result to return on a successful match.  The value returned by
 @code{greg-recv} is the result for the pattern actually matched.@*
-If no pattern is matched within the timeout period then an empty list
-is returned (unless you use @code{(set! expect-timeout-proc xxx)} to
+If no pattern is matched within the timeout period then an exception
+is raised, causing the testcase to return an UNRESOLVED result
+(unless you use @code{(set! expect-timeout-proc xxx)} to
 override Gregs timeout handler.@*
-If no pattern is matched before an end-of-file is read, then an empty list
-is returned (unless you use @code{(set! expect-eof-proc xxx)} to
-override Gregs end-of-file handler.
+If no pattern is matched before an end-of-file is read, then an exception
+is raised, causing the testcase to return an UNRESOLVED result
+(unless you use @code{(set! expect-eof-proc xxx)} to
+override Gregs end-of-file handler.@*
+You must override any @code{expect} settings @emph{after} calling
+@code{greg-child}, since that procedure sets up the default settings.
+
+If you want a timeout or end-of-file to result in a failure rather than
+an UNRESOLVED testcase, you should override the default procedures as
+follows -
+@cartouche
+@smallexample
+(set! expect-timeout-proc (lambda (args) #f))
+(set! expect-eof-proc (lambda (args) #f))
+@end smallexample
+@end cartouche
+
+The pattern matching is done with extended regular expressions,
+usually with input split into lines so that a carat (^) at the start of an
+expression matches the start of a line, and a dollar ($) matches the end
+of a line.@*
+This is convenient for testing programs that produce lines of output in
+an expected format, as you can easily match the start and end of an
+output line.
+
+If you want to change this behavior to permit multi-line patterns and to
+have the carat and dollar match the start of input and end of input
+respectively, then you can use -
+@cartouche
+@smallexample
+(set! expect-strings-compile-flags regexp/extended)
+(set! expect-strings-exec-flags 0)
+@end smallexample
+@end cartouche
+This pattern matching behavior is occasionally useful when you are
+testing a program that produces output without clearly recognisable
+individual lines.
 
 @node Index, , Writing tests, Top
 @unnumbered Index
