@@ -26,12 +26,21 @@ endif
 # Link each of the libraries to the scheme directory. Use the name of the
 # library to that the <libname>.so symlink points to. That should be the
 # shared object name of the library.
+# Install the .scm file(s) ... if we are invoked with 'make=yes' then we
+# install scm files which load the debug libarary, othewrwise, we use
+# sed to edit the files to use the non-debug library as we install them.
 after-install::
 	@DIRP=$(GNUSTEP_SYSTEM_ROOT)/Libraries/Guile; \
 	$(MKINSTALLDIRS) $$DIRP/languages/gstep-guile; \
 	for i in $(SCHEME_FILES); do \
-	  $(INSTALL_DATA) $$i $$DIRP/languages/$$i; \
+	  if [ "$(debug)" = "no" ]; then \
+	    sed -e 's/libgstep_guile_d/libgstep_guile/' <$$i >$$$$.tmp; \
+	  else \
+	    cp $$i $$$$.tmp; \
+	  fi; \
+	  $(INSTALL_DATA) $$$$.tmp $$DIRP/languages/$$i; \
 	done; \
+	rm -f $$$$.tmp; \
 	echo "#############################################################"; \
 	echo "The gstep-guile libraries have been installed in -"; \
 	echo "$(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR)"; \
