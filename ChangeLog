@@ -1,5 +1,11 @@
 2001-05-13 Richard Frith-Macdonald <rfm@gnu.org>
 
+	* Source/gg_class.m: protect guile methods from GC.
+	* Source/private.m: Fix bug in returning ID ivars.
+	Tidy source.
+
+2001-05-13 Richard Frith-Macdonald <rfm@gnu.org>
+
 	* Source/gg_class.m: Permit subclassing of NSProxy.
 
 2001-05-12 Richard Frith-Macdonald <rfm@gnu.org>

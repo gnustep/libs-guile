@@ -110,243 +110,267 @@ gstep_guile_check_types(const char* type)
 BOOL
 gstep_guile_decode_item(SCM list, void* datum, int *position, const char** typespec)
 {
-    
-    const char	*type = *typespec;
-    int		offset = *position;
-    BOOL	inStruct = NO;
+  const char	*type = *typespec;
+  int		offset = *position;
+  BOOL		inStruct = NO;
 
-    if (*type == _C_STRUCT_B) {
-	inStruct = YES;
-	while (*type != _C_STRUCT_E && *type++ != '=');
-	if (*type == _C_STRUCT_E) {
-	    *typespec = type;
-	    return YES;
+  if (*type == _C_STRUCT_B)
+    {
+      inStruct = YES;
+      while (*type != _C_STRUCT_E && *type++ != '=');
+      if (*type == _C_STRUCT_E)
+	{
+	  *typespec = type;
+	  return YES;
 	}
     }
 
-    do {
-	int	align = objc_alignof_type(type); /* pad to alignment */
-	void	*where;
-	SCM	val;
+  do
+    {
+      int	align = objc_alignof_type(type); /* pad to alignment */
+      void	*where;
+      SCM	val;
 
-	offset = ROUND(offset, align);
-	where = datum + offset;
-	offset += objc_sizeof_type(type);
+      offset = ROUND(offset, align);
+      where = datum + offset;
+      offset += objc_sizeof_type(type);
 
-	if (inStruct) {
-	    val = gh_car(list);
-	    list = gh_cdr(list);
+      if (inStruct)
+	{
+	  val = gh_car(list);
+	  list = gh_cdr(list);
 	}
-	else {
-	    val = list;
+      else
+	{
+	  val = list;
 	}
 
-	switch (*type) {
-	    case _C_ID:
-	    case _C_CLASS:
-		if (SCM_NIMP(val) && OBJC_ID_P(val)) {
-		    *(id*)where = gstep_scm2id(val);
-		}
-#ifdef	RISKY
-		else if (SCM_NIMP(val) && OBJC_VOIDP_P(val)) {
-		    *(id*)where = (id)gstep_scm2voidp(val);
-		}
-#endif
-		else
-		    return NO;
-		break;
-
-	    case _C_SEL:
+      switch (*type)
+	{
+	  case _C_ID:
+	  case _C_CLASS:
+	    if (SCM_NIMP(val) && OBJC_ID_P(val))
 	      {
-		char *s;
-		int l;
-		if (SCM_STRINGP(val)) {
-		    gstep_scm2str(&s, &l, &val);
-		    *(SEL*)where = sel_get_any_typed_uid(s);
-		}
-		else
-		    return NO;
-		break;
+		*(id*)where = gstep_scm2id(val);
 	      }
-
-	    case _C_CHR:
-	        if (SCM_INUMP(val))
-		    *(char*)where = (char) gh_scm2long(val);
-		else
-		    return NO;
-	        break;
-
-	    case _C_UCHR:
-	        if (SCM_BOOL_F==val)
-		    *(unsigned char*)where = NO;
-	        else if (SCM_BOOL_T==val)
-		    *(unsigned char*)where = YES;
-		else  if (SCM_INUMP(val) && gh_scm2long(val) >= 0)
-		    *(unsigned char*)where = (unsigned char)gh_scm2long(val);
-		else
-		    return NO;
-	        break;
-
-	    case _C_SHT:
-	        if (gh_number_p(val))
-		    *(short*)where = (short) gh_scm2long(val);
-		else
-		    return NO;
-	        break;
-
-	    case _C_USHT:
-		if (gh_number_p(val) && gh_scm2long(val) >= 0)
-		    *(unsigned short*)where = (unsigned short) gh_scm2long(val);
-		else
-		    return NO;
-		break;
-
-	    case _C_INT:
-		if (gh_number_p(val))
-		    *(int*)where = (int) gh_scm2long(val);
-		else
-		    return NO;
-		break;
-
-	    case _C_UINT:
-		if (gh_number_p(val) && gh_scm2long(val) >= 0)
-		    *(unsigned int*)where = (unsigned int) gh_scm2long(val);
-		else
-		    return NO;
-		break;
-
-	    case _C_LNG:
-		if (gh_number_p(val))
-		    *(long*)where = (long) gh_scm2long(val);
-		else
-		    return NO;
-		break;
-
-	    case _C_ULNG:
-		if (gh_number_p(val) && gh_scm2long(val) >= 0)
-		    *(unsigned long*)where = (unsigned long) gh_scm2long(val);
-		else
-		    return NO;
-		break;
-
-	    case _C_FLT:
-		if (gh_number_p(val))
-		    *(float*)where = (float) gh_scm2double(val);
-		else
-		    return NO;
-		break;
-
-	    case _C_DBL:
-		if (gh_number_p(val))
-		    *(double*)where = (double) gh_scm2double(val);
-		else
-		    return NO;
-		break;
-
-	    case _C_CHARPTR:
-		if (gh_string_p(val)) {
-		    NSMutableData *d;
-		    char *s;
-		    int	l;
-
-		    s = gh_scm2newstr(val, &l);
-		    d = [NSMutableData dataWithBytesNoCopy: s length: l];
-		    *(char**)where = (char*)[d mutableBytes];
-		}
 #ifdef	RISKY
-		else if (SCM_NIMP(val) && OBJC_VOIDP_P(val)) {
-		    *(char**)where = (char*)gstep_scm2voidp(val);
-		}
+	    else if (SCM_NIMP(val) && OBJC_VOIDP_P(val))
+	      {
+		*(id*)where = (id)gstep_scm2voidp(val);
+	      }
 #endif
-		else
-		    return NO;
-		break;
+	    else
+	      return NO;
+	    break;
 
-	    case _C_PTR:
-		if (SCM_NIMP(val) && OBJC_VOIDP_P(val)) {
-		    *(void**)where = gstep_scm2voidp(val);
-		}
-#ifdef	RISKY
-		else if (SCM_NIMP(val) && OBJC_ID_P(val)) {
-		    *(void**)where = gstep_scm2id(val);
-		}
-		else if (gh_string_p(val)) {
-		    NSMutableData *d;
-		    char *s;
-		    int	l;
+	  case _C_SEL:
+	    {
+	      char	*s;
+	      int	l;
 
-		    s = gh_scm2newstr(val, &l);
-		    d = [NSMutableData dataWithBytesNoCopy: s length: l];
-		    *(void**)where = [d mutableBytes];
+	      if (SCM_STRINGP(val))
+		{
+		  gstep_scm2str(&s, &l, &val);
+		  *(SEL*)where = sel_get_any_typed_uid(s);
 		}
-#endif
-		else
-		    return NO;
-		break;
-
-	    case _C_STRUCT_B:
-		if (gh_list_p(val)) {
-		    if (gstep_guile_decode_item(val, datum, &offset, &type)
-			== NO)
-			return NO;
-		}
-		else
-		    return NO;
-		break;
-
-	    default:
+	      else
 		return NO;
+	      break;
+	    }
+
+	  case _C_CHR:
+	    if (SCM_INUMP(val))
+	      *(char*)where = (char) gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_UCHR:
+	    if (SCM_BOOL_F == val)
+	      *(unsigned char*)where = NO;
+	    else if (SCM_BOOL_T==val)
+	      *(unsigned char*)where = YES;
+	    else  if (SCM_INUMP(val) && gh_scm2long(val) >= 0)
+	      *(unsigned char*)where = (unsigned char)gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_SHT:
+	    if (gh_number_p(val))
+	      *(short*)where = (short) gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_USHT:
+	    if (gh_number_p(val) && gh_scm2long(val) >= 0)
+	      *(unsigned short*)where = (unsigned short) gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_INT:
+	    if (gh_number_p(val))
+	      *(int*)where = (int) gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_UINT:
+	    if (gh_number_p(val) && gh_scm2long(val) >= 0)
+	      *(unsigned int*)where = (unsigned int) gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_LNG:
+	    if (gh_number_p(val))
+	      *(long*)where = (long) gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_ULNG:
+	    if (gh_number_p(val) && gh_scm2long(val) >= 0)
+	      *(unsigned long*)where = (unsigned long) gh_scm2long(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_FLT:
+	    if (gh_number_p(val))
+	      *(float*)where = (float) gh_scm2double(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_DBL:
+	    if (gh_number_p(val))
+	      *(double*)where = (double) gh_scm2double(val);
+	    else
+	      return NO;
+	    break;
+
+	  case _C_CHARPTR:
+	    if (gh_string_p(val))
+	      {
+		NSMutableData	*d;
+		char		*s;
+		int		l;
+
+		s = gh_scm2newstr(val, &l);
+		d = [NSMutableData dataWithBytesNoCopy: s length: l];
+		*(char**)where = (char*)[d mutableBytes];
+	      }
+#ifdef	RISKY
+	    else if (SCM_NIMP(val) && OBJC_VOIDP_P(val))
+	      {
+		*(char**)where = (char*)gstep_scm2voidp(val);
+	      }
+#endif
+	    else
+	      return NO;
+	    break;
+
+	  case _C_PTR:
+	    if (SCM_NIMP(val) && OBJC_VOIDP_P(val))
+	      {
+		*(void**)where = gstep_scm2voidp(val);
+	      }
+#ifdef	RISKY
+	    else if (SCM_NIMP(val) && OBJC_ID_P(val))
+	      {
+		*(void**)where = gstep_scm2id(val);
+	      }
+	    else if (gh_string_p(val))
+	      {
+		NSMutableData	*d;
+		char		*s;
+		int		l;
+
+		s = gh_scm2newstr(val, &l);
+		d = [NSMutableData dataWithBytesNoCopy: s length: l];
+		*(void**)where = [d mutableBytes];
+	      }
+#endif
+	    else
+	      return NO;
+	    break;
+
+	  case _C_STRUCT_B:
+	    if (gh_list_p(val))
+	      {
+		if (gstep_guile_decode_item(val, datum, &offset, &type) == NO)
+		  return NO;
+	      }
+	    else
+	      return NO;
+	    break;
+
+	  default:
+	    return NO;
 	}
 
-	type = objc_skip_typespec(type); /* skip component */
-    } while (inStruct && *type != _C_STRUCT_E);
-    *typespec = type;
-    *position = offset;
-    return YES;
+      type = objc_skip_typespec(type); /* skip component */
+    }
+  while (inStruct && *type != _C_STRUCT_E);
+
+  *typespec = type;
+  *position = offset;
+  return YES;
 }
 
 SCM
 gstep_guile_encode_item(void* datum, int *position, const char** typespec, BOOL isAlloc, BOOL isInit, id recv, SCM wrap)
 {
-    const char	*type = *typespec;
-    int	offset = *position;
-    SCM	ret = SCM_UNDEFINED;
-    SCM	end = 0;
-    BOOL inStruct = NO;
+  const char	*type = *typespec;
+  int		offset = *position;
+  SCM		ret = SCM_UNDEFINED;
+  SCM		end = 0;
+  BOOL		inStruct = NO;
 
-    if (*type == _C_STRUCT_B) {
-	inStruct = YES;
-	while (*type != _C_STRUCT_E && *type++ != '=');
-	if (*type == _C_STRUCT_E) {
-	    *typespec = type;
-	    return SCM_UNDEFINED;
+  if (*type == _C_STRUCT_B)
+    {
+      inStruct = YES;
+      while (*type != _C_STRUCT_E && *type++ != '=');
+      if (*type == _C_STRUCT_E)
+	{
+	  *typespec = type;
+	  return SCM_UNDEFINED;
 	}
     }
 
-    do {
-	int	align = objc_alignof_type (type); /* pad to alignment */
-	SCM	val;
-	void	*where;
+  do
+    {
+      int	align = objc_alignof_type (type); /* pad to alignment */
+      SCM	val;
+      void	*where;
 
-	offset = ROUND(offset, align);
-	where = datum + offset;
-	offset += objc_sizeof_type(type);
+      offset = ROUND(offset, align);
+      where = datum + offset;
+      offset += objc_sizeof_type(type);
 
-	switch (*type) {
+      switch (*type)
+	{
 	  case _C_ID:
 	  case _C_CLASS:
-	    if (*(id*)where == recv) {
+	    if (recv != nil && *(id*)where == recv)
+	      {
 		val = wrap;
-	    }
-	    else {
-		if (isAlloc || isInit) {
+	      }
+	    else
+	      {
+		if (isAlloc || isInit)
+		  {
 		    /*
 		     *	If this is a special case of an object
 		     *	returned by 'alloc', 'init, 'copy', or 'new', then
 		     *	we don't need to retain it since it already
 		     *	has a retain count of 1.
 		     */
-		    if (inStruct == YES) {
+		    if (inStruct == YES)
+		      {
 			/*
 			 *	This should really never happen -
 			 *	if it does then someone has flouted the
@@ -354,11 +378,13 @@ gstep_guile_encode_item(void* datum, int *position, const char** typespec, BOOL 
 			 *	'init', or 'alloc' method which returns
 			 *	a structure!
 			 */
-			val=gstep_id2scm(*(id*)datum, YES);
-		    }
-		    else {
-			val=gstep_id2scm(*(id*)datum, NO); 
-			if (isInit) {
+			val = gstep_id2scm(*(id*)where, YES);
+		      }
+		    else
+		      {
+			val = gstep_id2scm(*(id*)where, NO); 
+			if (isInit)
+			  {
 			    /*
 			     *	If an init method has replaced our
 			     *	original object - it will have released
@@ -366,91 +392,113 @@ gstep_guile_encode_item(void* datum, int *position, const char** typespec, BOOL 
 			     *	Guile wrapper for it.
 			     */
 			    gstep_fixup_id(wrap);
-			}
-		    }
-		}
-		else {
-		    val = gstep_id2scm(*(id*)datum, YES); 
-		}
-	    }
+			  }
+		      }
+		  }
+		else
+		  {
+		    val = gstep_id2scm(*(id*)where, YES); 
+		  }
+	      }
 	    break;
+
 	  case _C_SEL:
 	    val = gh_str02scm((char*)sel_get_name(*(SEL *)where));
 	    break;
+
 	  case _C_CHR:
 	    val = gh_long2scm((long) *(char*)where);
 	    break;
+
 	  case _C_UCHR:
 	    val = gh_ulong2scm((unsigned long) *(unsigned char*)where);
 	    break;
+
 	  case _C_SHT:
 	    val = gh_long2scm((long) *(short*)where);
 	    break;
+
 	  case _C_USHT:
 	    val = gh_ulong2scm((unsigned long) *(unsigned short*)where);
 	    break;
+
 	  case _C_INT:
 	    val = gh_long2scm((long) *(int*)where);
 	    break;
+
 	  case _C_UINT:
 	    val = gh_ulong2scm((unsigned long)*(unsigned int*)where);
 	    break;
+
 	  case _C_LNG:
 	    val = gh_long2scm(*(long*)where);
 	    break;
+
 	  case _C_ULNG:
 	    val = gh_ulong2scm(*(unsigned long*)where);
 	    break;
+
 	  case _C_FLT:
 	    val = gh_double2scm((double) *(float*)where);
 	    break;
+
 	  case _C_DBL:
 	    val = gh_double2scm(*(double*)where);
 	    break;
+
 	  case _C_CHARPTR:
 	    val = gh_str02scm(*(char**)where);
 	    break;
+
 	  case _C_PTR:
 	    val = gstep_voidp2scm(*(void**)where, NO, NO, 0);
 	    break;
+
 	  case _C_VOID:
 	    val = SCM_UNDEFINED;
 	    break;
+
 	  case _C_STRUCT_B:
-	    val=gstep_guile_encode_item(datum, &offset, &type, NO, NO, nil, 0);
+	    val =
+	      gstep_guile_encode_item(datum, &offset, &type, NO, NO, nil, 0);
 	    if (val == (SCM)0)
-		return val;
+	      return val;
 	    break;
+
 	  default:
 	    return (SCM)0;
 	}
 
-	if (inStruct) {
-	    gh_defer_ints();
-	    if (end == 0) {
-		SCM_NEWCELL(end);
-		SCM_SETCAR(end, val); 
-		SCM_SETCDR(end, SCM_EOL);
-		ret = end;
+      if (inStruct)
+	{
+	  gh_defer_ints();
+	  if (end == 0)
+	    {
+	      SCM_NEWCELL(end);
+	      SCM_SETCAR(end, val); 
+	      SCM_SETCDR(end, SCM_EOL);
+	      ret = end;
 	    }
-	    else {
-		SCM	tmp;
-		SCM_NEWCELL(tmp);
-		SCM_SETCAR(tmp, val); 
-		SCM_SETCDR(tmp, gh_cdr(end));
-		SCM_SETCDR(end, tmp);
-		end = tmp;
+	  else
+	    {
+	      SCM	tmp;
+	      SCM_NEWCELL(tmp);
+	      SCM_SETCAR(tmp, val); 
+	      SCM_SETCDR(tmp, gh_cdr(end));
+	      SCM_SETCDR(end, tmp);
+	      end = tmp;
 	    }
-	    gh_allow_ints();
+	  gh_allow_ints();
 	}
-	else {
-	    ret = val;
+      else
+	{
+	  ret = val;
 	}
-	type = (char*)objc_skip_typespec(type); /* skip component */
+      type = (char*)objc_skip_typespec(type); /* skip component */
     } while (inStruct && *type != _C_STRUCT_E);
-    *typespec = type;
-    *position = offset;
-    return ret;
+  *typespec = type;
+  *position = offset;
+  return ret;
 }
 
 int
