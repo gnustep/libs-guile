@@ -6,7 +6,7 @@
 @c
 @c This file documents the GNUstep-Guile Regression testing framework `Greg'
 @c
-@c Copyright (C) 1998,1999,2000,2001 Free Software Foundation, Inc.
+@c Copyright (C) 1998,1999,2000,2001,2003 Free Software Foundation, Inc.
 @c
 @c This text may be freely distributed under the terms of the GNU
 @c General Public License.
@@ -29,12 +29,12 @@ END-INFO-DIR-ENTRY
 @title The Greg testing framework
 @subtitle for Greg Version @VERSION@
 @sp 1
-@subtitle February 2001
+@subtitle March 2003
 @author Richard Frith-Macdonald <rfm@@gnu.org>
 @page
 
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1998,1999,2000,2001 Free Software Foundation, Inc.
+Copyright @copyright{} 1998,1999,2000,2001,2003 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -51,7 +51,7 @@ into another language, under the above conditions for modified versions.
 @end titlepage
 
 @ifinfo
-Copyright @copyright{} 1998,1999,2000,2001 Free Software Foundation, Inc.
+Copyright @copyright{} 1998,1999,2000,2001,2003 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -104,6 +104,13 @@ See the file @file{COPYING.LIB}.
 @node News, Overview, Copying, Top
 @chapter New in this release
 @cindex News
+
+New in 1.5
+
+@itemize @bullet
+@item
+Updated to support guile-1.6
+@end itemize
 
 New in 1.4
 
@@ -232,8 +239,8 @@ DejaGNU, but also provides Guile modules to permit `embedded' testing of
 applications that use Guile as a scripting language and libraries that
 are directly accessible to Guile.
 
-This release has been tested with Guile-1.3.4 and 1.3.3, it will certainly
-not run on versions earlier than 1.3.1
+This release has been tested with Guile-1.6.3, it will probably
+not run on versions earlier than 1.4
 
 Apologies to Guile/Scheme/Lisp programmers out there - I came to this from
 Objective-C programming and taught myself during the four weeks that
@@ -645,9 +652,14 @@ type @code{make install} to build and install things.
 You should end up with -
 
 A dynamic library, which can be dynamically linked into Guile with
+(on guile 1.4)
 @code{
 (if (not (feature? 'greg-pty))
     (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so")))
+}
+or (on guile 1.6)
+@code{
+  (load-extension "libgreg" "scm_init_greg")
 }
 
 a module defining Guile procedures and variables providing the main

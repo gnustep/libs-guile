@@ -1,3 +1,14 @@
+Fri Mar 14 10:35:00 2003  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* GREG-VERSION: Bump to 1.5
+	* configure: Regenerate
+	* configure.in: Add some tests for guile-1.6
+	* Documentation/gregdoc.texi.in: Update to say we have 1.6 support
+	* Library/config.h.in: Add test for new 1.6 feature
+	* Library/greg.c: Update for 1.6
+	* Library/greg.in: Update for 1.6
+	* Library/greg.scm.in: Update for 1.6
+
 Wed Feb  6 16:39:04 2002  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* Makefile (configure): Rule removed.

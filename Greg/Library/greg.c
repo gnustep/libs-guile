@@ -362,7 +362,7 @@ scm_pty_child(SCM args)
 void
 scm_init_greg()
 {
-#ifdef NEW_GUILE
+#ifdef HAVE_SCM_C_DEFINE_GSUBR
   scm_c_define_gsubr(s_pty_child, 0, 0, 1, scm_pty_child);
 #else /* OLD_GUILE */
   scm_make_gsubr(s_pty_child, 0, 0, 1, scm_pty_child);
