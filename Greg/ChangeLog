@@ -1,3 +1,8 @@
+Wed Jan  6  7:45:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+        * Documentation/gregdoc.in: fixed typo - submitted by
+        ttn@rubicon.cobaltnet.com
+
 Thu Dec 31 15:20:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
         * configure.in: Added code to use guile-config for guile-1.3
