@@ -2,6 +2,13 @@ AC_INIT(configure.in)
 
 sinclude(ScriptKit/path_guile.m4)
 
+if test -z "$GNUSTEP_SYSTEM_ROOT"; then
+  {
+   echo "ERROR: You must run the GNUstep initialization script before configuring the gnustep-guile library!" 1>&2;
+  exit 1; 
+  }
+fi
+
 #--------------------------------------------------------------------
 # Use a .h file with #define's, instead of -D command-line switches
 #--------------------------------------------------------------------
@@ -9,15 +16,8 @@ AC_CONFIG_HEADER(config.h)
 
 #--------------------------------------------------------------------
 # The GNUstep root directory.
-# The user should have the GNUSTEP_SYSTEM_ROOT environment variable
-# defined, but if not then we have a global default.
 #--------------------------------------------------------------------
-AC_PREFIX_DEFAULT(`if test "x$GNUSTEP_SYSTEM_ROOT" = "x"; then
-GNUSTEP_SYSTEM_ROOT=/usr/GNUstep ;
-echo $GNUSTEP_SYSTEM_ROOT ;
-else
-echo $GNUSTEP_SYSTEM_ROOT ;
-fi`)
+AC_PREFIX_DEFAULT(`echo $GNUSTEP_SYSTEM_ROOT`)
 if test "x$prefix" = "x"; then
   prefix=$ac_default_prefix ;
 fi
