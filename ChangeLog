@@ -1,3 +1,16 @@
+Thu Mar  4 19:35:31 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* GNUmakefile (after-distclean): Added new target.
+
+	* Added install-sh. Copied from Greg sub directory.
+
+	* ScriptKit: New directory. Import ScriptKit.
+
+	* GNUmakefile (SUBPROJECTS): Added ScriptKit.
+
+	* configure.in: New file. 
+	  Use AC_CONFIG_SUBDIRS.
+
 Mon Jan 25  9:45:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Library/Makefile.postamble: Install scm file on systems without
