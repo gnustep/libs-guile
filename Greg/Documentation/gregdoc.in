@@ -212,8 +212,9 @@ site so much that an attempt at a generic solution is pretty pointless.
 What Greg does do, is provide hooks to let you easily introduce site
 specific code for handling those sorts of situations.
 
-The latest version of Greg can normally be found at
-@uref{http://www.tiptree.demon.co.uk/gstep/guile/greg.tar.gz}
+The current version of Greg can normally be found on GNU ftp sites and
+at
+@uref{http://www.tiptree.demon.co.uk/gstep/guile/Greg-@VERSION@.tar.gz}
 with documentation online at
 @uref{http://www.tiptree.demon.co.uk/gstep/guile/gregdoc_toc.html}
 
