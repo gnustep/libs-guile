@@ -21,16 +21,23 @@
 ;   License along with this library; if not, write to the Free
 ;   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+(begin
+
+(define r "")
+(define cls "")
+(define obj "")
+(define prt "")
+(define result "")
 
 (greg-testcase "gstep-class can lookup NSObject" #t
 (lambda ()
-  (define cls (gstep-class NSObject))
+  (set! cls (gstep-class NSObject))
   (not (eq? cls gstep-nil))
 ))
 
 (greg-testcase "gstep-protocol can lookup NSCoding" #t
 (lambda ()
-  (define prt (gstep-protocol NSCoding))
+  (set! prt (gstep-protocol NSCoding))
   (not (eq? prt gstep-nil))
 ))
 
@@ -41,13 +48,13 @@
 
 (greg-testcase "(gstep-bool->bool 1) returns #t" #t
 (lambda ()
-  (define result (gstep-bool->bool 1))
+  (set! result (gstep-bool->bool 1))
   (and (boolean? result) result)
 ))
 
 (greg-testcase "(gstep-bool->bool 0) returns #f" #t
 (lambda ()
-  (define result (gstep-bool->bool 0))
+  (set! result (gstep-bool->bool 0))
   (and (boolean? result) (not result))
 ))
 
@@ -73,57 +80,57 @@
 
 (greg-testcase "(gstep-bool 1) returns #t" #t
 (lambda ()
-  (define result (gstep-bool 1))
+  (set! result (gstep-bool 1))
   (and (boolean? result) result)
 ))
 
 (greg-testcase "(gstep-bool 0) returns #f" #t
 (lambda ()
-  (define result (gstep-bool 0))
+  (set! result (gstep-bool 0))
   (and (boolean? result) (not result))
 ))
 
 (greg-testcase "(gstep-bool? 0) returns #t" #t
 (lambda ()
-  (define result (gstep-bool? 0))
+  (set! result (gstep-bool? 0))
   (and (boolean? result) result)
 ))
 
 (greg-testcase "(gstep-bool? 1) returns #t" #t
 (lambda ()
-  (define result (gstep-bool? 1))
+  (set! result (gstep-bool? 1))
   (and (boolean? result) result)
 ))
 
 (greg-testcase "(gstep-bool? \"x\") returns #f" #t
 (lambda ()
-  (define result (gstep-bool? "x"))
+  (set! result (gstep-bool? "x"))
   (and (boolean? result) (not result))
 ))
 
-(define cls ([] "NSString" class))
+(set! cls ([] "NSString" class))
 
 (greg-testcase "$$ creates an NSString" #t
 (lambda ()
-  (define result ([] ($$ "hello") isKindOfClass: cls))
+  (set! result ([] ($$ "hello") isKindOfClass: cls))
   (gstep-bool->bool result)
 ))
 
 (greg-testcase "string->gstep-nsstring creates an NSString" #t
 (lambda ()
-  (define result ([] (string->gstep-nsstring "hello") isKindOfClass: cls))
+  (set! result ([] (string->gstep-nsstring "hello") isKindOfClass: cls))
   (gstep-bool->bool result)
 ))
 
 (greg-testcase "gstep-nsstring->string gives us a string" #t
 (lambda ()
-  (define obj ($$ "hello"))
+  (set! obj ($$ "hello"))
   (string=? (gstep-nsstring->string obj) "hello")
 ))
 
 (greg-testcase "gstep-nsstring? returns #t for an NSString object" #t
 (lambda ()
-  (define obj ($$ "hello"))
+  (set! obj ($$ "hello"))
   (gstep-nsstring? obj)
 ))
 
@@ -134,17 +141,17 @@
 
 (greg-testcase "gstep-nsstring converts a string to an NSString" #t
 (lambda ()
-  (define result ([] (gstep-nsstring "hello") isKindOfClass: cls))
+  (set! result ([] (gstep-nsstring "hello") isKindOfClass: cls))
   (gstep-bool->bool result)
 ))
 
 (greg-testcase "gstep-nsstring converts an NSString to a string" #t
 (lambda ()
-  (define obj ($$ "hello"))
+  (set! obj ($$ "hello"))
   (string=? (gstep-nsstring obj) "hello")
 ))
 
-(define r ())
+(set! r ())
 (greg-testcase "NSMakeRange builds expected list" #t
 (lambda ()
   (set! r (NSMakeRange 5 6))
@@ -173,3 +180,4 @@
   (equal? r '(1 9))
 ))
 
+)

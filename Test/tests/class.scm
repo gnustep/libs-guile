@@ -55,8 +55,8 @@
 ;
 (greg-testcase "Guile can add methods to an Objective-C class" #t
 (lambda ()
-(gstep-class-methods "NSString" '(("test" "v@:" foo->test)))
-(gstep-instance-methods "NSString" '(("test" "v@:" foo->test)))
+(gstep-class-methods "NSString" (list (list "test" "v@:" foo->test)))
+(gstep-instance-methods "NSString" (list (list "test" "v@:" foo->test)))
 #t
 ))
 

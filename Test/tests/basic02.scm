@@ -68,7 +68,7 @@
   (catch #t
     (lambda ()
       (set! r2 (NSMakeRange 6 4))
-      (define s ([] "NSString" stringWithCString: "Hello"))
+      (set! s ([] "NSString" stringWithCString: "Hello"))
       ([] s substringWithRange: r2)
       #f
     )

@@ -42,7 +42,6 @@ go_main(int argc, char **argv)
 
     /* Load gstep_guile.scm. */
     gh_eval_str("(if (not (defined? 'use-modules)) (primitive-load-path \"ice-9/boot-9.scm\"))");
-    gh_eval_str("(use-modules (languages gstep-guile))");
   
     if (argc > 2 && strcmp(argv[1], "-c") == 0) {
 	gh_eval_str(argv[2]);

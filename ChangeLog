@@ -1,3 +1,17 @@
+2001-01-04 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/gg_class.m: Correct code for adding factory methods.
+	* Library/gg_id.m: Resolve class links if necessary when sending a
+	message to a newly loaded class.  This makes it possible to load
+	objc shared libraries using  '(dynamic-link "libname.so")' and then
+	use the classes from the library.
+	* Library/private.m: Correct code for determining if an object is
+	a class.
+	* Test/tests/*: Tidied test scripts to localise defines
+	* Test/test.scm: Use the gstep-guile module
+	* Test/go.m: Don't use the gstep-guile module - let test.scm do it.
+	* Test/gui.m: ditto.
+	
 2000-12-18 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/gg_id.m: Create an autorelease pool while releasing
