@@ -1,3 +1,11 @@
+2001-01-22  Nicola Pero  <nicola@brainstorm.co.uk>
+
+	* Library/Makefile.in, Documentation/Makefile.in: Use
+	INSTALL_ROOT_DIR everywhere to make the package relocatable -
+	needed for RPM generation.
+	* Documentation/Makefile.in (install-info): Create the $(infodir)
+	directory.
+	
 2001-01-03 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Documentation/gregdoc.in: Add some help on use withe the expect
