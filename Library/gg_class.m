@@ -71,13 +71,6 @@ static scm_sizet free_gstep_class (SCM obj);
 static int print_gstep_class (SCM exp, SCM port, scm_print_state *pstate);
 static SCM mark_gstep_class (SCM obj);
 
-struct scm_smobfuns gstep_class_smob = {
-  mark_gstep_class,
-  free_gstep_class,
-  print_gstep_class,
-  equal_gstep_class
-};
-
 static SCM 
 mark_gstep_class (SCM obj)
 {
@@ -998,7 +991,22 @@ gstep_instance_methods_fn(SCM classn, SCM mlist)
 void
 gstep_init_class()
 {
+#if	GUILE_MAKE_SMOB_TYPE
+  gstep_scm_tc16_class = scm_make_smob_type ("gg_class", 0);
+  scm_set_smob_mark(gstep_scm_tc16_class, mark_gstep_class);
+  scm_set_smob_free(gstep_scm_tc16_class, free_gstep_class);
+  scm_set_smob_print(gstep_scm_tc16_class, print_gstep_class);
+  scm_set_smob_equalp(gstep_scm_tc16_class, equal_gstep_class);
+#else
+  static struct scm_smobfuns gstep_class_smob = {
+    mark_gstep_class,
+    free_gstep_class,
+    print_gstep_class,
+    equal_gstep_class
+  };
+
   gstep_scm_tc16_class = scm_newsmob (&gstep_class_smob);
+#endif
 
   /*
    *	Stuff to do with classes

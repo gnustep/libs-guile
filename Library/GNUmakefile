@@ -27,6 +27,8 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 include ../Version
 
+include	../config.mak
+
 LIBRARY_NAME=libgstep_guile libgg_base
 
 ifneq ($(GUI_LIB),nil)
@@ -54,11 +56,11 @@ libgstep_guile_HEADER_FILES = \
 SCHEME_FILES = \
 	gstep-guile.scm
 
--include Makefile.preamble
+include Makefile.preamble
 
 -include GNUmakefile.local
 
 include $(GNUSTEP_MAKEFILES)/library.make
 
--include Makefile.postamble
+include Makefile.postamble
 

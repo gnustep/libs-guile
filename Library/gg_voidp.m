@@ -43,13 +43,6 @@ static scm_sizet free_gstep_voidp (SCM obj);
 static int print_gstep_voidp (SCM exp, SCM port, scm_print_state *pstate);
 static SCM mark_gstep_voidp (SCM obj);
 
-struct scm_smobfuns gstep_voidp_smob = {
-  mark_gstep_voidp,
-  free_gstep_voidp,
-  print_gstep_voidp,
-  equal_gstep_voidp
-};
-
 static SCM 
 mark_gstep_voidp (SCM obj)
 {
@@ -496,7 +489,22 @@ gstep_list_voidp_fn(SCM l, SCM t)
 void
 gstep_init_voidp()
 {
+#if	GUILE_MAKE_SMOB_TYPE
+  gstep_scm_tc16_voidp = scm_make_smob_type ("gg_voidp", 0);
+  scm_set_smob_mark(gstep_scm_tc16_voidp, mark_gstep_voidp);
+  scm_set_smob_free(gstep_scm_tc16_voidp, free_gstep_voidp);
+  scm_set_smob_print(gstep_scm_tc16_voidp, print_gstep_voidp);
+  scm_set_smob_equalp(gstep_scm_tc16_voidp, equal_gstep_voidp);
+#else
+  static struct scm_smobfuns gstep_voidp_smob = {
+    mark_gstep_voidp,
+    free_gstep_voidp,
+    print_gstep_voidp,
+    equal_gstep_voidp
+  };
+
   gstep_scm_tc16_voidp = scm_newsmob (&gstep_voidp_smob);
+#endif
 
   /*
    *	Plain voidp functions.

@@ -1,3 +1,4 @@
+# Generated automatically from Makefile.preamble.in by configure.
 #
 #   Makefile.preamble
 #
@@ -7,15 +8,12 @@
 #   be put into Makefile.postamble.
 #
 
-GSHARE = share/guile/1.2
-ICE9 = $(GSHARE)/ice-9
-
 #
 # Flags dealing with compiling and linking
 #
 
 # Additional flags to pass to the preprocessor
-ADDITIONAL_CPPFLAGS +=
+ADDITIONAL_CPPFLAGS += -DGUILE_MAKE_SMOB_TYPE=$(GUILE_MAKE_SMOB_TYPE)
 
 # Additional flags to pass to the Objective-C compiler
 ADDITIONAL_OBJCFLAGS += 
