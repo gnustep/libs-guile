@@ -1,3 +1,38 @@
+Tue Nov 26 12:48:19 2002  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* GNUmakefile: Do not define GNUSTEP_MAKEFILES.
+	* AppKit.make.in: Added.
+	* config.mak.in: Removed.
+	* configure.in: Output AppKit.make; do not output config.mak
+	and Test/GNUmakefile.
+	* configure: Regenerated.
+	
+	* Library/GNUmakefile (GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES): Define
+	to be ../guile.make.
+	(GNUSTEP_MAKEFILES): Variable definition removed.
+	(../config.mak): Do not include.
+	(../AppKit.make): Include.
+	* Library/Makefile.preamble: Replaced DEFS with GUILE_DEFINE, and
+	GUILE_CFLAGS with GUILE_CPPFLAGS, since we're now correctly using
+	../guile.make.
+
+	* ScriptKit/config.mak.in: Renamed DEFS to GUILE_DEFINE, and
+	GUILE_CFLAGS to GUILE_CPPFLAGS.
+	* ScriptKit/Examples/Makefile.preamble: Updated for those variable
+	name changes.
+	* ScriptKit/Library/Makefile.preamble: The same.
+	* ScriptKit/Examples/GNUmakefile: include ../config.mak before
+	common.make.  Define GUILE_MAKE_LOADED=yes to prevent system
+	guile.make to interfere with local GUILE variables.
+	* ScriptKit/Library/GNUmakefile: Similar changes.
+
+	* Test/GNUmakefile.in: Removed.
+	* Test/GNUmakefile: Added.
+	* Test/Makefile.preamble: Updated for new variable names.
+
+	* Tools/GNUmakefile: include ../AppKit.make.  Do not include
+	../config.mak.
+	
 2002-09-16 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/link_base.m: Adjust for new constants for NSFileManager

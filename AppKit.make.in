@@ -1,0 +1,1 @@
+HAVE_APPKIT = @ac_cv_header_AppKit_AppKit_h@

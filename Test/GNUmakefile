@@ -1,16 +1,13 @@
--include ../Greg/config.mak
-
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
-GNUSTEP_MAKEFILES = $(GNUSTEP_SYSTEM_ROOT)/Makefiles
+GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES = ../guile.make
+include ../AppKit.make
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
-include ../config.mak
-
 # The application to be compiled
 ifneq ($(HAVE_APPKIT),no)
-  ifneq (@ac_cv_header_AppKit_AppKit_h@,no)
+  ifneq (yes,no)
     APP_NAME = gui
     gui_OBJC_FILES = gui.m
   endif
@@ -27,6 +24,6 @@ go_OBJC_FILES = go.m
 
 include $(GNUSTEP_MAKEFILES)/tool.make
 ifneq ($(HAVE_APPKIT),no)
-include $(GNUSTEP_MAKEFILES)/application.make
+  include $(GNUSTEP_MAKEFILES)/application.make
 endif
 -include Makefile.postamble
