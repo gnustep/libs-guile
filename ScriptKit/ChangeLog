@@ -1,3 +1,14 @@
+2003-04-08  David Ayers  <d.ayers@inode.at>
+
+	* ScriptKit/Library/GuileInterpreter.m: ([GuileSCM
+	-descriptionWithLocale:]): Fixed typo in last modification.
+
+2003-04-08  Matt Rice  <matt@vespertine.pc.ashlandfiber.net>
+
+	* ScriptKit/Library/GuileSCM.m,
+	* ScriptKit/Library/GuileInterpreter.m: Use defines to support
+	guile 1.6.
+	
 2003-04-07  David Ayers  <d.ayers@inode.at>
 
 	* Library/*.h/m: Reformatted according to standard.

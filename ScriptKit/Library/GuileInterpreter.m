@@ -43,6 +43,12 @@
 
 #include <string.h>
 
+#ifdef HAVE_SCM_C_DEFINE_GSUBR
+#define CFUN(X,A1,A2,A3,P) scm_c_define_gsubr(X,A1,A2,A3,P)
+#else
+#define CFUN(X,A1,A2,A3,P) scm_make_gsubr(X,A1,A2,A3,P)
+#endif
+
 static GuileInterpreter *currentInterpreter = nil;
 // static NSLock *singleInterpreterLock = nil;
 
@@ -162,8 +168,8 @@ NSString * GuileInterpreterKeyWord_Update  = @"guile-update";
   gh_eval_str("(use-modules (languages gstep-guile))");
   if (!proc_install)
     {
-      scm_make_gsubr(script_kit_lookup_n, 1, 0, 0, script_kit_lookup_fn);
-      scm_make_gsubr(script_kit_update_n, 2, 0, 0, script_kit_update_fn);
+      CFUN(script_kit_lookup_n, 1, 0, 0, script_kit_lookup_fn);
+      CFUN(script_kit_update_n, 2, 0, 0, script_kit_update_fn);
     }
 }
 
