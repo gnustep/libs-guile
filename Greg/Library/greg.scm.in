@@ -69,8 +69,12 @@
 ;;; Dynamically link the glue code for accessing the pty library,
 ;;; but only when it isn't already present.
 
+;;; IF NEW_GUILE
+;;;(load-extension "libgreg" "scm_init_greg")
+;;; ELSE /* OLD_GUILE */
 (if (not (feature? 'greg-pty))
     (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so")))
+;;; ENDIF
 
 (use-modules (ice-9 expect))
 
@@ -87,11 +91,11 @@
 (define-public greg-out-dir "")
 (define-public greg-src-dir ".")
 (define-public greg-script-dir "")
-(define-public greg-files ())
-(define-public greg-tools ())
-(define-public greg-paths ())
-(define-public greg-case-begin (lambda () ()))
-(define-public greg-case-end (lambda (result) ()))
+(define-public greg-files '())
+(define-public greg-tools '())
+(define-public greg-paths '())
+(define-public greg-case-begin (lambda () '()))
+(define-public greg-case-end (lambda (result) '()))
 
 ;
 ; Define top-level variables for storing test statistics etc.
@@ -132,8 +136,8 @@
 ;
 (define greg-dbg-port #f)
 (define greg-log-port #f)
-(define greg-child-info ())
-(define greg-expect-list ())
+(define greg-child-info '())
+(define greg-expect-list '())
 
 ;
 ; Public functions to access some counters
@@ -155,7 +159,7 @@
 (define-public (greg-toolname) greg-tool-name)
 
 (define (insert list elem)
-  (if (eq? list ())
+  (if (eq? list '())
     (cons elem list)
     (if (string<? elem (car list))
       (cons elem list)
@@ -210,6 +214,26 @@
   )
 )
 
+;;; Procedure to close log and debug ports (normally done before quitting)
+(define greg-close-logs
+  (lambda ()
+  (begin 
+    (if (output-port? greg-dbg-port)
+	(begin
+	  (close-output-port greg-dbg-port)
+	  (set! greg-dbg-port #f)
+	)
+    )
+    (if (output-port? greg-log-port)
+	(begin
+	  (close-output-port greg-log-port)
+	  (set! greg-log-port #f)
+	)
+    )
+  )
+)
+)
+
 ;
 ; Procedure to reset stuff at the end of a test run.
 ;
@@ -219,18 +243,7 @@
       (= (+ greg-total-upasses greg-total-ufailures greg-total-unresolved greg-total-unsupported greg-total-untested) 0)
     )
     (greg-end-child)
-    (if (output-port? greg-dbg-port)
-      (begin
-        (close-output-port greg-dbg-port)
-	(set! greg-dbg-port #f)
-      )
-    )
-    (if (output-port? greg-log-port)
-      (begin
-        (close-output-port greg-log-port)
-	(set! greg-log-port #f)
-      )
-    )
+    (greg-close-logs)
     (set! greg-num-tools 0)
     (set! greg-tool-name "")
     (set! greg-file-name "")
@@ -265,7 +278,7 @@
   (lambda args
     (do
       ()
-      ((eq? args ()))
+      ((eq? args '()))
       (begin
 	(display (car args))
 	(if (output-port? greg-log-port)
@@ -286,15 +299,16 @@
       (if (output-port? greg-dbg-port)
 	(do
 	  ()
-	  ((eq? args ()))
+	  ((eq? args '()))
 	  (begin
+	    (display (car args))
 	    (display (car args) greg-dbg-port)
 	    (set! args (cdr args))
 	  )
 	)
 	(do
 	  ()
-	  ((eq? args ()))
+	  ((eq? args '()))
 	  (begin
 	    (display (car args))
 	    (set! args (cdr args))
@@ -313,7 +327,7 @@
     (if (>= greg-verbose level)
       (do
 	()
-	((eq? args ()))
+	((eq? args '()))
 	(begin
 	  (display (car args))
 	  (if (output-port? greg-log-port)
@@ -391,7 +405,7 @@
 	    (eqv? (stat:type (stat name)) 'directory))
     (let
       (
-	(dir ())
+	(dir '())
 	(dirp (opendir name))
       )
       (begin
@@ -419,12 +433,12 @@
 	    (greg-log "\nThe directory '")
 	    (greg-log name)
 	    (greg-log "' does not contain any suitable tool directories!\n\n")
-	    ()
+	    '()
 	  )
 	  (if (> (length greg-tools) 0)
 	    (let
 	      (
-		(tmpdir ())
+		(tmpdir '())
 	      )
 	      (begin
 		(for-each
@@ -447,7 +461,7 @@
       (greg-log "\nThis (")
       (greg-log name)
       (greg-log ") is not the name of an accessible directory!\n\n")
-      ()
+      '()
     )
   )
 )
@@ -461,7 +475,7 @@
 	    (eqv? (stat:type (stat name)) 'directory))
     (let
       (
-	(dir ())
+	(dir '())
 	(dirp (opendir name))
       )
       (begin
@@ -496,12 +510,12 @@
 	    (greg-log "\nThe directory '")
 	    (greg-log name)
 	    (greg-log "' does not contain any suitable scripts!\n\n")
-	    ()
+	    '()
 	  )
 	  (if (> (length greg-files) 0)
 	    (let
 	      (
-		(tmpdir ())
+		(tmpdir '())
 	      )
 	      (begin
 		(for-each
@@ -530,7 +544,7 @@
       (greg-log "\nThis (")
       (greg-log name)
       (greg-log ") is not the name of an accessible directory!\n\n")
-      ()
+      '()
     )
   )
 )
@@ -564,7 +578,7 @@
 		(greg-log "ERROR: " name " - Exception in " path ": " key "\n")
 		(set! ok-to-continue #f)
 		(if (eqv? (car key) 'quit)
-		  (quit)
+		  (begin (greg-close-logs) (quit))
 		)
 	      )
 	    )
@@ -574,7 +588,7 @@
 	(if ok-to-continue
 	  (do
 	    ((file-list (greg-list-files-in-directory name) (cdr file-list)))
-	    ((eq? file-list ()) (greg-end-tool))
+	    ((eq? file-list '()) (greg-end-tool))
 	    (begin
 	      (set! greg-file-name (car file-list))
 	      (greg-vlog 2 "Running " greg-file-name " ...\n")
@@ -591,7 +605,7 @@
 		    (greg-log greg-tool-name " - " greg-file-name)
 		    (greg-log " - Exception: " key "\n")
 		    (if (eqv? (car key) 'quit)
-		      (quit)
+		      (begin (greg-close-logs) (quit))
 		    )
 		  )
 		)
@@ -616,7 +630,7 @@
 		(set! greg-total-unresolved (+ greg-total-unresolved 1))
 		(greg-log "ERROR: " name " - Exception in " path ": " key "\n")
 		(if (eqv? (car key) 'quit)
-		  (quit)
+		  (begin (greg-close-logs) (quit))
 		)
 	      )
 	    )
@@ -716,7 +730,7 @@
 		  (set! greg-total-unresolved (+ greg-total-unresolved 1))
 		  (greg-log "UNRESOLVED: " greg-case-name "\n")
 		  (if (eqv? (car key) 'quit)
-		    (quit)
+		    (begin (greg-close-logs) (quit))
 		  )
 		)
 	      )
@@ -813,7 +827,7 @@
 		(greg-log "ERROR: Exception in " path ": " key "\n")
 		(set! ok-to-continue #f)
 		(if (eqv? (car key) 'quit)
-		  (quit)
+		  (begin (greg-close-logs) (quit))
 		)
 	      )
 	    )
@@ -821,14 +835,14 @@
 	)
 
 	(if ok-to-continue
-	  (if (eq? greg-paths ())
+	  (if (eq? greg-paths '())
 	    ;
 	    ; No paths specified - so we must be testing all the tool
 	    ; directories in our default directory
 	    ;
 	    (do
 	      ((dir-list (greg-list-directories home) (cdr dir-list)))
-	      ((eq? dir-list ()) (greg-summary))
+	      ((eq? dir-list '()) (greg-summary))
 	      (begin
 		(chdir home)
 		(greg-do-test (car dir-list))
@@ -844,7 +858,7 @@
 	      (chdir greg-old-home)
 	      (do
 		((file-list greg-paths (cdr file-list)))
-		((eq? file-list ()) (begin (greg-end-tool) (greg-summary)))
+		((eq? file-list '()) (begin (greg-end-tool) (greg-summary)))
 		(begin
 		  (set! greg-file-name (car file-list))
 		  (greg-vlog 2 "Running " greg-file-name " ...\n")
@@ -861,7 +875,7 @@
 			(greg-log greg-tool-name " - " greg-file-name)
 			(greg-log " - Exception: " key "\n")
 			(if (eqv? (car key) 'quit)
-			  (quit)
+			  (begin (greg-close-logs) (quit))
 			)
 		      )
 		    )
@@ -887,7 +901,7 @@
 		(set! greg-total-unresolved (+ greg-total-unresolved 1))
 		(greg-log "ERROR: Exception in " path ": " key "\n")
 		(if (eqv? (car key) 'quit)
-		  (quit)
+		  (begin (greg-close-logs) (quit))
 		)
 	      )
 	    )
@@ -1038,7 +1052,7 @@
 	(if (> (length greg-child-info) 2)
 	  (waitpid (caddr greg-child-info))
 	)
-	(set! greg-child-info ())
+	(set! greg-child-info '())
       )
     )
   )
@@ -1110,7 +1124,7 @@
 	(output-port? (cadr greg-child-info)))
       (do
 	()
-	((eq? args ()))
+	((eq? args '()))
 	(begin
 	  (display (car args) (cadr greg-child-info))
 	  (set! args (cdr args))
@@ -1142,3 +1156,4 @@
 (defmacro-public greg-expect-fail (assertion body)
   `(greg-testcase ,assertion #f (lambda () ,body))
 )
+
