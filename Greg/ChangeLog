@@ -1,3 +1,8 @@
+2004-07-10  iAndreas Vogele <voegelas@gmx.net>
+
+	* Library/greg.scm.in: Use let raqther than define if not at outer
+	scope.
+
 2004-02-05 13:07  Alexander Malmberg <alexander@malmberg.org>
 
 	* Library/Makefile.in: Export SED.
