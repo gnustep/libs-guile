@@ -1,7 +1,7 @@
 			     -*- text -*-
 		    Guide to the ScriptKit library
 
-	       Time-stamp: <99/02/28 01:51:57 masata-y>
+	       Time-stamp: <99/03/25 23:31:13 masata-y>
 
 		Original Japanese version written by
                             Masatake YAMATO
@@ -10,6 +10,13 @@
 		       Translated to English by
 			  Yasuhiro SHIRASAKI
 		     <yasuhiro@awa.tohoku.ac.jp>
+		      (Section 1, 2, 3 and 4.1)
+
+				 and
+
+                            Masatake YAMATO
+		    <masata-y@is.aist-nara.ac.jp>
+		   (Section 4.2, 4.3, 4.4 and 4.5)
 
 
 1. What's "ScriptKit"?
@@ -103,4 +110,860 @@ as follows:
 
 As a quick test of functionality, run "run_test.sh" in the ScriptKit/Library
 directory.
+
+
+4. ScriptKit Tutorial
+=====================
+
+First we'll introduce the "Hello world" program with the ScriptKit and
+explain how to connect GNUstep variables with GUILE variables with the
+program.
+
+The section 4.3 "Expression of GUILE variables in GNUstep environment"
+describes usage of GuileSCM classes in the ScriptKit. These classes makes
+handling of SCM type sit easy.
+
+The section 4.4 "Expression of GUILE procedures in GNUstep environment"
+describes GuileProcedure and GuileInvocation. GuileProcedure is sub class
+of GuileSCM and has a GUILE procedures as its limited SCM type.
+GuileInvocation is a class to handle sets of GUILE procedure and its
+parameters. It is just like a NSInvocation, which memories Object, its
+methods and parameters.
+
+The section 4.5 "Exception handling" describes GNUstep exceptions and
+GUILE exceptions handling. The ScriptKit unifies these exception handling.
+
+The section 4.5 "Reserved keywords for scripting" describes special
+keywords for GUILE scripts evaluated by GNUstep programs.
+
+4.1. Hello world
+----------------
+
+To evaluate guile scripts with ScriptKit, following 4 steps are needed
+basically.
+
+ 1. Initialize the library.
+ 2. Generate interpreter object.
+ 3. Generate script object.
+ 4. Evaluate script object with interpreter object.
+
+The another method is described in section 4.4.
+
+The following program (hello.m) prints out "Hello world" and shows how
+to take basic 4 steps.
+
+------------------------------------------------------------<hello.m>
+   0: /* hello.m */
+   1: #include <ScriptKit/Guile.h>
+   2: #include <Foundation/NSAutoreleasePool.h>
+   3: 
+   4: void test_main (int orig_argc, char ** orig_argv);
+   5: void func (GuileInterpreter * interpreter);
+   6: 
+   7: int
+   8: main (int argc, char ** argv)
+   9: {
+  10:   gh_enter(argc, argv, test_main);
+  11:   return 0;
+  12: } 
+  13: 
+  14: void
+  15: test_main (int orig_argc, char ** orig_argv)
+  16: {
+  17:   NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+  18:   [GuileInterpreter initializeInterpreter];
+  19:   func ([[[GuileInterpreter alloc] init] autorelease]);
+  20:   [pool release], pool       = nil;
+  21: }
+  22: 
+  23: void
+  24: func (GuileInterpreter * interpreter)
+  25: {
+  26:   GuileScript * script = [[GuileScript alloc] init];
+  27:   [script setDelegate: @"(display \"Hello, world\\n\")"];
+  28:   [interpreter executeScript: script];
+  29:   [script release], script = nil;
+  30: }
+------------------------------------------------------------<hello.m>
+
+4.1.1 Program description
+
+  1: #include <ScriptKit/Guile.h>
+
+Including all the ScriptKit classes interface declarations. Following
+list shows these classes:
+
+  * GuileSCM
+  * GuileC
+  * GuileProcedure
+  * GuileInterpreter
+  * GuileInvocation
+  * GuileScript
+
+hello.m uses GuileInterpreter and GuileScript classes.
+
+  7: int
+  8: main (int argc, char ** argv)
+  9: {
+ 10:   gh_enter(argc, argv, test_main);
+ 11:   return 0;
+ 12: }  
+
+See the guile's info about gh_enter() function.
+
+ 17:   NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+ ...
+ 20:   [pool release], pool        = nil;
+
+See the OpenStep reference books about NSAutoreleasePool. All the GUILE
+and GNUstep program may need these steps. The part peculiar to ScriptKit
+begins after 18 lines.
+
+ 18:   [GuileInterpreter initializeInterpreter];
+
+This sentence initializes GuileInterpreter class (1). All the programs
+using ScriptKit need to initialize this class before calling any ScriptKit
+classes.
+
+ 19:   func ([[[GuileInterpreter alloc] init] autorelease]);
+
+Here we make an instance of GuileInterpreter and pass it to the func(2).
+These two steps are preparation for evaluating GUILE scripts with ScriptKit.
+
+ 23: void
+ 24: func (GuileInterpreter * interpreter)
+ 25: {
+ 26:   GuileScript * script = [[GuileScript alloc] init];
+ 27:   [script setDelegate: @"(display \"Hello, world\\n\")"];
+ 28:   [interpreter executeScript: script];
+ 29:   [script release], script = nil;
+ 30: }
+
+Here just evaluating the script in the func.
+
+ 26:   GuileScript * script = [[GuileScript alloc] init];
+ 27:   [script setDelegate: @"(display \"Hello, world\\n\")"];
+
+Here, we make GuileScript instance and set GUILE script with -setDelegate:
+method(3). The GUILE script is:
+
+  (display "Hello, world\n")
+
+ 28:   [interpreter executeScript: script];
+
+We send the script object to the interpreter object (-executeScript:)
+and evaluate it(4).
+
+4.1.2. compiling
+................
+
+Use GNUmakefile and add -lScriptKit and required libraries (-lgstep_guile
+and -lguile) to the ADDITIONAL_TOOL_LIBS.
+
+  1: include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+  2: 
+  3: TEST_TOOL_NAME=hello
+  4: hello_OBJC_FILES=hello.m
+  5: 
+  6: ADDITIONAL_TOOL_LIBS += -lScriptKit -lgstep_guile -lguile
+  7: include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/test-tool.make
+
+NOTE: The libraries required by guile depends on your environment.
+Check what are required with:
+
+  % guile-config link
+
+Type "make" (or gmake).
+
+4.1.3. Just say hello
+.....................
+
+Just say hello and you will get:
+
+  % ./hello
+  hello, world
+
+
+4.2. Correspondence of GNUstep variables with GUILE variables
+--------------------------------------------------------------
+
+ In this section, we describe the way to bind GNUstep variables to
+GUILE variables in scripts. In 4.2.1 "Outline", we'll describe meaning
+of correspondence of variables. In 4.2.2, "helloX.m, extended version
+of hello.m", using a sample program helloX.m we'll describe the way to
+bind GNUstep variables to GUILE variables. In 4.2.3. "Without
+variables correspondence", we'll show a program that has same function
+of hello.m but it doesn't use variable correspondence feature of
+ScriptKit. You can compare these two programs. and you'll find the
+program is more complex than hello.m.
+
+4.2.1. Outline
+..............
+
+ With ScriptKit, you can pass variables in GNUstep program to GUILE
+scripts and bound them to GUILE variables in the scripts when
+evaluating the scripts.
+
+ For example:
+
+ (display "hello world")
+
+ If you want to change this script to print other string that is
+generated in your GNUstep program than "hello world". In following
+pseudo program shows the way to do so. output_str is string you want
+to print.
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ GuileInterpreter * interpreter;
+ GuileScript * script;
+ NSString * output_str;
+
+ ... /* Generating output_str here */
+
+ [script setDelegate: @"(display output_str)"];
+ [interpreter executeScript: script];
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ This is only a "pseudo" program in aspect that its programmer
+confuses the name space of GNUstep environment and the name space of
+Guile script. It is ideal if you can write like above. But
+`output_str' typed to NSString is an variable in GNUstep
+environment. And `output_str' passed to `display' in the script is an
+variable in guile. They have same name but different variable.
+
+ Using ScriptKit you can bind the name space of GNUstep environment
+and the name space of guile script through an instance of NSDictionary
+(name space mediator).  And you can pass a GNUstep variables to a
+guile script.
+
+4.2.2. helloX.m, extended version of hello.m
+............................................
+
+ To binding variables, you have to split the target script into two
+parts. One is the variables bound to variables in GNUstep environment
+(volatile part).  The other is the variables nothing to do with
+variables in GNUstep environment(constant part).
+
+ Think again the last example:
+
+ (display output_str)
+
+ We'll split this script into the two parts.
+
+ The one is `output_str'.
+ The other is (display ???).
+
+ (display ???) is constant part.
+ `output_str' should be bound to a variable defined in GNUstep
+ environment. So it is volatile part.
+
+ After splitting, you should create a name binding dictionary.  Put the
+name of the variable bound to variable in GNUstep environment as a
+key. And put the corresponding variable in GNUstep environment as its
+value. For example, @"output_str" is a key. output_str defined in
+GNUstep environment is its value.
+
+ It is ready to evaluate. When the guile interpreter evaluate a
+script, all variable registered to the dictionary as keys are
+automatically replaced with values in the dictionary.  For example,
+the `output_str' in the script is automatically replaced with
+`output_str' defined in GNUstep environment.
+
+ Here is a sample program, helloX.m.  In the program, a guile
+script is used to print a string that is generated in GNUstep
+environment. helloX.m prints "hello, <UserName>". The string, 
+<UserName> is generated in GNUstep environment.
+All functions without `func' in helloX.m are same of hello.m.
+So we shows only new `func' here.
+
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   0: /* helloX.m */
+   1: void
+   2: func (GuileInterpreter * interpreter)
+   3: {
+   4:   NSMutableDictionary * name_space = [[NSMutableDictionary alloc] init];
+   5:   GuileScript * script = [[GuileScript alloc] init];
+   6:   NSString * hello_user;
+   7: 
+   8:   hello_user = [@"hello, " stringByAppendingString: NSUserName()];
+   9:   hello_user = [hello_user stringByAppendingString: @"\n"];
+  10:   [name_space setObject: hello_user forKey: @"STRING"];
+  11:   [script setUserDictionary: name_space];
+  12: 
+  13:   [script setDelegate: @"(display STRING)"];
+  14:   
+  15:   [interpreter executeScript: script];
+  16: 
+  17:   [script release], script 	   = nil;
+  18:   [name_space release], name_space = nil;
+  19: }
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  1: #include <Foundation/NSPathUtilities.h>
+  ...
+  8:   hello_user = [@"hello, " stringByAppendingString: NSUserName()];
+
+Include NSPathUtilities.h to use a function, NSUserName.
+You can get the user name by this function.
+
+   4:   NSMutableDictionary * name_space = [[NSMutableDictionary alloc] init];
+
+Create name_space, an instance of NSMutableDictionary that acts as a
+mediator between the name space of GNUstep environment and the name
+space guile script. The variable in a script to be evaluated is replaced
+with the value registered in name_space if the key associated with the value
+has same name of the variable.
+
+   8:   hello_user = [@"hello, " stringByAppendingString: NSUserName()];
+   9:   hello_user = [hello_user stringByAppendingString: @"\n"];
+
+Create a string to print. hello_user points this string.
+Get the name of user with NSUserName() and append it to @"hello, ".
+
+   10:   [name_space setObject: hello_user forKey: @"STRING"];
+
+ Register hello_user to name_space as a value. It is associated with a 
+key @"STRING". You can refer the value of hello_user from a script through
+the variable named STRING in the script.
+
+   11:   [script setUserDictionary: name_space]; 
+
+ Set name_space to script as a mediator between the name space
+ of GNUstep environment and the name space guile script. 
+
+   13:   [script setDelegate: @"(display STRING)"];
+
+ Set script. (display ???) is nothing to do with GNUstep environment.
+
+  (display STRING)
+
+ Only STRING is replaced with hello_user at evaluating time.  All
+objects passed to a script are invoked their -scmValue method
+inherited from NSObject. To tell exactly, the variables in the script
+are replaced with the result of -scmValue. For example, [NSString -
+scmValue] returns simple guile string. So in the above code, STRING is
+replaced with not the instance of NSString but a guile string that is
+wrapped in the instance of NSString.
+
+  15:   [interpreter executeScript: script];
+
+Evaluate the script.
+
+  17:   [script release], script 	   = nil;
+  18:   [name_space release], name_space = nil;
+
+Release objects.
+
+4.2.3. Without correspondence
+.............................
+
+ You can write a program that has same function of hel-lox.m without
+ScriptKit's variables bounding feature. In fact, next sample program,
+helloY.m has function of helloX.m but in helloY.m we don't use 
+ScriptKit's variables bounding feature. The simplest way to print a 
+string generated in GNUstep environment from a guile script is
+generating a script with appending strings in the GNUstep environment.
+To append strings, you can use [NSString - stringByAppendingString:].
+
+ But with the way, referred object types are limited to NSString only.
+ScriptKit's variables bounding feature makes it possible to refer any
+type of GNUstep objects from scripts. It is not limited to NSString.
+
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   0: /* helloY.m */
+   1: #include <Foundation/NSPathUtilities.h>
+   2: 
+   3: void
+   4: func (GuileInterpreter * interpreter)
+   5: {
+   6:   GuileScript * script = [[GuileScript alloc] init];
+   7:   NSString * str;
+   8: 
+   9:   str = [@"hello, " stringByAppendingString: NSUserName()];
+  10:   str = [str stringByAppendingString: @"\n"];
+  11:   str = [@"(display \"" stringByAppendingString: str];
+  12:   str = [str stringByAppendingString: @"\")"];
+  13:   [script setDelegate: str];
+  14:   
+  15:   [interpreter executeScript: script];
+  16: 
+  17:   [script release], script 	   = nil;
+  18: }
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+There is one more good point. ScriptKit's variables bounding feature
+splits the script into volatile and constant parts. You can change
+the name space mediator bound to volatile part and constant parts
+separately.
+
+ Here is a example that shows usefulness of script separation.  You
+can evaluate a same script with different name space mediators again
+and again.  In opposite, you can evaluate many scripts with single
+name space mediator again and again.
+
+This means the ScriptKit raises re-usability of scripts constant part
+and name space mediators.  If you create a script as single string
+like helloY.m, you can not use the script again in similar situation
+that the script is needed. You have to re-generate scripts for each
+situation. Even if the re-generated script is very similar with the
+original script.
+
+
+4.3. Expression of GUILE variables in GNUstep environment
+----------------------------------------------------------
+
+In this section we show usage of GuileSCM class.
+
+The guile interpreter is written in C language. In the interpreter
+inside all scheme objects are represented in a universal type, SCM.
+GuileSCM wraps this SCM type variable. You can manage SCM type
+variable
+
+GuileSCM helps you to  manage memory associated with SCM type
+variables. You can manage them with methods of
+NSObject(-retain/-release/-autorelease). You don't have to call
+guile's memory management functions explictly.
+
+ We assume there are two cases you want to handle SCM type variable
+ in your GNUstep program.
+
+ 1. If you need the returned value of a script evaluation.
+    About this topic, read 4.3.1. "Getting the result of evaluation".
+
+ 2. If you need to refer to SCM variable from a script.
+    About this topic, read 4.3.2. "Passing SCM variables to a script".
+
+
+4.3.1. Getting the result of evaluation
+.......................................
+If you need not only side effects of scripts evaluation but also the
+result of scripts evaluation, the way to receive the result on GNUstep
+side is needed. In 4.1 and 4.2, we've showed the way to evaluate a
+script in GNUstep environment. In this section, we showed the way
+ to get the result of scripts evaluation.
+
+ [GuileInterpreter -executeScript:] returns an instance GuileSCM 
+as the result of evaluation. In 4.1. and 4.2. we ignored returned
+value.
+
+  GuileSCM * result = [GuileInterpreter -executeScript: foo];
+
+ In above example, the result of evaluation is put into `result'.
+ With methods of GuileSCM, you can use or inspect the result.
+ See GuileSCM.h about details. 
+
+ In the next sample program(guilescm.m), we evaluate a script
+adding two numbers with GuileInterpreter. we get an instance
+of GuileSCM that wraps the result of adding from the
+GuileInterpreter. To un-wrap the instance and to get the result
+we use -intValue method and print the result.
+
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   0: /* guilescm.m */
+   1: void
+   2: func (GuileInterpreter * interpreter)
+   3: {
+   4:   GuileScript * script = [[GuileScript alloc] init];
+   5:   GuileSCM * result;
+   6: 
+   7:   [script setDelegate: @"(+ 3 4)"];
+   8:   result = [interpreter executeScript: script];
+   9: 
+  10:   fprintf(stderr, "%d\n", [result intValue]);
+  11:   [script release], script 	   = nil;
+  12: }
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   7:   [script setDelegate: @"(+ 3 4)"];
+
+   Set (+ 3 4) as a script, .
+
+   8:   result = [interpreter executeScript: script];
+   
+   Evaluate (+ 3 4). The method -executeScript: returns an instance of
+GuileSCM as a result. The result is put to `result'.
+
+  10:   fprintf(stderr, "%d\n", [result intValue]);
+
+  To Get the result as a int from `result', use -intValue. 
+  And print the result.
+
+4.3.2. How to pass SCM values to a script
+.........................................
+
+ Using GuileSCM, you can refer variety of types variable from scripts.
+
+ As described in 4.2, using ScriptKit you can refer a variable in 
+GNUstep environment from a Guile Script  through a NSDictionary 
+instance. 
+
+ However there is a problem. You can refer only variables that can be 
+element of NSDictionary. In the other words, the variable to be referred
+must be an instance of a subclass of NSObject. A GNUstep program is written
+in Objective-C that is upper compatible with C language. The C language 
+primitive types like int and double cannot be members of NSDictionary.
+So you cannot refer these C primitive typed variables from scripts.
+It is too strict.
+
+ With GuileSCM class declared in GuileSCM.h you can register a C
+primitive typed variable to NSDictionary. So you can refer them. You
+can refer a C primitive typed variable directly. You don't have to
+un-wrap the instance of GuileSCM to refer the variable. ScriptKit
+automatically un-wraps the instance of GuileSCM when you refer the
+variable from the script.
+
+ e.g.
+ Creating a instance of GuileSCM from an int value:
+ GuileSCM * s = [GuileSCM scmWithInt: 0];
+
+ When you refer s from a script, you will get 0 that is wrapped in s.
+ You will not get s itself.
+
+ In the opposite, Creating a instance of NSObject:
+ NSObject * x = [NSObject new];
+
+ When you refer x from a script, you will get x itself.
+
+ ScriptKit invokes -scmValue all members of NSDictionary to pass
+members to a script. Normally, the -scmValue method of members 
+returns the members themselves. But some classes like GuileSCM 
+are overriding this method to change its behavior. You should
+check GuileSCM categories declared in GuileSCM.h to know what 
+classes override this method.
+
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   1: void
+   2: func (GuileInterpreter * interpreter)
+   3: {
+   4:   NSMutableDictionary * name_space = [[NSMutableDictionary alloc] init];
+   5:   GuileScript * script = [[GuileScript alloc] init];
+   6:   NSString * str;
+   7:   GuileSCM *x, *y;
+   8:   
+   9:   x = [GuileSCM scmWithLong: 3];
+  10:   y = [GuileSCM scmWithLong: 4];
+  11:   [name_space setObject: x forKey: @"a"];
+  12:   [name_space setObject: y forKey: @"b"];
+  13:   [script setUserDictionary: name_space];
+  14: 
+  15:   [script setDelegate: @"(display (+ a b)) (newline)"];
+  16:   
+  17:   [interpreter executeScript: script];
+  18: 
+  19:   [script release], script 	   = nil;
+  20:   [name_space release], name_space = nil;
+  21: }
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   9:   x = [GuileSCM scmWithLong: 3];
+  10:   y = [GuileSCM scmWithLong: 4];
+
+  Create GuileSCM instances that wraps integer 3, 4 as a long that is a 
+  C primitive type.
+
+  11:   [name_space setObject: x forKey: @"a"];
+  12:   [name_space setObject: y forKey: @"b"];
+
+  Register created GuileSCM instances to name_space as @"a" and @"b". 
+
+  15:   [script setDelegate: @"(display (+ a b)) (newline)"];
+
+  Set a script that adds two numbers and prints the adding.
+  `a' and `b' are not substituted with x and y that are instance of 
+  GuileSCM. But they are substituted with 3, 4 that are wrapped in
+  x and y. ScriptKit automatically un-wraps x and y.
+
+  17:   [interpreter executeScript: script];
+
+  The result 7 is printed.
+
+
+4.4. Expression of GUILE procedures in GNUstep environment
+----------------------------------------------------------
+
+In this section, we show usage of GuileProcedure class(GuileProcedure) and
+GuileInvocation class (GuileInvocation). These classes are provide you another
+way to pass GNUstep variables to Guile procedure. 
+
+The difference between the classes and GuileInterpreter is that
+GuileProcedure and GuileInvocation can only evaluate a guile procedure
+with its arguments. On the other side GuileInterpreter can evaluate any
+kind of guile scripts including a procedure with its arguments. So with
+GuileInterpreter you can do all what you can do with GuileProcedure and 
+GuileInvocation.
+
+ However, if you set kind of scripts to evaluate limit to a procedure,
+GuileProcedure and GuileInvocation make it easy to evaluate the script.
+
+ GuileProcedure wraps only a SCM variable that points to a procedure.
+GuileInvocation wraps a SCM variable that points to a procedure and
+arguments for the procedure.
+
+4.4.1. GuileProcedure
+.....................
+  
+  GuileProcedure is sub class of GuileSCM and has a GUILE procedures
+as its limited SCM type. GuileInterpreter doesn't returns a GuileSCM 
+instance but a GuileProcedure instance if the result of evaluation
+is a procedure. Using [GuileProcedure -procWithExpression:] method,
+you can create an instance of GuileProcedure from a procedure 
+definition expressed in a string.
+
+ To pass arguments to an instance of GuileProcedure and evolute them,
+use [GuileProcedure -callWithObjects:]. [GuileProcedure
+-callWithObjects:] takes variable arguments and apply them to the
+procedure that the instance contains. Don't forget to put a constant
+GUILE_EOA at the end of [GuileProcedure -callWithObjects:] method
+arguments list. The Nth argument in the arguments list of -callWithObjects: 
+is bound to the procedure as Nth argument  of the procedure.
+
+ Here is a sample program(guile_proc.m). This program shows the
+way to pass argument to a guile procedure using GuileProcedure.
+
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   0: /* guile_proc.m */
+   1: void
+   2: func (GuileInterpreter * interpreter)
+   3: {
+   4:   NSString * lambda    = @"(lambda (x y) (+ x y))";
+   5:   GuileProcedure *proc = [GuileProcedure procWithExpression: lambda];
+   6:   GuileSCM * result;
+   7:   
+   8:   result = [proc callWithObjects: 
+   9: 		   [GuileSCM scmWithInt: 3], [GuileSCM scmWithInt: 4], GUILE_EOA];
+  10:   fprintf(stderr, "%d\n", [result intValue]);
+  11: }
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   4:   NSString * lambda    = @"(lambda (x y) (+ x y))";
+
+  This is a definition of procedure that sums up x and y.
+
+   5:   GuileProcedure *proc = [GuileProcedure procWithExpression: lambda];
+   
+   Create an instance of GuileProcedure from the procedure definition.
+
+   8:   result = [proc callWithObjects: 
+   9: 		   [GuileSCM scmWithInt: 3], [GuileSCM scmWithInt: 4], GUILE_EOA];
+
+   Apply 3 and 4 to the instance. The result of evaluation is returned 
+   to `result'.
+
+  10:   fprintf(stderr, "%d\n", [result intValue]);
+
+  Print 7, the result of evaluation. To get an integer from the
+  `result', use -intValue.
+  
+4.4.2. GuileInvocation
+......................
+
+GuileInvocation looks like NSInvocation. GuileInvocation instance can
+hold a GuileProcedure instance, arguments for it and result of
+applying.
+
+  When you passes arguments to a GuileProcedure instance, applying 
+those arguments to the procedure that the instance holds is happened
+at same time. With GuileInvocation you can delay timing of applying 
+from passing arguments to the instance. To pass arguments use 
+[GuileInvocation -setArgument:atIndex:]. To apply those arguments
+to procedure use [GuileInvocation -invoke].
+
+The result of applying is held in the GuileInvocation instance itself.
+With GuileProcedure or GuileInterpreter, you need another variable to
+hold the result of script evaluation. However with GuileInvocation
+you don't need such a variable to hold the result.
+
+ Here is a program(guile_inv.m) that shows the way to apply arguments
+to a procedure with using GuileInvocation.
+
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   0: /* guile_inv.m */
+   1: void
+   2: func (GuileInterpreter * interpreter)
+   3: {
+   4:   GuileInvocation * inv;
+   5:   GuileProcedure *proc = [GuileProcedure procWithExpression: 
+   6: 					   @"(lambda (x y) (+ x y))"];
+   7:   GuileSCM * result;
+   8:   
+   9:   inv =  [GuileInvocation invocationWithArgc: 2];
+  10:   [inv setProcedure: proc];
+  11:   [inv setArgument: [GuileSCM scmWithInt: 3] atIndex: 1];
+  12:   [inv setArgument: [GuileSCM scmWithInt: 4] atIndex: 2];
+  13:   [inv invoke];
+  14:   result = [inv returnValue];
+  15:   fprintf(stderr, "%d\n", [result intValue]);
+  16: }
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   5:   GuileProcedure *proc = [GuileProcedure procWithExpression: 
+   6: 					   @"(lambda (x y) (+ x y))"];
+
+   Create a GuileProcedure instance from a definition of procedure
+   that sums up x and y.
+
+   9:   inv =  [GuileInvocation invocationWithArgc: 2];
+
+   Create an instance of GuileInvocation that can holds two arguments.
+
+  10:   [inv setProcedure: proc];
+
+  Set a procedure to the instance of GuileInvocation.
+
+  11:   [inv setArgument: [GuileSCM scmWithInt: 3] atIndex: 1];
+  12:   [inv setArgument: [GuileSCM scmWithInt: 4] atIndex: 2];
+
+  Set 3 as the first argument of the procedure.
+  Set 4 as the second argument of the procedure.
+  (At index 0, procedure is set.)
+
+  13:   [inv invoke];
+
+  Apply the arguments to the procedure.
+  In internal of -invoke following script is evaluated.
+
+  ((lambda (x y) (+ x y)) 3 4)
+
+  14:   result = [inv returnValue];
+
+  Pick up the result of applying by [GuileInvocation -returnValue].
+  Note: The held result is cleaned up when the -invoke method is
+  called again.
+
+  15:   fprintf(stderr, "%d\n", [result intValue]);
+
+  Get the result of applying and print it.
+
+
+4.5. Exception Handling
+-----------------------
+
+Guile and GNUstep, each of them have their own exception handling 
+mechanisms. Guile has catch-throw macro. GNUstep has NSExcetpion
+class. ScriptKit converts catch-throw exception to NSExcetpion.
+So you can treat any kind of exception from a script as NSException.
+
+During evaluating a script with ScriptKit, both catch-throw exception 
+and NSException are possible to be raised. A catch-throw exception and
+NSException are raised in following sample program(exception.m).
+In the program both of them are caught by
+NS_DURING-NS_HANDLER-NS_ENDHANDLER macro.
+
+NOTE: In exception.m, we use [GuileInterpreter -eval:] instead of
+[GuileInterpreter -executeScript:] to evaluate a script.
+To use -eval: is easier than -executeScript: when the script
+is constant. "constant" means the script refers to no GNUstep
+
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++   
+   0: /* exception.m */
+   1: #include <Foundation/NSException.h>
+   2: 
+   3: void
+   4: func (GuileInterpreter * interpreter)
+   5: {
+   6:   NSString * script1, * script2;
+   7:   script1 = @"(define ARRAY ([] 'NSArray array)) ([] ARRAY objectAtIndex: 0)";
+   8:   script2 = @"(define LIST (list 1 2)) (list-ref LIST 2)";
+   9:   
+  10:   NS_DURING
+  11:     {
+  12:       [interpreter eval: script1];
+  13:     }
+  14:   NS_HANDLER
+  15:     {
+  16:       printf("The 1st NSException is caught.\n");
+  17:       printf("Exception Name: %s\n", [[localException name] cString]);
+  18:       printf("Reason: %s\n",  [[localException reason] cString]);
+  19:     }
+  20:   NS_ENDHANDLER;
+  21: 
+  22:   NS_DURING
+  23:     {
+  24:       [interpreter eval: script2];
+  25:     }
+  26:   NS_HANDLER
+  27:     {
+  28:       printf("The 2nd NSException is caught.\n");
+  29:       printf("Exception Name: %s\n", [[localException name] cString]);
+  30:       printf("Reason: %s\n",  [[localException reason] cString]);
+  31:     }
+  32:   NS_ENDHANDLER;
+  33:   
+  34: }
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   7:   script1 = @"(define ARRAY ([] 'NSArray array)) ([] ARRAY objectAtIndex: 0)";
+
+   Create an empty NSArray instance and refers the first element of
+   the instance. NSRangeException will be raised from this script 
+   because the instance is empty.
+
+  10:   NS_DURING
+  11:     {
+  12:       [interpreter eval: script1];
+  13:     }
+
+  Evaluate the script in a NS_DURING block. An NSException will be
+  raised.
+
+  14:   NS_HANDLER
+  15:     {
+  16:       printf("The 1st NSException is caught.\n");
+  17:       printf("Exception Name: %s\n", [[localException name] cString]);
+  18:       printf("Reason: %s\n",  [[localException reason] cString]);
+  19:     }
+  20:   NS_ENDHANDLER;
+
+  Catch the NSException in a NS_HANDLER/NS_ENDHANDLER block.
+
+   8: script2 = @"(define LIST (list 1 2)) (list-ref LIST 2)";
+
+   scripts2 is a script that creates a list that consists of two number,
+   1, 2. And try to refer 3rd element. `list-ref' throws a guile
+   exception because there are only two elements in the list.
+	
+  22: NS_DURING
+  23:     {
+  24:       [interpreter eval: script2];
+  25:     }
+
+    Evaluate the script2 in a NS_DURING block.
+    An guile exception is raise and it is converted to NSException.
+
+  14:   NS_HANDLER
+  15:     {
+  16:       printf("The 1st NSException is caught.\n");
+  17:       printf("Exception Name: %s\n", [[localException name] cString]);
+  18:       printf("Reason: %s\n",  [[localException reason] cString]);
+  19:     }
+  20:   NS_ENDHANDLER;
+
+  Catch the NSException converted from the guile exception in a 
+  NS_HANDLER/NS_ENDHANDLER block.
+
+  Compile and run exception.m. Here is the result output of exception.m.
+  (New lines are inserted.)
+
+    % ./exception
+    The 1st NSException is caught.
+    Exception Name: GuileInterpreterException
+    Reason: (let* ((guile-interpreter (script-kit-lookup "guile-interpreter"))
+		   (guile-dictionary (script-kit-lookup "guile-dictionary"))
+		   (guile-update (begin 
+				  (defmacro script-kit-update-macro (name) 
+				    `(script-kit-update 
+				      (symbol->string ',name) ,name))
+				  script-kit-update-macro)))
+	      (define ARRAY ([] 'NSArray array)) 
+	      ([] ARRAY objectAtIndex: 0))
+    The 2nd NSException is caught.
+    Exception Name: GuileInterpreterException
+    Reason: (let* ((guile-interpreter (script-kit-lookup "guile-interpreter"))
+		   (guile-dictionary (script-kit-lookup "guile-dictionary"))
+		   (guile-update (begin 
+				  (defmacro script-kit-update-macro (name)
+				    `(script-kit-update (symbol->string ',name) ,name))
+				  script-kit-update-macro)))
+	      (define LIST (list 1 2)) (list-ref LIST 2))
+    %
 
