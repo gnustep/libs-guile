@@ -6,7 +6,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 # The list of subproject directories
 #
-SUBPROJECTS = Library Greg Test Documentation
+SUBPROJECTS = Library Greg Test Documentation ScriptKit
 
 -include GNUmakefile.preamble
 
@@ -15,3 +15,6 @@ SUBPROJECTS = Library Greg Test Documentation
 include $(GNUSTEP_MAKEFILES)/aggregate.make
 
 -include GNUmakefile.postamble
+
+after-distclean::
+	rm -f config.status config.log config.cache TAGS
