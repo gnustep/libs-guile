@@ -9,6 +9,7 @@
 @itemize @bullet
 @item Fixes to allow subclassing.
 @item guile-base and guile-gui moved here from testing package
+@item new procedure to list methods and types of an object.
 @end itemize
 
 @section Noteworthy changes in version @samp{1.0.0}

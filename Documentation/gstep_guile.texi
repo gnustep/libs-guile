@@ -537,6 +537,14 @@ When a pointer type result is returned by a method, you will get a
 @samp{voidp} item returned.
 
 @item
+@findex methods
+@samp{(gstep-methods obj)}
+is used to return a list of the types and names of the methods of the
+object @samp{obj}.@*
+NB. If @samp{obj} is a class, this procedure returns a list of the class
+methods, otherwise it returns the instance methods.
+
+@item
 @findex class-methods
 @samp{(gstep-class-methods name methods)}
 is used to add class (factory) methods to an existing class, where @samp{name}

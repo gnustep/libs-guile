@@ -1,3 +1,8 @@
+2001-07-27 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/gg_id.m: added gstep-methods procedure to list methods
+	and their types.
+
 2001-06-09 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/gg_NSObject.m: Cope with unicode strings (use lossyCString)
