@@ -1105,6 +1105,13 @@
   )
 )
 
+;;;;;;;;;;;;;;;;
+; Utility macros
+;;;;;;;;;;;;;;;;
+
+;
+; Send a string as input to a child process.
+;
 (define-public greg-send 
   (lambda args
     (if (and (> (length greg-child-info) 1)
@@ -1122,7 +1129,24 @@
   )
 )
 
+;
+; Require a child process to produce output matching one of the
+; regular expressions in the list.
+;
 (defmacro-public greg-recv clauses
   `(expect-strings ,@clauses)
 )
 
+;
+; Shorthand for the most common sort of testcase - the test body
+; is expected to pass.
+;
+(defmacro-public greg-pass (assertion body)
+  `(greg-testcase ,assertion #t (lambda () ,body))
+)
+;
+; And a test that is expected to fail.
+;
+(defmacro-public greg-fail (assertion body)
+  `(greg-testcase ,assertion #f (lambda () ,body))
+)
