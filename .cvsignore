@@ -1,3 +1,8 @@
 gnustep-guile.spec
 gnustep-guile-debug.spec
 guile.make
+config.h
+config.mak
+config.log
+config.cache
+config.status
