@@ -23,6 +23,9 @@
 #  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
+infodir=/usr/info
+INSTALL_DATA = install -m 644
+
 all:	info html dvi
 
 gregdoc.texi:	gregdoc
@@ -40,6 +43,9 @@ html:	gregdoc
 info:	gregdoc
 	makeinfo -D NO-TEXI2HTML -o gregdoc.info gregdoc
 
+install-info: gregdoc.info
+	install-info gregdoc.info $(infodir)/dir
+	$(INSTALL_DATA) gregdoc.info $(infodir)greg.info
 
 clean:
 	rm -f gregdoc.aux gregdoc.cp gregdoc.cps gregdoc.dvi \

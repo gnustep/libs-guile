@@ -70,7 +70,7 @@ pty_master(char* name, int len)
 
       grantpt(master);                   /* Change permission of slave.  */
       unlockpt(master);                  /* Unlock slave.        */
-      slave = ptsname(master);
+      slave = (const char*)ptsname(master);
       if (slave == 0 || strlen(slave) >= len)
 	{
 	  close(master);
@@ -81,31 +81,33 @@ pty_master(char* name, int len)
 	  strcpy(name, (char*)slave);
 	}
     }
-#else
-  const char	*groups = "pqrstuvwxyzPQRSTUVWXYZ";
-
-  master = -1;
-  if (len > 10)
+  else
+#endif
     {
-      strcpy(name, "/dev/ptyXX");
-      while (master < 0 && *groups != '\0')
-	{
-	  int	i;
+      const char	*groups = "pqrstuvwxyzPQRSTUVWXYZ";
 
-	  name[8] = *groups++;
-	  for (i = 0; i < 16; i++)
+      master = -1;
+      if (len > 10)
+        {
+	  strcpy(name, "/dev/ptyXX");
+	  while (master < 0 && *groups != '\0')
 	    {
-	      name[9] = "0123456789abcdef"[i];
-	      master = open(name, O_RDWR);
-	      if (master >= 0)
-		{
-		  name[5] = 't';
-		  break;
+	      int	i;
+
+	      name[8] = *groups++;
+	      for (i = 0; i < 16; i++)
+	        {
+		  name[9] = "0123456789abcdef"[i];
+		  master = open(name, O_RDWR);
+		  if (master >= 0)
+		    {
+		      name[5] = 't';
+		      break;
+		    }
 		}
 	    }
 	}
     }
-#endif
   return master;
 }
 
@@ -117,7 +119,7 @@ pty_slave(const char* name)
   slave = open(name, O_RDWR);
 #if	HAVE_SYS_STROPTS_H
 #if	HAVE_PTS_STREAM_MODULES
-  if (slave >= 0)
+  if (slave >= 0 && isastream(slave))
     {
       if (ioctl(slave, I_PUSH, "ptem") < 0)
 	{
