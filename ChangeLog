@@ -1,3 +1,12 @@
+2003-04-04  Adam Fedor  <fedor@gnu.org>
+
+	* Documentation/GNUmakefile: Use $(GNUSTEP_MAKEFILES) instead of
+        $(GNUSTEP_SYSTEM_ROOT)/Makefiles
+	* ScriptKit/Examples/GNUmakefile, ScriptKit/Library/GNUmakefile,
+	Tools/GNUmakefile: Idem.
+	* Library/Makefile.postamble: Use $(GNUSTEP_LIBRARIES) instead
+	of $(GNUSTEP_SYSTEM_ROOT)/Libraries.
+
 2003-04-01  David Ayers  <d.ayers@inode.at>
 
 	* Library/link_gdl2.m: Include deprecated API.

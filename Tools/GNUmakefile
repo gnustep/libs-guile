@@ -21,9 +21,9 @@ endif
 
 include Makefile.preamble
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/tool.make
+include $(GNUSTEP_MAKEFILES)/tool.make
 
 ifneq ($(HAVE_APPKIT),no)
-  include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/application.make
+  include $(GNUSTEP_MAKEFILES)/application.make
 endif
 

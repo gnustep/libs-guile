@@ -2,7 +2,7 @@
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
 # Load our own local GUILE flags, then set GUILE_MAKE_LOADED to yes in
-# order to prevent the xxx/System/Makefiles/Additional/guile.make from
+# order to prevent the $GNUSTEP_MAKEFILES/Additional/guile.make from
 # being loaded, as it defines some flags which conflict with our own,
 # defined in ../config.mak.  We should really be loading the local
 # guile.make here, but we can't do that without having ScriptKit
@@ -11,7 +11,7 @@ GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 include ../config.mak
 GUILE_MAKE_LOADED = yes
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+include $(GNUSTEP_MAKEFILES)/common.make
 
 LIBRARY_NAME = libScriptKit
 TEST_TOOL_NAME = test_skit
@@ -47,7 +47,7 @@ libScriptKit_DLL_DEF=libScriptKit.def
 
 include Makefile.preamble
 
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/library.make
-include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/test-tool.make
+include $(GNUSTEP_MAKEFILES)/library.make
+include $(GNUSTEP_MAKEFILES)/test-tool.make
 
 include Makefile.postamble
