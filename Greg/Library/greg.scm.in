@@ -74,7 +74,7 @@
     (load-extension "libgreg" "scm_init_greg")
   )
   (if (not (feature? 'greg-pty))
-    (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so"))
+    (dynamic-call "scm_init_greg" (dynamic-link "libgreg.@SOEXTENSION@"))
   )
 )
 

@@ -109,7 +109,7 @@ typedef	struct voidp_struct {
  */
 extern int gstep_scm_tc16_id;
 #define OBJC_ID_P(arg) ((SCM_TYP16(arg)) == gstep_scm_tc16_id) 
-int gstep_scm_tc16_class;
+extern int gstep_scm_tc16_class;
 #define OBJC_CLASS_P(arg) ((SCM_TYP16(arg)) == gstep_scm_tc16_class) 
 extern int gstep_scm_tc16_voidp;
 #define OBJC_VOIDP_P(arg) ((SCM_TYP16(arg)) == gstep_scm_tc16_voidp) 
