@@ -40,6 +40,10 @@
 #define DEBUG_INIT_DEALLOC(X...)	DEBUG_PRINT (GUILESCM_DEBUG_INIT_DEALLOC, X)
 #define DEBUG_MAPPER(X...)		DEBUG_PRINT (GUILESCM_DEBUG_MAPPER, X)
 
+#ifdef HAVE_SCM_GC_PROTECT_OBJECT
+#define scm_protect_object scm_gc_protect_object
+#endif
+
 static int GuileSCM_debug_flag = 0;
 static GuileSCM *GuileSCM_nil = nil;
 
@@ -316,7 +320,7 @@ static void GuileSCM_mapper_remove (SCM scm);
   
   tmpstr = gh_scm2newstr (gh_call1 (write2str, value), NULL);
   
-  ret = [[super description] stringByAppindingFormat: @" %s", tmpstr];
+  ret = [[super description] stringByAppendingFormat: @" %s", tmpstr];
 
   free (tmpstr);
   return ret;
