@@ -1,3 +1,8 @@
+Mon Dec 21 15:35:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+        * Library/Makefile.postamble: revised fix of installation of the three
+        compiled modules as supplied by <doko@cs.tu-berlin.de>
+
 Fri Dec 18 12:15:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
         * Library/Makefile.postamble: Fixed installation of the three
