@@ -197,7 +197,7 @@ gstep_link_gui()
       gstep_gui_functions();
       gstep_gui_classes();
 
-      scm_add_feature("link_gui");
+      scm_add_feature("gstep_link_gui");
 
 #ifdef  HAVE_SCM_C_RESOLVE_MODULE
       module = scm_set_current_module (module);
