@@ -1,3 +1,8 @@
+2002-01-02  Adam Fedor  <fedor@gnu.org>
+
+	* Library/GuileInterpreter.m (-generateRealScript:): Reorder data
+	arguments. (patch from awj@digitalgreen.com).
+
 2001-07-30  Adam Fedor  <fedor@gnu.org>
 
 	* Makefile.postamble: Copy headers on mingw32 instead of linking.
