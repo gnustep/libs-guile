@@ -91,15 +91,20 @@ equal_gstep_id (SCM s1, SCM s2)
 static scm_sizet 
 free_gstep_id (SCM obj)
 {
-    id	o = (id)gh_cdr(obj);
+  id	o = (id)gh_cdr(obj);
 
-    if (o != nil) {
-	NSMapRemove(knownObjects, (void*)o);
-	if ([o respondsTo: @selector(release)]) {
-	    [o release];
+  if (o != nil)
+    {
+      NSMapRemove(knownObjects, (void*)o);
+      if ([o respondsTo: @selector(release)])
+	{
+	  NSAutoreleasePool	*pool = [NSAutoreleasePool new];
+
+	  [o release];
+	  [pool release];
 	}
     }
-    return (scm_sizet)0;
+  return (scm_sizet)0;
 }
 
 static int
@@ -139,68 +144,77 @@ print_gstep_id (SCM exp, SCM port, scm_print_state *pstate)
 void
 gstep_fixup_id(SCM obj)
 {
-    id	o = (id)gh_cdr(obj);
+  id	o = (id)gh_cdr(obj);
 
-    /*
-     *	Fixup for the case where an object has been destroyed by the objc
-     *	world and we need to adjust the guile world to reflect that.
-     */
-    if (o != nil) {
-	NSMapRemove(knownObjects, (void*)o);
-	SCM_SETCDR(obj, (SCM)nil); 
+  /*
+   *	Fixup for the case where an object has been destroyed by the objc
+   *	world and we need to adjust the guile world to reflect that.
+   */
+  if (o != nil)
+    {
+      NSMapRemove(knownObjects, (void*)o);
+      SCM_SETCDR(obj, (SCM)nil); 
     }
 }
 
 SCM
 gstep_id2scm(id o, BOOL shouldRetain)
 {
-    SCM	answer;
+  SCM	answer;
 
-    /* Only ever make one copy of a nil object  */
-    if (o == nil) {
-	if (gstep_nil == 0) {
-	    gh_defer_ints();
-	    SCM_NEWCELL(answer);
-	    SCM_SETCAR(answer, gstep_scm_tc16_id); 
-	    SCM_SETCDR(answer, (SCM)o); 
-	    gstep_nil = answer;
-	    scm_permanent_object(gstep_nil); /* Don't garbage collect */
-	    gh_allow_ints();
+  /* Only ever make one copy of a nil object  */
+  if (o == nil)
+    {
+      if (gstep_nil == 0)
+	{
+	  gh_defer_ints();
+	  SCM_NEWCELL(answer);
+	  SCM_SETCAR(answer, gstep_scm_tc16_id); 
+	  SCM_SETCDR(answer, (SCM)o); 
+	  gstep_nil = answer;
+	  scm_permanent_object(gstep_nil); /* Don't garbage collect */
+	  gh_allow_ints();
 	}
-	return gstep_nil;
+      return gstep_nil;
     }
 
-    gh_defer_ints();
-    if (knownObjects == 0) {
-	knownObjects = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
-                      NSNonOwnedPointerMapValueCallBacks, 0);
-	answer = 0;
+  gh_defer_ints();
+  if (knownObjects == 0)
+    {
+      knownObjects = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
+	NSNonOwnedPointerMapValueCallBacks, 0);
+      answer = 0;
     }
-    else {
-	answer = (SCM)NSMapGet(knownObjects, (void*)o);
+  else
+    {
+      answer = (SCM)NSMapGet(knownObjects, (void*)o);
     }
-    if (answer == 0) {
-	SCM_NEWCELL(answer);
-	SCM_SETCAR(answer, gstep_scm_tc16_id); 
-	SCM_SETCDR(answer, (SCM)o); 
-	NSMapInsertKnownAbsent(knownObjects, (void*)o, (void*)answer);
-	if (shouldRetain && [o respondsTo: @selector(retain)]) {
-	    [o retain];
+  if (answer == 0)
+    {
+      SCM_NEWCELL(answer);
+      SCM_SETCAR(answer, gstep_scm_tc16_id); 
+      SCM_SETCDR(answer, (SCM)o); 
+      NSMapInsertKnownAbsent(knownObjects, (void*)o, (void*)answer);
+      if (shouldRetain && [o respondsTo: @selector(retain)])
+	{
+	  [o retain];
 	}
     }
-    gh_allow_ints();
+  gh_allow_ints();
 
-    return answer;
+  return answer;
 }
 
 id
 gstep_scm2id (SCM o)
 {
-    if (SCM_NIMP(o) && OBJC_ID_P(o)) {
-	return (id)gh_cdr(o);
+  if (SCM_NIMP(o) && OBJC_ID_P(o))
+    {
+      return (id)gh_cdr(o);
     }
-    else {
-	return nil;
+  else
+    {
+      return nil;
     }
 }
 
@@ -228,40 +242,46 @@ static char gstep_ivarnames_n[] = "gstep-ivarnames";
 static SCM 
 gstep_ivarnames_fn (SCM receiver)
 {
-    Class	class;
-    id		self = nil;
-    struct objc_ivar_list	*ivars;
-    SCM	item = SCM_EOL;
+  Class		class;
+  id		self = nil;
+  struct objc_ivar_list	*ivars;
+  SCM		item = SCM_EOL;
 
-    if (SCM_NIMP(receiver) && OBJC_ID_P(receiver)) {
-	self = (id)gh_cdr(receiver);
-	if (!self) {
-	    return receiver;	/* objc nil */
+  if (SCM_NIMP(receiver) && OBJC_ID_P(receiver))
+    {
+      self = (id)gh_cdr(receiver);
+      if (!self)
+	{
+	  return receiver;	/* objc nil */
 	}
     }
-    if (self == nil) {
-	gstep_scm_error("not an object", receiver);
+  if (self == nil)
+    {
+      gstep_scm_error("not an object", receiver);
     }
 
-    if (gstep_guile_object_is_class(self))
-	class = self;
-    else
-	class = self->class_pointer;
+  if (gstep_guile_object_is_class(self))
+    class = self;
+  else
+    class = self->class_pointer;
 
-    while (class != nil) {
-	int	i;
+  while (class != nil)
+    {
+      int	i;
 
-	ivars = class->ivars;
-	class = class->super_class;
-	if (ivars) {
-	    for (i = 0; i < ivars->ivar_count; i++) {
-		const char*	name = ivars->ivar_list[i].ivar_name;
+      ivars = class->ivars;
+      class = class->super_class;
+      if (ivars)
+	{
+	  for (i = 0; i < ivars->ivar_count; i++)
+	    {
+	      const char*	name = ivars->ivar_list[i].ivar_name;
 
-		item = scm_cons(scm_makfrom0str(name), item);
+	      item = scm_cons(scm_makfrom0str(name), item);
 	    }
 	}
     }
-    return item;
+  return item;
 }
 
 
@@ -586,11 +606,11 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 	  NS_ENDHANDLER
 	  [arp release];
 	}
-	if (selector == 0)
-	  {
-	    gstep_scm_error("no such selector", method);
-	    return SCM_BOOL_F;
-	  }
+      if (selector == 0)
+	{
+	  gstep_scm_error("no such selector", method);
+	  return SCM_BOOL_F;
+	}
     }
 
   /* Try to get the actual method to be invoked so we can get the return
@@ -738,7 +758,7 @@ static char gstep_get_nil_n[] = "gstep-get-nil";
 static SCM
 gstep_get_nil_fn()
 {
-    return gstep_id2scm(nil, NO);
+  return gstep_id2scm(nil, NO);
 }
 
 
