@@ -35,6 +35,17 @@
 #include <Foundation/NSObject.h>
 #include <Foundation/NSString.h>
 
+#if defined(BUILD_libgstep_guile_DLL) || defined(BUILD_libgg_base_DLL)
+#  define GG_EXPORT  __declspec(dllexport)
+#  define GG_DECLARE __declspec(dllexport)
+#elif defined(libgstep_guile_ISDLL) || defined(BUILD_libgg_base_ISDLL)
+#  define GG_EXPORT  extern __declspec(dllimport)
+#  define GG_DECLARE __declspec(dllimport)
+#else
+#  define GG_EXPORT extern
+#  define GG_DECLARE
+#endif
+
 /*
  *	In the declaration of `scm_setuid@guile-1.[0-2]/libguile/posix.h'
  *	`id' is used.  This is an objc key word, so to avoid a syntax error,
@@ -49,10 +60,10 @@
 /*
  *	Initialize the GUILE/Objective-C interface.
  */
-extern void gstep_init();
+GG_EXPORT void gstep_init();
 
-extern void gstep_link_base();	/* Use Foundation stuff.	*/
-extern void gstep_link_gui();	/* Use AppKit stuff.		*/
+GG_EXPORT void gstep_link_base();	/* Use Foundation stuff.	*/
+GG_EXPORT void gstep_link_gui();	/* Use AppKit stuff.		*/
 
 
 
@@ -65,23 +76,23 @@ extern void gstep_link_gui();	/* Use AppKit stuff.		*/
  *	object has already been retained and does not need to be retained
  *	for use within Guile.
  */
-extern SCM gstep_id2scm(id o, BOOL shouldRetain);
+GG_EXPORT SCM gstep_id2scm(id o, BOOL shouldRetain);
 
 /*
  *	Convert id object to nil without releasing the original.
  */
-extern void gstep_fixup_id(SCM o);
+GG_EXPORT void gstep_fixup_id(SCM o);
 
 /*
  *	Get the id from a SCM
  */
-extern id gstep_scm2id(SCM o);
+GG_EXPORT id gstep_scm2id(SCM o);
 
 /*
  *	Test whether a scheme object is an objective-c object.
  */
-extern SCM gstep_scm_id_p(SCM o);
-extern int gstep_id_p(SCM o);
+GG_EXPORT SCM gstep_scm_id_p(SCM o);
+GG_EXPORT int gstep_id_p(SCM o);
 
 
 
@@ -92,24 +103,24 @@ extern int gstep_id_p(SCM o);
  *	If 'lenKnown' is true - 'len' is recorded and the system can do some
  *	range checking when transferring data to/from the voidp.
  */
-extern SCM gstep_voidp2scm(void *ptr, BOOL malloced, BOOL lenKnown, int len);
+GG_EXPORT SCM gstep_voidp2scm(void *ptr, BOOL malloced, BOOL lenKnown, int len);
 
 /*
  *	Like gstep_voidp2scm(), but modifies an existing item.
  */
-extern void gstep_voidp_set(SCM old, void *ptr, BOOL m, BOOL lenKnown, int len);
+GG_EXPORT void gstep_voidp_set(SCM old, void *ptr, BOOL m, BOOL lenKnown, int len);
 
 /*
  *	Get the void pointer from a SCM
  */
-extern void *gstep_scm2voidp(SCM o);
-extern int gstep_scm2voidplength(SCM o);
+GG_EXPORT void *gstep_scm2voidp(SCM o);
+GG_EXPORT int gstep_scm2voidplength(SCM o);
 
 /*
  *	Test whether a scheme object is a pointer to abstract memory.
  */
-extern SCM gstep_scm_voidp_p(SCM o);
-extern int gstep_voidp_p(SCM o);
+GG_EXPORT SCM gstep_scm_voidp_p(SCM o);
+GG_EXPORT int gstep_voidp_p(SCM o);
 
 
 
@@ -118,7 +129,7 @@ extern int gstep_voidp_p(SCM o);
  *	equal functions.
  *	Guile uses these functions to handle an objc id.
  */
-extern struct scm_smobfuns gstep_id_smob; 
+GG_EXPORT struct scm_smobfuns gstep_id_smob; 
 
 /*
  *	'gstep_scm_tc16_id' is a key used to select `gstep_id_smob' in
@@ -127,15 +138,15 @@ extern struct scm_smobfuns gstep_id_smob;
  *	Each scm object which contains an objc id in its CDR slot,
  *	contains this integer value in its CAR slot.
  */
-extern int gstep_scm_tc16_id;
+GG_EXPORT int gstep_scm_tc16_id;
 
 /*
  *	Similar methods information for 'class' and 'voipd' items.
  */
-extern struct scm_smobfuns gstep_class_smob; 
-extern int gstep_scm_tc16_class;
-extern struct scm_smobfuns gstep_voidp_smob; 
-extern int gstep_scm_tc16_voidp;
+GG_EXPORT struct scm_smobfuns gstep_class_smob; 
+GG_EXPORT int gstep_scm_tc16_class;
+GG_EXPORT struct scm_smobfuns gstep_voidp_smob; 
+GG_EXPORT int gstep_scm_tc16_voidp;
 
 
 
@@ -155,6 +166,6 @@ extern int gstep_scm_tc16_voidp;
  *	NB. Your function needs to be able to work where 'obj' is derived from
  *	Object or NSObject.
  */
-extern void (*print_for_guile)(id obj, SEL sel, SCM port);
+GG_EXPORT void (*print_for_guile)(id obj, SEL sel, SCM port);
 
 #endif /* __gstep_guile_h_INCLUDE */

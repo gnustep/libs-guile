@@ -612,7 +612,12 @@ gstep_class_info(Class objcClass, Module_t module)
 static SCM
 gstep_add_methods(Class dest, SCM mlist, BOOL instance)
 {
-  extern objc_mutex_t __objc_runtime_mutex;
+#ifdef objc_EXPORT
+  objc_EXPORT
+#else
+  extern
+#endif
+  objc_mutex_t __objc_runtime_mutex;
   MethodList		*ml = 0;
   SCM			classn = gh_str02scm((char*)dest->name);
   SCM			tmp;

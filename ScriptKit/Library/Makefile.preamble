@@ -46,3 +46,9 @@ ADDITIONAL_GUI_LIBS +=
 ADDITIONAL_INSTALL_DIRS +=
 
 
+ifeq ($(GNUSTEP_TARGET_OS),mingw32)
+libScriptKit_LIBRARIES_DEPEND_UPON += -lgstep_guile -lgnustep-base -lobjc $(GUILE_LIBS)
+endif
+ifeq ($(GNUSTEP_TARGET_OS),cygwin)
+libScriptKit_LIBRARIES_DEPEND_UPON += -lgstep_guile -lgnustep-base -lobjc $(GUILE_LIBS)
+endif
