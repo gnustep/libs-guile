@@ -1,5 +1,7 @@
 AC_INIT(configure.in)
 
+sinclude(path_guile.m4)
+
 #--------------------------------------------------------------------
 # Use a .h file with #define's, instead of -D command-line switches
 #--------------------------------------------------------------------
@@ -20,11 +22,10 @@ if test "x$prefix" = "x"; then
   prefix=$ac_default_prefix ;
 fi
 
-AC_ARG_WITH(guile-path,
-           [  --with-guile-path=DIR   How to call guile], ,)
+AC_PATH_GUILE
 
 AC_CHECK_HEADERS(AppKit/AppKit.h)
 AC_SUBST(ac_cv_header_AppKit_AppKit_h)
 
 AC_CONFIG_SUBDIRS(Greg ScriptKit)
-AC_OUTPUT(Test/GNUmakefile)
+AC_OUTPUT(config.mak Test/GNUmakefile)

@@ -69,13 +69,6 @@ static scm_sizet free_gstep_id (SCM obj);
 static int print_gstep_id (SCM exp, SCM port, scm_print_state *pstate);
 static SCM mark_gstep_id (SCM obj);
 
-struct scm_smobfuns gstep_id_smob = {
-  mark_gstep_id,
-  free_gstep_id,
-  print_gstep_id,
-  equal_gstep_id
-};
-
 static SCM 
 mark_gstep_id (SCM obj)
 {
@@ -753,7 +746,22 @@ gstep_get_nil_fn()
 void
 gstep_init_id()
 {
+#if	GUILE_MAKE_SMOB_TYPE
+  gstep_scm_tc16_id = scm_make_smob_type ("gg_id", 0);
+  scm_set_smob_mark(gstep_scm_tc16_id, mark_gstep_id);
+  scm_set_smob_free(gstep_scm_tc16_id, free_gstep_id);
+  scm_set_smob_print(gstep_scm_tc16_id, print_gstep_id);
+  scm_set_smob_equalp(gstep_scm_tc16_id, equal_gstep_id);
+#else
+  static struct scm_smobfuns gstep_id_smob = {
+    mark_gstep_id,
+    free_gstep_id,
+    print_gstep_id,
+    equal_gstep_id
+  };
+
   gstep_scm_tc16_id = scm_newsmob (&gstep_id_smob);
+#endif
 
   /*
    *	Stuff to do with id's

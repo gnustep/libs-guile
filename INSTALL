@@ -11,7 +11,7 @@ Required software
      cvs login (password is `anoncvs')
      cvs -z3 checkout guile
 
-   * guile-1.3.4		
+   * guile-1.4		
      Should be available from any GNU ftp site
      NB. guile 1.3 contains bugs that prevent gstep-guile from working
      fully.
@@ -33,8 +33,8 @@ Build and Install
    * Make sure you have gcc-2.8.* installed.
 
    * Make sure you have Guile-1.3.4 or later built and installed.  This
-     library has been tested with 1.3.4.  The library does not work
-     fully with Guile-1.3
+     library has been tested with 1.4 and 1.3.4.  The library does not
+     work fully with Guile-1.3
 
    * Make sure you have gstep-core-0.6.5 (or later) installed and have
      your account properly set up to use GNUstep.sh from the gstep-make
