@@ -11,15 +11,15 @@ DOCUMENT_NAME = gstep_guile
 DOCUMENT_TEXT_NAME = README NEWS INSTALL
 
 # The texinfo source files to be used
-gstep_guile_TEXI_FILES = install.tmpl.texi news.tmpl.texi gstep_guile
+gstep_guile_TEXI_FILES = install.texi news.texi gstep_guile.texi
 
 README_TEXI_FILES = version.texi
-README_TEXT_MAIN = readme.tmpl.texi
+README_TEXT_MAIN = readme.texi
 
-INSTALL_TEXT_MAIN = install.tmpl.texi
+INSTALL_TEXT_MAIN = install.texi
 INSTALL_TEXI_FILES = version.texi
 
-NEWS_TEXT_MAIN = news.tmpl.texi
+NEWS_TEXT_MAIN = news.texi
 NEWS_TEXI_FILES = version.texi
 
 -include Makefile.preamble
