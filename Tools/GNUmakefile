@@ -4,10 +4,12 @@ GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES=../guile.make
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+include ../config.mak
+
 TOOL_NAME = guile-base
 guile-base_OBJC_FILES = guile-base.m
 
-ifneq ($(GUI_LIB),nil)
+ifneq ($(HAVE_APPKIT),no)
 APP_NAME = guile-gui
 guile-gui_OBJC_FILES = guile-gui.m
 endif
@@ -16,6 +18,7 @@ include Makefile.preamble
 
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/tool.make
 
-ifneq ($(GUI_LIB),nil)
+ifneq ($(HAVE_APPKIT),no)
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/application.make
 endif
+
