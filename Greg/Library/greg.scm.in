@@ -87,6 +87,7 @@
 (define-public greg-src-dir ".")
 (define-public greg-files ())
 (define-public greg-tools ())
+(define-public greg-paths ())
 
 ;
 ; Define top-level variables for storing test statistics etc.
@@ -471,9 +472,14 @@
 	      (begin
 		(for-each
 		  (lambda (e)
-		    (set! e (string-append e ".scm"))
 		    (if (member e dir)
 		      (set! tmpdir (cons e tmpdir))
+		      (begin
+			(set! e (string-append e ".scm"))
+			(if (member e dir)
+			  (set! tmpdir (cons e tmpdir))
+			)
+		      )
 		    )
 		  )
 		  greg-files
@@ -799,13 +805,59 @@
 	)
 
 	(if ok-to-continue
-	  (do
-	    ((dir-list (greg-list-directories home) (cdr dir-list)))
-	    ((eq? dir-list ()) (greg-summary))
+	  (if (eq? greg-paths ())
+	    ;
+	    ; No paths specified - so we must be testing all the tool
+	    ; directories in our default directory
+	    ;
+	    (do
+	      ((dir-list (greg-list-directories home) (cdr dir-list)))
+	      ((eq? dir-list ()) (greg-summary))
+	      (begin
+		(chdir home)
+		(greg-do-test (car dir-list))
+		(chdir greg-old-home)
+	      )
+	    )
+	    ;
+	    ; Got some paths of specific tool files to run - so run them as
+	    ; a simulated 'tool'
+	    ;
 	    (begin
-	      (chdir home)
-	      (greg-do-test (car dir-list))
+	      (greg-start-tool "testing files from greg-paths")
 	      (chdir greg-old-home)
+	      (do
+		((file-list greg-paths (cdr file-list)))
+		((eq? file-list ()) (begin (greg-end-tool) (greg-summary)))
+		(begin
+		  (set! greg-file-name (car file-list))
+		  (greg-vlog 2 "Running " greg-file-name " ...\n")
+		  (catch #t
+		    (lambda ()
+		      (set! path greg-file-name)
+		      (load
+			(if (string=? (substring path 0 1) "/")
+			  path
+			  (string-append (getcwd) "/" path)
+			)
+		      )
+		    )
+		    (lambda key
+		      (begin
+			(set! greg-test-exceptions (+ greg-test-exceptions 1))
+			(set! greg-tool-unresolved (+ greg-tool-unresolved 1))
+			(set! greg-total-unresolved (+ greg-total-unresolved 1))
+			(greg-log greg-tool-name " - " greg-file-name)
+			(greg-log " - Exception: " key "\n")
+			(if (eqv? (car key) 'quit)
+			  (quit)
+			)
+		      )
+		    )
+		  )
+		  (greg-vlog 2 "Ended " greg-file-name "\n")
+		)
+	      )
 	    )
 	  )
 	)
