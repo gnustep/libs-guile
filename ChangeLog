@@ -1,3 +1,15 @@
+Thu Dec 17 11:42:46 1998  Adam Fedor  <fedor@ultra.doc.com>
+
+	* configure: Pass args to subdir config.
+
+	* GNUmakefile: Likewise
+	* Documentation/GNUmakefile: Fix include paths.
+	* Library/GNUmakefile: Fix include paths.
+	* Test/GNUmakefile: Fix include paths.
+
+	* Greg/Library/Makefile.in (install): Add install root dir.
+	* Library/Makefile.postamble (after-install): Likewise.
+
 Tue Dec 15 11:20:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Library/gg_class.m: Added code to catch guile exceptions and
