@@ -33,8 +33,15 @@
 #include <objc/encoding.h>
 
 #ifndef	_C_BYREF
-#define byref			
+# define byref			
 #endif
+
+#ifndef	byref
+# if (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ <= 91))
+#  define byref
+# endif
+#endif
+
 
 @protocol SKInterpreter <NSObject>
 + (oneway void)initializeInterpreter;

@@ -1,3 +1,8 @@
+2000-10-16 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* ScriptKit/Library/SKInterpreter.h: patch by n.pero for use with
+	shared libobjc
+
 2000-06-24 Richard Frith-Macdonald <rfm@gnu.org>
 
 	Fixes for guile-1.4 which changed the smob interface breaking most
