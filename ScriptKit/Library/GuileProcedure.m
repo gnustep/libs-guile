@@ -1,7 +1,6 @@
 /* GuileProcedure.m
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: Eiichi TAKAMORI<taka@ma1.seikyou.ne.jp>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -44,67 +43,67 @@ id Guile_end_of_arguments()
 @implementation GuileProcedure
 - initWithExpression: (NSString *) sexp
 {
-    SCM	proc = gh_eval_str ((char*) [sexp cString]);
-    if (!gh_procedure_p(proc))
-      {
-	[self release], self = nil;
-	[NSException raise: 
-		       NSInvalidArgumentException
-		     format: 
-		       @"SEXP, the argument is not procedure."];
-	/* FIXME: Which is better throwing the exception or returning nil ? */
-      }
-    return [self initWithSCM: proc];
+  SCM	proc = gh_eval_str ((char*) [sexp cString]);
+  if (!gh_procedure_p(proc))
+    {
+      [self release], self = nil;
+      [NSException raise: NSInvalidArgumentException
+		   format: @"SEXP, the argument is not procedure."];
+      /* FIXME: Which is better throwing the exception or returning nil ? */
+    }
+  return [self initWithSCM: proc];
 }
 
 + (GuileProcedure *) procWithExpression: (NSString *) sexp
 {
-    return [[[self alloc] initWithExpression: sexp] autorelease];
+  return [[[self alloc] initWithExpression: sexp] autorelease];
 }
 
 - callWithObjects: firstObject, ...
 {
-    SCM		proc = value;
-    SCM		args = SCM_EOL;
-    id		arg;
-    va_list	ap;
-    SCM		ret;
-    void * eoa = GUILE_EOA;
+  SCM		proc = value;
+  SCM		args = SCM_EOL;
+  id		arg;
+  va_list	ap;
+  SCM		ret;
+  void * eoa = GUILE_EOA;
 
-    va_start (ap, firstObject);
-    arg = firstObject;
-    while (arg != eoa) {
+  va_start (ap, firstObject);
+  arg = firstObject;
+  while (arg != eoa)
+    {
       if (arg == nil)
 	args = gh_cons([GuileSCM nilSCMValue], args);
       else
 	args = gh_cons ([arg scmValue], args);
       arg = va_arg (ap, id);
     }
-    va_end (ap);
-    args = gh_reverse (args);
+  va_end (ap);
+  args = gh_reverse (args);
 
-    ret = gh_apply (proc, args);
+  ret = gh_apply (proc, args);
 
-    return [GuileSCM scmWithSCM: ret];
+  return [GuileSCM scmWithSCM: ret];
 }
 
-- callWithObjects: (id*)objects count:(unsigned) n
+- callWithObjects: (id*)objects count: (unsigned) n
 {
-    SCM		proc = value;
-    SCM		args = SCM_EOL;
-    id		arg;
-    int		i;
-    SCM		ret;
+  SCM		proc = value;
+  SCM		args = SCM_EOL;
+  id		arg;
+  int		i;
+  SCM		ret;
 
-    for (i = 0; i < n; i++) {
-	arg = objects[i];
-	args = gh_cons ([arg scmValue], args);
+  for (i = 0; i < n; i++)
+    {
+      arg = objects[i];
+      args = gh_cons ([arg scmValue], args);
     }
-    args = gh_reverse (args);
+  args = gh_reverse (args);
 
-    ret = gh_apply (proc, args);
+  ret = gh_apply (proc, args);
 
-    return [GuileSCM scmWithSCM: ret];
+  return [GuileSCM scmWithSCM: ret];
 }
 - (GuileSCM *) callWithArray: (NSArray *)array
 {
@@ -125,14 +124,15 @@ id Guile_end_of_arguments()
       n = [array count];
     }
 
-  for (i = 0; i < n; i++) {
-    arg = [array objectAtIndex: i];
-    if (arg == eoa)
-      {
-	arg = nil;
-      }
-    args = gh_cons ([arg scmValue], args);
-  }
+  for (i = 0; i < n; i++)
+    {
+      arg = [array objectAtIndex: i];
+      if (arg == eoa)
+	{
+	  arg = nil;
+	}
+      args = gh_cons ([arg scmValue], args);
+    }
   args = gh_reverse (args);
 
   ret = gh_apply (proc, args);

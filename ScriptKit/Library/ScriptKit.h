@@ -1,7 +1,6 @@
 /* ScriptKit.h
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -25,8 +24,8 @@
 /* ScriptKit.h created by dlehn on Sat 21-Jun-1997 */
 #ifndef SCRIPT_KIT_H
 
-#include  <ScriptKit/SKScript.h>
-#include <ScriptKit/SKInterpreter.h>
+#include "SKScript.h"
+#include "SKInterpreter.h"
 
 const char * script_kit_version();
 

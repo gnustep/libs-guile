@@ -1,3 +1,10 @@
+2003-04-07  David Ayers  <d.ayers@inode.at>
+
+	* Library/Makefile.postamble: Added after-all and before-clean
+	targets to support cleaner header inclusions.
+	* Library/gg_Object.h:  Use #include "" rather than <> for project
+	headers.
+
 2003-04-04  Adam Fedor  <fedor@gnu.org>
 
 	* Documentation/GNUmakefile: Use $(GNUSTEP_MAKEFILES) instead of

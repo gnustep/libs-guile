@@ -1,5 +1,5 @@
 /* gg_Object.h - interface between guile and old Object stuff
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2003 Free Software Foundation, Inc.
 
    Written by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
    Date: September 1998
@@ -25,7 +25,7 @@
 #define __gg_Object_h_INCLUDE 
 
 #ifndef	__gstep_guile_h_INCLUDE
-#include	<gstep_guile.h>
+#include	"gstep_guile.h"
 #endif
 
 #include	<objc/Object.h>

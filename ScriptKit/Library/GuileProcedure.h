@@ -1,7 +1,6 @@
 /* GuileProcedure.h
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: Eiichi TAKAMORI<taka@ma1.seikyou.ne.jp>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -32,16 +31,17 @@
 
 #include <Foundation/NSString.h>
 #include <Foundation/NSObject.h>
-#include <ScriptKit/GuileSCM.h>
+
+#include "GuileSCM.h"
 
 @class NSArray;
 
 @interface GuileProcedure: GuileSCM
-- initWithExpression: (NSString *) sexp;
-+ (GuileProcedure *) procWithExpression: (NSString *) sexp;
+- initWithExpression: (NSString *)sexp;
++ (GuileProcedure *) procWithExpression: (NSString *)sexp;
 
 - (GuileSCM *) callWithObjects: firstObj, ...; // GUILE_EOA terminated.
-- (GuileSCM *) callWithObjects: (id*) objects count: (unsigned) n;
+- (GuileSCM *) callWithObjects: (id*)objects count: (unsigned)n;
 
 /* GUILE_EOA in array is translated as nil.
    So you can pass a nil to the procedure. */

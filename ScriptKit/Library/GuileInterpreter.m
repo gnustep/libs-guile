@@ -1,7 +1,6 @@
 /* GuileInterpreter.h
 
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   Copyright (C) 1997, 1998 David I. Lehn
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    
    Author: David I. Lehn<dlehn@vt.edu>
    Maintainer: Masatake YAMATO<masata-y@is.aist-nara.ac.jp>
@@ -151,11 +150,11 @@ NSString * GuileInterpreterKeyWord_Update  = @"guile-update";
 
 @implementation GuileInterpreter
 
-+ (void)initialize
++ (void) initialize
 {
 }
 
-+ (oneway void)initializeInterpreter
++ (oneway void) initializeInterpreter
 {
   gstep_init();
   gh_eval_str("(if (not (defined? 'use-modules)) (primitive-load-path \"ice-9/boot-9.scm\"))");
@@ -168,7 +167,7 @@ NSString * GuileInterpreterKeyWord_Update  = @"guile-update";
     }
 }
 
-+ (void)scmError:(NSString *)message args:(SCM)args
++ (void) scmError: (NSString *)message args: (SCM)args
 { 
     SCM errsym;
     SCM str;
@@ -178,16 +177,17 @@ NSString * GuileInterpreterKeyWord_Update  = @"guile-update";
     scm_throw (errsym, gh_cons (str, args));
 }
 
-- (id)init
+- (id) init
 {
   self = [super init];
-  if(self){
-    batch_mode = YES;
-  }
+  if (self)
+    {
+      batch_mode = YES;
+    }
   return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [super dealloc];
 }
@@ -259,7 +259,7 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
   [script appendString: value];
   [script appendString: @")"];
 }
-- (oneway void)setUserDictionary:(NSMutableDictionary *)dict
+- (oneway void) setUserDictionary: (NSMutableDictionary *)dict
 {
   /* We should not use shared_let and currentInterpreter
      Because using shared_let means we can use only one
@@ -272,7 +272,7 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
   shared_let = dict;
   [super setUserDictionary: dict];
 }
-- (NSString *)generateRealScript: (id<SKScript>)scr
+- (NSString *) generateRealScript: (id<SKScript>)scr
 {
   char *c_script;
   NSMutableString * script = nil;
@@ -326,57 +326,57 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
 
   return script;
 }
-- (id)executeScript:(id<SKScript>)scr
+- (id) executeScript: (id<SKScript>)scr
 {
-    SCM ret;
-    char *c_script;
-    NSString * script = nil;
+  SCM ret;
+  char *c_script;
+  NSString * script = nil;
 
-    script   = [self generateRealScript: scr];
-    c_script = (char *)[script cString];
-    // [singleInterpreterLock lock];
-    currentInterpreter = self;
+  script   = [self generateRealScript: scr];
+  c_script = (char *)[script cString];
+  // [singleInterpreterLock lock];
+  currentInterpreter = self;
 
-    if (YES == [self isInBatchMode])
+  if (YES == [self isInBatchMode])
+    {
+      // Raise NSException
+      NS_DURING
 	{
-	    // Raise NSException
-	    NS_DURING
-		{
-		    ret = gh_catch (SCM_BOOL_T, 
-				    (scm_catch_body_t) eval_str_wrapper, 
-				    c_script, 
-				    (scm_catch_handler_t) gopenstep_batch_handler, 
-				    // Pass a script as nsstring to the handler
-				    script); 
-		}
-	    NS_HANDLER
-		{
-		  [localException raise];
-		}
-	    NS_ENDHANDLER;
+	  ret = gh_catch (SCM_BOOL_T, 
+			  (scm_catch_body_t) eval_str_wrapper, 
+			  c_script, 
+			  (scm_catch_handler_t) gopenstep_batch_handler, 
+			  // Pass a script as nsstring to the handler
+			  script); 
 	}
-    else			// interactive
+      NS_HANDLER
 	{
-	    // Only print message
-	    ret = gh_catch (SCM_BOOL_T, 
-			    (scm_catch_body_t) eval_str_wrapper, 
-			    c_script, 
-			    (scm_catch_handler_t) gopenstep_interactive_handler, 
-			    // Pass a script as cstring to the handler
-			    c_script);
+	  [localException raise];
 	}
-    // [singleInterpreterLock unlock];
+      NS_ENDHANDLER;
+    }
+  else			// interactive
+    {
+      // Only print message
+      ret = gh_catch (SCM_BOOL_T, 
+		      (scm_catch_body_t) eval_str_wrapper, 
+		      c_script, 
+		      (scm_catch_handler_t) gopenstep_interactive_handler, 
+		      // Pass a script as cstring to the handler
+		      c_script);
+    }
+  // [singleInterpreterLock unlock];
 
-    /* -scmWithSCM: accepts not only objc id but any type of variable.*/
-    return [GuileSCM scmWithSCM: ret];
+  /* -scmWithSCM: accepts not only objc id but any type of variable.*/
+  return [GuileSCM scmWithSCM: ret];
 }
 
-- (oneway void)executeScriptOneway:(id<SKScript>)scr
+- (oneway void) executeScriptOneway: (id<SKScript>)scr
 {
-    [self executeScript:scr];
+  [self executeScript:scr];
 }
 
-- (void)replWithPrompt:(NSString *)prompt
+- (void) replWithPrompt: (NSString *)prompt
 {
   NSString *script_kit_set_prompt_scm_code = [NSString stringWithFormat:@"(if (equal? (version) \"1.0\") (set! the-prompt-string \"%@\") (set-repl-prompt! \"%@\"))", prompt, prompt];
 
@@ -386,81 +386,81 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
   [self eval: @"(top-repl)"];
 }
 
-- (void)repl
+- (void) repl
 {
   [self replWithPrompt:@"guile>"];
 }
 
 //
-- (void)interactiveMode
+- (void) interactiveMode
 {
   batch_mode = NO;
 }
-- (void)batchMode
+- (void) batchMode
 {
   batch_mode = YES;
 }
-- (BOOL)isInBatchMode
+- (BOOL) isInBatchMode
 {
   if (YES == batch_mode)
     return YES;
   else 
     return NO;
 }
-- (BOOL)isInInteractiveMode
+- (BOOL) isInInteractiveMode
 {
   if (YES == batch_mode)
     return NO;
   else
-    return NO;
+    return YES;
 }
 
 // 
-- (GuileSCM *) eval: (NSString *) sexp
+- (GuileSCM *) eval: (NSString *)sexp
 {
   return [self eval: sexp inUserDictionary: nil];
 }
-- (GuileSCM *)eval: (NSString *) sexp 
+- (GuileSCM *)eval: (NSString *)sexp 
   inUserDictionary: (NSMutableDictionary *)d
 {
   GuileScript * s      = [[GuileScript alloc] init];
   GuileSCM * result    = nil;
   [s setUserDictionary: d];
   [s setDelegate: sexp];
-  result =[self executeScript: s];
+  result = [self executeScript: s];
   [s release], s = nil;
   return result;
 }
 
-- (GuileSCM *) loadFile: (NSString *) filename
+- (GuileSCM *) loadFile: (NSString *)filename
 {
   SCM result = gh_eval_file ((char *)[filename cString]);
   return [GuileSCM scmWithSCM: result];
 }
 
-- (GuileSCM *)define: (NSString *) name withValue: (GuileSCM *) val
+- (GuileSCM *) define: (NSString *)name withValue: (GuileSCM *)val
 {
   SCM result = gh_define((char *)[name cString], [val scmValue]);
   return [GuileSCM scmWithSCM: result];
 }
 
-- (GuileSCM *)lookup: (NSString *) name
+- (GuileSCM * ) lookup: (NSString *)name
 {
   SCM result = gh_lookup ((char *)[name cString]);
   return [GuileSCM scmWithSCM: result];
 }
 
-- (void)display: (GuileSCM *) guile_scm
+- (void) display: (GuileSCM *) guile_scm
 {
   gh_display ([guile_scm scmValue]);
 }
 
-- (void)write: (GuileSCM *) guile_scm
+- (void) write: (GuileSCM *) guile_scm
 {
   gh_write ([guile_scm scmValue]);
 }
 
-- (void)newline
+- (void) newline
 {
   gh_newline ();
 }
