@@ -25,7 +25,11 @@
 /* GuileInterpreter.m created by dlehn on Mon 16-Jun-1997 */
 
 #include <assert.h>
+/* Because guile uses `id' as variable name sometime,
+   while it is an Objective-C reserved keyword. */
+#define id id_x_
 #include <guile/gh.h>
+#undef id
 #include "GuileInterpreter.h"
 //#include <gstep_guile.h>
 // Needed for class list funcs
