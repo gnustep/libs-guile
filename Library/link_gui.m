@@ -33,7 +33,6 @@
 static void
 gstep_gui_numeric_constants()
 {
-#define	CNUM(X) gh_define(#X, gh_long2scm(X))
 
 }
 
@@ -42,7 +41,6 @@ gstep_gui_numeric_constants()
 static void
 gstep_gui_string_constants()
 {
-#define	CSTR(X) gh_define(#X, gstep_id2scm(X, NO))
 
 }
 
@@ -105,7 +103,6 @@ static void
 gstep_gui_classes()
 {
   NSAutoreleasePool	*arp = [NSAutoreleasePool new];
-#define	CCLS(X) gh_define(#X, gstep_id2scm([X class], NO))
 
   CCLS(NSActionCell);
   CCLS(NSApplication);
@@ -182,11 +179,30 @@ gstep_gui_classes()
 void
 gstep_link_gui()
 {
-  gstep_init();
-  gstep_gui_numeric_constants();
-  gstep_gui_string_constants();
-  gstep_gui_functions();
-  gstep_gui_classes();
+  static BOOL beenHere = NO;
+
+  if (beenHere == NO)
+    {
+#ifdef  HAVE_SCM_C_RESOLVE_MODULE
+      SCM module = scm_c_resolve_module ("languages gstep-guile");
+#endif
+
+      beenHere = YES;
+#ifdef  HAVE_SCM_C_RESOLVE_MODULE
+      module = scm_set_current_module (module);
+#endif
+      gstep_init();
+      gstep_gui_numeric_constants();
+      gstep_gui_string_constants();
+      gstep_gui_functions();
+      gstep_gui_classes();
+
+      scm_add_feature("link_gui");
+
+#ifdef  HAVE_SCM_C_RESOLVE_MODULE
+      module = scm_set_current_module (module);
+#endif
+    }
 }
 
 #else

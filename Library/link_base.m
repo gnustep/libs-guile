@@ -1176,6 +1176,9 @@ gstep_link_base()
       gstep_base_string_constants();
       gstep_base_functions();
       gstep_base_classes();
+
+      scm_add_feature("link_base");
+
 #ifdef  HAVE_SCM_C_RESOLVE_MODULE
       module = scm_set_current_module (module);
 #endif

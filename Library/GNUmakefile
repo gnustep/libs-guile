@@ -31,6 +31,8 @@ include ../Version
 
 LIBRARY_NAME = libgstep_guile libgg_base
 
+libgg_base_OBJC_FILES = link_base.m
+
 ifneq ($(strip $(HAVE_APPKIT)),no)
   LIBRARY_NAME += libgg_gui
   libgg_gui_OBJC_FILES = link_gui.m
@@ -40,8 +42,6 @@ ifneq ($(strip $(HAVE_EOF)),no)
   LIBRARY_NAME += libgg_gdl2
   libgg_gdl2_OBJC_FILES = link_gdl2.m
 endif
-
-libgg_base_OBJC_FILES = link_base.m
 
 # The Objective-C source files to be compiled
 libgstep_guile_OBJC_FILES =	gstep_guile.m \

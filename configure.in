@@ -40,4 +40,4 @@ AC_SUBST(ac_cv_header_EOAccess_EOAccess_h)
 CPPFLAGS="$save_CPPFLAGS"
 
 AC_CONFIG_SUBDIRS(Greg ScriptKit)
-AC_OUTPUT(AppKit.make EOF.make guile.make)
+AC_OUTPUT(AppKit.make EOF.make guile.make Library/gstep-guile.scm)

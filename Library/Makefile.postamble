@@ -27,14 +27,18 @@ endif
 # library to that the <libname>.so symlink points to. That should be the
 # shared object name of the library.
 # Install the .scm file(s) ... if we are invoked with 'make=yes' then we
-# install scm files which load the debug libarary, othewrwise, we use
-# sed to edit the files to use the non-debug library as we install them.
+# install scm files which load the debug libararies, othewrwise, we use
+# sed to edit the files to use the non-debug libraries as we install them.
 after-install::
 	@DIRP=$(GNUSTEP_SYSTEM_ROOT)/Libraries/Guile; \
 	$(MKINSTALLDIRS) $$DIRP/languages/gstep-guile; \
 	for i in $(SCHEME_FILES); do \
 	  if [ "$(debug)" = "no" ]; then \
-	    sed -e 's/libgstep_guile_d/libgstep_guile/' <$$i >$$$$.tmp; \
+	    sed -e 's/libgstep_guile_d/libgstep_guile/' \
+	    sed -e 's/libgg_base_d/libgg_base/' \
+	    sed -e 's/libgg_gdl2_d/libgg_gdl2/' \
+	    sed -e 's/libgg_gui_d/libgg_gui/' \
+	    <$$i >$$$$.tmp; \
 	  else \
 	    cp $$i $$$$.tmp; \
 	  fi; \
