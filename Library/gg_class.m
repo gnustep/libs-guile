@@ -32,6 +32,7 @@ extern void __objc_resolve_class_links();
 #include <stdarg.h>
 
 #include <Foundation/NSObject.h>
+#include <Foundation/NSProxy.h>
 
 #include <Foundation/NSAutoreleasePool.h>
 #include <Foundation/NSException.h>
@@ -874,30 +875,35 @@ gstep_new_class_fn(SCM classn, SCM supern, SCM ilist, SCM mlist, SCM clist)
 	supern = scm_symbol_to_string(supern);
     }
     if (SCM_NIMP(supern) && SCM_STRINGP(supern)) {
-	Class	want = [NSObject class];
+	Class	want1 = [NSObject class];
+	Class	want2 = [NSProxy class];
 	Class	class;
 
 	sname = gh_scm2newstr(supern, 0);
 	sclass = objc_lookup_class(sname);
 
 	class = sclass;
-	while (class != nil) {
-	    if (class == want) {
+	while (class != nil)
+	  {
+	    if (class == want1 || class == want2)
+	      {
 		break;
-	    }
+	      }
 	    class = class_get_super_class(class);
-	}
+	  }
 
-	if (class == nil) {
+	if (class == nil)
+	  {
 	    free(cname);
 	    free(sname);
-	    gstep_scm_error("the superclass isn't based on NSObject",
-			supern);
-	}
-    }
-    else {
+	    gstep_scm_error("the superclass isn't based on NSObject or NSProxy",
+	      supern);
+	  }
+      }
+    else
+      {
 	gstep_scm_error("not a symbol or string", supern);
-    }
+      }
 
     module = objc_calloc(1, sizeof(Module));
     module->version = OBJC_VERSION;
