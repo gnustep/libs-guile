@@ -18,4 +18,5 @@
 *.vrs
 *.cl
 *.pr
-
+Makefile
+gregdoc.texi
