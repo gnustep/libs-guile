@@ -92,7 +92,7 @@ remove-header-links:
 	-rm -rf GNUstepGuile
 else
 header-links: $(HEADER_LINK_DEPENDS)
-	@(if [ ! -L GNUstepGuile ]; then \
+	@(if [ ! -h GNUstepGuile ]; then \
 	  rm -rf GNUstepGuile; \
 	  $(LN_S) . GNUstepGuile; \
 	fi)

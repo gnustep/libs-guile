@@ -1,3 +1,8 @@
+2004-02-28  Adam Fedor  <fedor@gnu.org>
+
+	* Library/Makefile.postamble (header-links): Use -h not -L which
+	doesn't work on some systems (Solaris).
+
 2004-02-18  Adam Fedor  <fedor@gnu.org>
 
 	* Version 1.1.4
