@@ -31,6 +31,7 @@
 #include	<Foundation/NSData.h>
 #include	<objc/encoding.h>
 
+#include "../config.h"
 #include "gstep_guile.h"
 #include "private.h"
 

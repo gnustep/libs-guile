@@ -1,3 +1,8 @@
+2001-07-30  Adam Fedor  <fedor@gnu.org>
+
+	* Greg/Library/greg.c: Add proper define for getting guile export
+	symbols on Windows.
+
 2001-05-20 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Documentation/Makefile.in: Added installation of greg man page.

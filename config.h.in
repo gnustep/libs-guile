@@ -1,4 +1,8 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
 
+#ifdef libguile_ISDLL
+#define __GUILE_IMPORT__ 1
+#endif
+
 /* Define if you have the <AppKit/AppKit.h> header file.  */
 #undef HAVE_APPKIT_APPKIT_H

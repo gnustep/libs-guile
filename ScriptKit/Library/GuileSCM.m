@@ -24,6 +24,7 @@
 
 /* GuileSCM.m created by dlehn on Wed 18-Jun-1997 */
 
+#include "../config.h"
 #include "Guile.h"
 #include <Foundation/NSObjCRuntime.h>
 #include <Foundation/NSException.h>

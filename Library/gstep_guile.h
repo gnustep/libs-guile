@@ -129,7 +129,9 @@ GG_EXPORT int gstep_voidp_p(SCM o);
  *	equal functions.
  *	Guile uses these functions to handle an objc id.
  */
+#if GUILE_MAKE_SMOB_TYPE == 0
 GG_EXPORT struct scm_smobfuns gstep_id_smob; 
+#endif
 
 /*
  *	'gstep_scm_tc16_id' is a key used to select `gstep_id_smob' in
@@ -143,9 +145,11 @@ GG_EXPORT int gstep_scm_tc16_id;
 /*
  *	Similar methods information for 'class' and 'voipd' items.
  */
+#if GUILE_MAKE_SMOB_TYPE == 0
 GG_EXPORT struct scm_smobfuns gstep_class_smob; 
-GG_EXPORT int gstep_scm_tc16_class;
 GG_EXPORT struct scm_smobfuns gstep_voidp_smob; 
+#endif
+GG_EXPORT int gstep_scm_tc16_class;
 GG_EXPORT int gstep_scm_tc16_voidp;
 
 

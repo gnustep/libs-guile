@@ -26,6 +26,7 @@
 #include <Foundation/NSAutoreleasePool.h>
 #include <objc/objc-api.h>
 
+#include "../config.h"
 #include "gg_Object.h"
 #include "private.h"
 
