@@ -31,7 +31,7 @@ include	../config.mak
 
 LIBRARY_NAME=libgstep_guile libgg_base
 
-ifneq ($(GUI_LIB),nil)
+ifneq ($(HAVE_APPKIT),no)
 LIBRARY_NAME += libgg_gui
 libgg_gui_OBJC_FILES = link_gui.m
 endif

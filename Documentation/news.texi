@@ -4,6 +4,13 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.0.2}
+
+@itemize @bullet
+@item Better configure/make/install support
+@item Bug fixes
+@end itemize
+
 @section Noteworthy changes in version @samp{1.0.1}
 
 @itemize @bullet

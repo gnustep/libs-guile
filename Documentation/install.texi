@@ -8,10 +8,6 @@
 
 @itemize @bullet
 
-@item gnustep-guile	@*
-Available from
-@url{ftp://ftp.gnustep.org/pub/gnustep/libs}. 
-
 @item guile-1.4		@*
 Should be available from any GNU ftp site @*
 NB. guile 1.3 contains bugs that prevent gnustep-guile from working fully.
@@ -23,7 +19,6 @@ Available from
 
 @item gcc-2.8.* or greater@*
 Gcc 3.0 is recommended and should be available from any GNU ftp site @*
-You may also use a recent version of egcs. @*
 NB. For debugging, you need gdb-4.17 with the objc patch.
 The patch for gdb-4.17 is available at
 @url{ftp://ftp.gnustep.org/pub/gnustep/contrib/} @*
@@ -63,10 +58,9 @@ Alternatively - you can run the 'go' program directly and work interactively.
 
 @subsection Trouble
 
-This package has only been used by me on a GNU/Linux/Intel system -
 I would love to hear about success/failures on other systems.
 
-Likely problems -
+Likely problems:
 
 @itemize @bullet
 @item
