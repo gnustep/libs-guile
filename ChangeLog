@@ -1,3 +1,8 @@
+2000-11-06  Adam Fedor  <fedor@gnu.org>
+
+	* Documentation: Move tmpl.texi files to texi files and update 
+	GNUmakefile
+
 2000-10-16 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* ScriptKit/Library/SKInterpreter.h: patch by n.pero for use with
