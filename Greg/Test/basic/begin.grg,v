@@ -1,0 +1,32 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.10.08.03.55.45;	author richard;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@;
+;	Run the 'greg' script on the 'tests' tool to provide output
+;	for us to check.
+;
+
+(greg-child "/bin/sh" "-c" "greg --outdir tests --tool tests --file greg --verbose")
+
+;(greg-child "greg" "--outdir" "tests" "--tool" "tests" "--file" "greg" "--verbose")
+
+@

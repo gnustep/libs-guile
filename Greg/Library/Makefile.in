@@ -1,0 +1,83 @@
+
+SH = /bin/sh
+
+CC = @CC@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+GUILE_BIN_PATH = @GUILE_BIN_PATH@
+GUILE_SCM_PATH = @GUILE_SCM_PATH@
+
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+
+VER_INFO = $(MAJOR_VERSION):$(MINOR_VERSION)
+
+INSTALL_DATA =		$(SH) ../install-sh -c -m 0644
+INSTALL_SCRIPT =	$(SH) ../install-sh -c -m 0755
+LIBTOOL =		$(SH) ../libtool
+MKINSTDIRS =		$(SH) ../mkinstalldirs
+
+INCTAIL =	Headers/$(GNUSTEP_HOST_CPU)/$(GNUSTEP_HOST_OS)
+INCLUDES =	-I$(GNUSTEP_USER_ROOT)/$(INCTAIL) \
+		-I$(GNUSTEP_LOCAL_ROOT)/$(INCTAIL) \
+		-I$(GNUSTEP_SYSTEM_ROOT)/$(INCTAIL)
+
+LIB = libgreg.la
+
+LIB_SOURCES = greg.c
+LIB_OBJECTS =  greg.lo
+
+LIB_LDFLAGS = -version-info $(VER_INFO) -export-dynamic
+
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+LINK = $(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(LDFLAGS) -o $@
+
+
+
+all: $(LIB)
+
+.SUFFIXES:
+.SUFFIXES: .S .c .lo .o .s
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+libgreg.la: $(LIB_OBJECTS)
+	$(LINK) -rpath $(GUILE_BIN_PATH) $(LIB_LDFLAGS) $(LIB_OBJECTS) $(LIBS)
+
+%.o: %.c
+	@echo '$(COMPILE) -c $<'; \
+	$(COMPILE) -c $<
+
+%.lo: %.c
+	@echo '$(LTCOMPILE) -c $<'; \
+	$(LTCOMPILE) -c $<
+
+install: libgreg.la greg.scm greg
+	$(MKINSTDIRS) $(GUILE_BIN_PATH); \
+	$(MKINSTDIRS) $(GUILE_SCM_PATH); \
+	$(MKINSTDIRS) $(bindir); \
+	if test -f ${LIB}; then \
+	  $(INSTALL_DATA) .libs/libgreg.so ${GUILE_BIN_PATH}/libcompiled.so; \
+	fi; \
+	$(INSTALL_DATA) greg.scm ${GUILE_SCM_PATH}/greg.scm; \
+	$(INSTALL_SCRIPT) greg ${bindir}/greg;
+
+clean:
+	rm -rf core *.o *.lo *.la .libs
+
+distclean:	clean
+	rm -rf greg greg.scm config.h test.* Makefile
+
