@@ -51,6 +51,8 @@ test:
 documentation:
 	(cd Documentation; $(MAKE))
 
+check:
+
 clean:
 	(cd Library; $(MAKE) clean); \
 	(cd Test; $(MAKE) clean); \

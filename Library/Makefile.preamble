@@ -13,7 +13,7 @@
 #
 
 # Additional flags to pass to the preprocessor
-ADDITIONAL_CPPFLAGS += -DGUILE_MAKE_SMOB_TYPE=$(GUILE_MAKE_SMOB_TYPE)
+ADDITIONAL_CPPFLAGS += -DGUILE_MAKE_SMOB_TYPE=$(GUILE_MAKE_SMOB_TYPE) $(DEFS)
 
 # Additional flags to pass to the Objective-C compiler
 ADDITIONAL_OBJCFLAGS += 
@@ -22,7 +22,7 @@ ADDITIONAL_OBJCFLAGS +=
 ADDITIONAL_CFLAGS += 
 
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS +=
+ADDITIONAL_INCLUDE_DIRS += $(GUILE_CFLAGS)
 
 # Additional LDFLAGS to pass to the linker
 # ADDITIONAL_LDFLAGS += 
@@ -31,7 +31,7 @@ ADDITIONAL_INCLUDE_DIRS +=
 ADDITIONAL_LIB_DIRS += -L../Library/$(GNUSTEP_OBJ_DIR)
 
 # Additional libraries when linking tools
-ADDITIONAL_TOOL_LIBS += -lgstep_guile -lguile
+ADDITIONAL_TOOL_LIBS += -lgstep_guile $(GUILE_LIBS)
 
 # Additional libraries when linking applications
 ADDITIONAL_GUI_LIBS +=

@@ -59,3 +59,6 @@ version.texi: ../Version
 	echo '@set GNUSTEP-GUILE-VERSION $(VERSION)' \
 		>> version.texi
 
+
+regenerate: $(DOCUMENT_TEXT_NAME)
+	mv -f $(DOCUMENT_TEXT_NAME) ..

@@ -4,7 +4,7 @@
 @include version.texi
 @end ifset
 
-The gstep_guile library lets you use (and extend) the GNUstep libraries
+The gnustep_guile library lets you use (and extend) the GNUstep libraries
 from within Guile.  This effectively provides you with scripting language for
 GNUstep and an interactive system for developing GNUstep applications.
 
@@ -14,7 +14,7 @@ You can find out more about Guile at
 @url{http://www.fsf.org/software/guile}
 
 The package provides a (trivial) program which, when compiled and linked
-with libguile, libgstep_guile, and the GNUstep toolkit libraries, will
+with libguile, libgnustep_guile, and the GNUstep toolkit libraries, will
 give you a Guile command-line interpreter from which you can create
 Objective-C classes and objects and send messages to them.  
 

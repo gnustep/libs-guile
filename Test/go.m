@@ -24,7 +24,7 @@ char *gstep_guile_set_prompt_scm_code = \
 int
 main(int argc, char **argv, char ** envp)
 {
-#if	defined(LIB_FOUNDATION_LIBRARY)
+#if	defined(LIB_FOUNDATION_LIBRARY) || defined(GS_PASS_ARGUMENTS)
     [NSProcessInfo initializeWithArguments: argv
 				     count: argc
 			       environment: envp];

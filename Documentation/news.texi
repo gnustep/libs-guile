@@ -4,13 +4,16 @@
 @include version.texi
 @end ifset
 
-Note - the major and minor version numbers of this library will be tied
-to those of gstep-core.  This means that changes in the sub-minor version
-number may actually denote major changes in functionality!
-I think that things have stabilised now and future releases will be more
-in the way of bug/portability fixes than the addition of new features.
+@section Noteworthy changes in version @samp{0.9.2}
 
-Version 0.6.6
+@itemize @bullet
+@item Install in GNUSTEP_SYSTEM_ROOT
+@item Added RPM packaging info
+@item Corrected code for adding factory methods
+@item Resolve class links so one can load shared libaries.
+@end itemize
+
+@section Version 0.6.6
 
 @itemize @bullet
 
@@ -18,7 +21,7 @@ Version 0.6.6
 
 @end itemize
 
-Version 0.6.5
+@section Version 0.6.5
 
 
 @itemize @bullet
