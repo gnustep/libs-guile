@@ -1,0 +1,1 @@
+HAVE_EOF = @ac_cv_header_EOAccess_EOAccess_h@

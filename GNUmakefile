@@ -33,7 +33,8 @@ ifeq ($(MKINSTALLDIRS),)
 endif
 
 after-distclean::
-	rm -f config.status config.log config.cache TAGS
+	rm -f config.status config.log config.cache TAGS \
+		AppKit.make EOF.make
 
 before-install::
 	$(MKINSTALLDIRS) $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional

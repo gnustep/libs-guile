@@ -64,6 +64,7 @@ GG_EXPORT void gstep_init();
 
 GG_EXPORT void gstep_link_base();	/* Use Foundation stuff.	*/
 GG_EXPORT void gstep_link_gui();	/* Use AppKit stuff.		*/
+GG_EXPORT void gstep_link_gdl2();	/* Use GDL2 stuff.		*/
 
 
 

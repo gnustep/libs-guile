@@ -12,12 +12,9 @@
 
 void gui_main (int argc, char ** argv);
 
-/*
 char *gstep_guile_introduction_scm_code = \
-"(display \"Type '(load \\\"test.scm\\\")' to run tests\") (display \"\\n\")";
-*/
-char *gstep_guile_introduction_scm_code = \
-"(display \"Welcome to the gui driver\\n\")";
+"(display \"Welcome to the gui driver\\n\")\
+ (display \"Type '(quit)' to exit\\n\")";
 
 char *gstep_guile_set_prompt_scm_code = \
 "(if (equal? (version) \"1.0\") (set! the-prompt-string \"gui> \") \
