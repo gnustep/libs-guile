@@ -371,10 +371,11 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 		  char	val[size];
 		} block;
 		int	offset = 0;
+	        char	*ptr = tmptype;
 
 		block = va_arg(ap, struct dummy);
 		val = gstep_guile_encode_item((void*)&block, &offset,
-			      &tmptype, NO, NO, nil, 0);
+			      &ptr, NO, NO, nil, 0);
 	      }
 	    }
 	    break;
@@ -824,7 +825,7 @@ static char gstep_new_class_n[] = "gstep-new-class";
 static SCM
 gstep_new_class_fn(SCM classn, SCM supern, SCM ilist, SCM mlist, SCM clist)
 {
-  extern void	__objc_exec_class(Module_t);
+  extern void	__objc_exec_class(void*);
   Module_t	module;
   Symtab_t	symtab;
   Class		new_class;

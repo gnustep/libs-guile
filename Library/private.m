@@ -116,9 +116,11 @@ gstep_guile_decode_item(SCM list, void* datum, int *position, const char** types
 
   if (*type == _C_STRUCT_B)
     {
+      const char	*ptr = type;
       inStruct = YES;
-      while (*type != _C_STRUCT_E && *type++ != '=');
-      if (*type == _C_STRUCT_E)
+      while (*ptr != _C_STRUCT_E && *ptr != '=') ptr++;
+      if (*ptr == '=') type = ptr;
+      if (*++type == _C_STRUCT_E)
 	{
 	  *typespec = type;
 	  return YES;
@@ -315,6 +317,7 @@ gstep_guile_decode_item(SCM list, void* datum, int *position, const char** types
       type = objc_skip_typespec(type); /* skip component */
     }
   while (inStruct && *type != _C_STRUCT_E);
+  if (*type == _C_STRUCT_E) type++;
 
   *typespec = type;
   *position = offset;
@@ -332,9 +335,11 @@ gstep_guile_encode_item(void* datum, int *position, const char** typespec, BOOL 
 
   if (*type == _C_STRUCT_B)
     {
+      const char	*ptr = type;
       inStruct = YES;
-      while (*type != _C_STRUCT_E && *type++ != '=');
-      if (*type == _C_STRUCT_E)
+      while (*ptr != _C_STRUCT_E && *ptr != '=') ptr++;
+      if (*ptr == '=') type = ptr;
+      if (*++type == _C_STRUCT_E)
 	{
 	  *typespec = type;
 	  return SCM_UNDEFINED;
@@ -496,6 +501,7 @@ gstep_guile_encode_item(void* datum, int *position, const char** typespec, BOOL 
 	}
       type = (char*)objc_skip_typespec(type); /* skip component */
     } while (inStruct && *type != _C_STRUCT_E);
+  if (*type == _C_STRUCT_E) type++;
   *typespec = type;
   *position = offset;
   return ret;

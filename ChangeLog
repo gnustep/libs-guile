@@ -1,3 +1,8 @@
+2003-06-02 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/gg_class.m: Fix to parse anonymous structures
+	* Library/private.m: Fix to parse handle structure arguments
+
 2003-05-25  Adam Fedor  <fedor@gnu.org>
 
 	* Version 1.1.0
