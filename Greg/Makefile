@@ -57,6 +57,7 @@ clean:
 
 distclean:
 	rm -f config.cache config.log config.status config.mak; \
+	rm -f Documentation/gregdoc; \
 	(cd Library; $(MAKE) distclean); \
 	(cd Test; $(MAKE) distclean); \
 	(cd Documentation; $(MAKE) distclean)
