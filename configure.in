@@ -1,6 +1,6 @@
 AC_INIT(configure.in)
 
-sinclude(path_guile.m4)
+sinclude(ScriptKit/path_guile.m4)
 
 #--------------------------------------------------------------------
 # Use a .h file with #define's, instead of -D command-line switches
