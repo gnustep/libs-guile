@@ -118,7 +118,6 @@ gstep_gui_classes()
     CCLS(NSBundle);
     CCLS(NSButton);
     CCLS(NSButtonCell);
-    CCLS(NSCStringText);
     CCLS(NSCachedImageRep);
     CCLS(NSCell);
     CCLS(NSClipView);
