@@ -1,3 +1,19 @@
+Thu Sep 13 18:27:09 2001  Nicola Pero  <nicola@brainstorm.co.uk>
+
+	* Library/greg.c (scm_init_greg): Added code (#ifdeffed out) for
+	newer guiles.  
+	* Library/greg.scm.in: Added code (commented out) for newer
+	guiles.
+	* Library/greg.in: Use '() rather than () for empty list because
+	newer guiles barf on ().
+	* Library/greg.scm.in: Idem.
+	* Library/greg.scm.in (greg-close-logs): New procedure closing log
+	and debug ports - code taken from greg-reset.
+	(greg-reset): Code to close log and debug ports moved to
+	greg-close-logs.
+	(greg-do-test): Invoke greg-close-logs before quitting for
+	exceptions or similar.
+
 2001-07-30  Adam Fedor  <fedor@gnu.org>
 
 	* Greg/Library/greg.c: Add proper define for getting guile export
