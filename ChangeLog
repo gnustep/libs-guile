@@ -2,6 +2,7 @@
 
 	* Source/gg_class.m: tidied to conform to coding standards.
 	* Source/gg_id.m: implemented gstep-sup-send to permit subclassing.
+	Avoid recursive calls for methodSignatureForSelector:
 
 2001-05-13 Richard Frith-Macdonald <rfm@gnu.org>
 
