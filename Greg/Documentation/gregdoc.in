@@ -105,6 +105,17 @@ See the file @emph{COPYING.LIB}.
 @chapter New in this release
 @cindex News
 
+New in 1.2
+
+@itemize @bullet
+@item
+Permit the files in the @code{greg-files} variable to use the @samp{.scm}
+extension or not.
+@item
+Added @code{greg-paths} variable to permit direct running of named files
+rather than using the DejaGNU-like tools directory structure.
+@end itemize
+
 New in 1.1
 
 @itemize @bullet
@@ -734,7 +745,8 @@ subroutine.
 @cindex directories and files
 
 A Greg test run expects to find files and directories in a certain layout
-(modeled on that used by DejaGNU).
+(modeled on that used by DejaGNU) - though it is possible to override this
+DejaGNU compatibility feature and simply run the tests in a list of files.
 
 The test source directory (normally your current directory) is expected to
 contain one or more @emph{tool} directories.  Each @emph{tool} directory
@@ -745,18 +757,25 @@ a Guile @emph{test} script.
 When a normal Greg test run is done, Greg goes through each @emph{tool}
 directory in turn and loads each @emph{test} script in turn.
 
-You may set the Guile variable @code{greg-tools} or use the @code{--tools ...}
+You may set the Guile variable @code{greg-tools} or use the @code{--tool ...}
 command-line option to specify a list of tools directories to use rather than
 assuming that @emph{all} subdirectories are @emph{tool} directories.
 If you do this, the tools are tested in the order in which they appear in
 the list rather than the default order (ASCII sorted by name).
 
-You may set the Guile variable @code{greg-files} or use the @code{--files ...}
+You may set the Guile variable @code{greg-files} or use the @code{--file ...}
 command-line option to specify a list of file names to use rather than
 assuming that @emph{all} @emph{.scm} files in each @emph{tool} directory are
 test scripts.
 If you do this, the files are loaded in the order in which they appear in
 the list.
+You may omit the @samp{.scm} extension from filenames and Greg will supply
+it for you if necessary.
+
+You may set the Guile variable @code{greg-paths} or use the @code{--path ...}
+command-line option to specify a list of test files to be run directly.
+This overrides the @code{greg-tools} and @code{greg-files} variables, and
+simply runs the files you list in the order you list them.
 
 @cindex begin.grg
 @cindex end.grg
@@ -781,6 +800,10 @@ before any @emph{test} scripts in that directory are loaded.
 
 If @emph{end.grg} exists in a @emph{tool} directory, it will be loaded
 after all the @emph{test} scripts in that directory are loaded.
+
+NB. Even when you use the @code{greg-paths} variable to run one or more test
+files directly, the @emph{begin.grg} and @emph{end.grg} files in your current
+directory will be loaded.
 
 @node Embedded usage
 @section Embedded usage
@@ -822,8 +845,9 @@ of the test scripts to be run.  If this list is empty, all the files with the
 @code{.scm} extension in a @emph{tool} subdirectory are loaded.  If the list
 contains names, the named scripts are loaded in the order in which they occur
 in the list rather than the default order (ASCII sorted by name).@*
-The names of scripts in this list should @emph{not} contain the @code{.scm}
-extension - it will be added automatically by Greg.
+The exact names of scripts in this list will be used to match filenames,
+and if no match is found a @code{.scm} extension will be added automatically
+by Greg and a re-match attempted.
 
 @item greg-obj-dir
 @cindex greg-obj-dir
@@ -838,6 +862,15 @@ By default, this is the current directory (@code{.}).
 The @code{greg-out-dir} variable is a string naming the directory in which
 Greg will generate log and debug output files.@*
 By default, this is the current directory (@code{.}).
+
+@item greg-paths
+@cindex greg-paths
+@cindex paths variable
+The @code{greg-paths} variable is a list of pathname of files to be run.
+This is used where you don't want to use the normal @emph{tools} hierarchy
+and need to test specific files explicitly.  The filenames are used exactly
+as given.  If you use this variable, you should set the @code{greg-tools}
+variable to an empty list.
 
 @item greg-posix
 @cindex greg-posix
@@ -905,6 +938,7 @@ greg --tool @var{tool} @dots{}
 [ --help ]
 [ --objdir @var{path} ]
 [ --outdir @var{path} ]
+[ --path @var{script} @dots{} ]
 [ --posix ]
 [ --srcdir @var{path} ]
 [ -v | --verbose ]  [ -V | --version ]
@@ -978,6 +1012,19 @@ Write output logs in directory @var{path}.  The default is @code{.}, the
 directory where you start @code{greg}.  This option affects only the
 log and the debug files @file{@var{tool}.log} and
 @file{@var{tool}.dbg}.
+
+@item --path @var{path} @dots{}
+@cindex selecting tests by explicit filename
+@cindex @code{--path} (@code{greg} option)
+@var{path} specifies what test files to run outside of the normal tools
+systems.
+
+For example, including @code{--path mytests/old/gcc} on the @code{greg}
+command line runs the tests in the @code{mytests/old/gcc} file.
+
+@code{greg --path mytests/old/gcc mytests/xxx.y}
+runs the tests in the @code{mytests/old/gcc} file and then the tests in
+the @code{mytests/xxx.y} file.
 
 @item --srcdir @var{path}
 @cindex source directory
