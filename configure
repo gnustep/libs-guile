@@ -11,12 +11,7 @@
 ac_help=
 ac_default_prefix=/usr/local
 # Any additions from configure.in:
-ac_default_prefix=`if test "x$GNUSTEP_SYSTEM_ROOT" = "x"; then
-GNUSTEP_SYSTEM_ROOT=/usr/GNUstep ;
-echo $GNUSTEP_SYSTEM_ROOT ;
-else
-echo $GNUSTEP_SYSTEM_ROOT ;
-fi`
+ac_default_prefix=`echo $GNUSTEP_SYSTEM_ROOT`
 ac_help="$ac_help
   --with-guile-prefix=PFX	Prefix where Guile is installed (optional)"
 ac_help="$ac_help
@@ -535,6 +530,13 @@ fi
 
 
 
+if test -z "$GNUSTEP_SYSTEM_ROOT"; then
+  {
+   echo "ERROR: You must run the GNUstep initialization script before configuring the gnustep-guile library!" 1>&2;
+  exit 1; 
+  }
+fi
+
 #--------------------------------------------------------------------
 # Use a .h file with #define's, instead of -D command-line switches
 #--------------------------------------------------------------------
@@ -542,8 +544,6 @@ fi
 
 #--------------------------------------------------------------------
 # The GNUstep root directory.
-# The user should have the GNUSTEP_SYSTEM_ROOT environment variable
-# defined, but if not then we have a global default.
 #--------------------------------------------------------------------
 
 if test "x$prefix" = "x"; then
