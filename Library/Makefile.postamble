@@ -22,11 +22,24 @@
 # library to that the <libname>.so symlink points to. That should be the
 # shared object name of the library.
 after-install::
-	DIRP=$(INSTALL_ROOT_DIR)`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`; \
+	@DIRP=$(INSTALL_ROOT_DIR)`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`; \
 	$(MKDIRS) $$DIRP/languages/gstep-guile; \
 	for i in $(SCHEME_FILES); do \
 	  $(INSTALL_DATA) $$i $$DIRP/languages/$$i; \
 	done; \
+	echo "#############################################################"; \
+	echo "The gstep-guile libraries have been installed in -"; \
+	echo "$(GNUSTEP_LIBRARIES)"; \
+	echo "It is possible that Guile may not be able to find them there "; \
+	echo "in which case, you will need to change/set the LD_LIBRARY_PATH"; \
+	echo " environment variable (or whatever other environment variable "; \
+	echo "your operating system uses to list the places in which "; \
+	echo "dynamic libraries may be found) to include the directory in "; \
+	echo "which the libraries have been installed."; \
+	echo "eg."; \
+	echo " LD_LIBRARY_PATH=$(GNUSTEP_LIBRARIES)"; \
+	echo " export LD_LIBRARY_PATH"; \
+	echo "#############################################################"; \
 
 # Things to do after uninstalling
 # after-uninstall::

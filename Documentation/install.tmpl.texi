@@ -73,10 +73,23 @@ Alternatively - you can run the 'go' program directly and work interactively.
 This package has only been used by me on a GNU/Linux/Intel system -
 I would love to hear about success/failures on other systems.
 
-Likely problems - structure return is likely to fail on other systems.
-it should be possible for you to fix things for your system by adding
+Likely problems -
+
+@itemize @bullet
+@item
+If you install gstep-guile in a non-standard location, it's possible that
+guile will not be able to find the dynamic libraries to load them.
+In this case, you will need to change/set the @code{LD_LIBRARY_PATH}
+environment variable (or whatever other environment variable your operating
+system uses to list the places in which dynamic libraries may be found) to
+include the directory in which the libraries have been installed.
+@item
+Structure return is likely to fail on other systems.
+It should be possible for you to fix things for your system by adding
 a config file in the src/mframe directory in gstep-base and re-running
-'configure' and rebuilding the base library.
+'configure' and rebuilding the base library - however, getting a working
+system for your machine/operatins system is likely to be quite tricky.
+@end itemize
 
 Try to fix the problem.  Send patches to <richard@@brainstorm.co.uk>.
 
