@@ -35,7 +35,7 @@ config.status:
 	./configure
 	$(MAKE) clean
 
-library: 
+library: FORCE
 	(cd Library; $(MAKE));
 
 test:
@@ -44,7 +44,7 @@ test:
 check:
 	(cd Test; $(MAKE) check);
 
-documentation:
+documentation: FORCE
 	(cd Documentation; $(MAKE))
 
 install: all
@@ -92,3 +92,7 @@ distrib:
 	gzip greg-$$VERSION.tar; \
 	rm -rf /tmp/greg-$$VERSION; \
 	)
+
+
+FORCE:
+

@@ -42,7 +42,7 @@ libgg_gui_LIBRARIES_DEPEND_UPON += -lgnustep-gui
 
 libgg_gdl2_LIBRARIES_DEPEND_UPON += -lgnustep-db2 -lgnustep-db2control
 
-libgstep_guile_LIBRARIES_DEPEND_UPON += -lgnustep-base -lobjc $(GUILE_LIBS)
+libgstep_guile_LIBRARIES_DEPEND_UPON += -lgnustep-base $(GUILE_LIBS)
 
 
 #
