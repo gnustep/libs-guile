@@ -1,3 +1,7 @@
+2001-05-13 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Source/gg_class.m: Permit subclassing of NSProxy.
+
 2001-05-12 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Source/gg_NSObject.m: Removed category for NSProxy, as a closer
