@@ -4,16 +4,22 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.0.3}
+
+@itemize @bullet
+@item Minor fixes to install better with newer gnustep-make
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{1.0.2}
 
 @itemize @bullet
 @item Better configure/make/install support
 @item Bug fixes
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{1.0.1}
 

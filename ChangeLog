@@ -1,3 +1,10 @@
+2002-03-14  Adam Fedor  <fedor@gnu.org>
+
+	* Version: 1.0.3
+
+	* Library/GNUmakefile (libgstep_guile_HEADER_FILES_INSTALL_DIR): 
+	Install in gnustep/guile.
+
 Tue Mar  5 17:53:45 2002  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* Library/link_gui.m (gstep_gui_classes): Do not try to access
