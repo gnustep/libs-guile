@@ -290,6 +290,12 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
   [script appendString: @"(let* ( "];
   // [script appendString: @"(letrec ( "];
     
+  add_let_script(script,
+		 GuileInterpreterKeyWord_Update,
+                 @"(begin "
+                 @"(defmacro script-kit-update-macro (name) `(script-kit-update (symbol->string ',name) ,name))"
+		 @"script-kit-update-macro)");
+
   if ((userDictionary != nil) && [userDictionary count] != 0)
     {
       NSEnumerator * keys = [userDictionary keyEnumerator];
@@ -311,11 +317,6 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
 		GuileInterpreterKeyWord_Dictionary,
 		userDictionary);
 
-  add_let_script(script,
-		 GuileInterpreterKeyWord_Update,
-                 @"(begin "
-                 @"(defmacro script-kit-update-macro (name) `(script-kit-update (symbol->string ',name) ,name))"
-		 @"script-kit-update-macro)");
   
   [script appendString: @") "];
 
