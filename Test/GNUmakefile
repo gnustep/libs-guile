@@ -2,19 +2,22 @@ GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
 GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES = ../guile.make
 include ../AppKit.make
+include ../EOF.make
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
 # The application to be compiled
 ifneq ($(HAVE_APPKIT),no)
-  ifneq (yes,no)
-    APP_NAME = gui
-    gui_OBJC_FILES = gui.m
-  endif
+  APP_NAME = gui
+  gui_OBJC_FILES = gui.m
 endif
 
-#The tool to be compiled
+#The tools to be compiled
 TOOL_NAME = go
+ifneq ($(HAVE_GDL2),no)
+  TOOL_NAME += gdl2
+  gdl2_OBJC_FILES = gdl2.m
+endif
 
 go_OBJC_FILES = go.m
 

@@ -31,6 +31,7 @@ ADDITIONAL_LIB_DIRS += -L../Library/$(GNUSTEP_OBJ_DIR)
 
 # Additional libraries when linking tools
 ADDITIONAL_TOOL_LIBS += -lgstep_guile -lgg_base $(GUILE_LIBS)
+gdl2_TOOL_LIBS = -lgg_gdl2
 
 # Additional libraries when linking applications
 ADDITIONAL_GUI_LIBS += -lgg_gui

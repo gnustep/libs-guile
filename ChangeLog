@@ -1,3 +1,28 @@
+2002-02-04  David Ayers  <d.ayers@inode.at>
+
+	* GNUmakefile: distclean AppKit.make and EOF.make.
+	* configure.in: Added tests for EOAccess.h, EOControl.h 
+	and EOInterface.h.
+	* config.h.in: Dito.
+	* configure: Regenerated.
+	* EOF.make.in: New file.
+
+	* Library/GNUmakefile: Added include of EOF.make and libgg_gdl2.
+	* Library/Makefile.pramble: Added dependancy for libgg_gdl2.
+	* Library/gstep_guile.h: Added gstep_link_gdl2().
+	* Library/link_gdl2.m: New file.
+
+	* Tools/guile-gdl2.m: New file.
+	* Tools/GNUmakefile: Added guile-gdl2.
+	* Tools/Makefile.preamble: Added guile-gdl2 support.
+
+	* Test/GNUmakefile: Removed excessive check in HAVE_APPKIT
+	processing.  Added gdl2.
+	* Test/Makefile.preamble: Added gdl2_TOOL_LIBS for gdl2.
+	* Test/go.m: Added note on how to exit to startup message.
+	* Test/gui.m: Added note on how to exit to startup message.
+	* Test/gdl2.m: New file.
+	
 Tue Nov 26 12:48:19 2002  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* GNUmakefile: Do not define GNUSTEP_MAKEFILES.

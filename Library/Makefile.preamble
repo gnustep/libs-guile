@@ -36,6 +36,8 @@ ADDITIONAL_TOOL_LIBS += -lgstep_guile $(GUILE_LIBS)
 # Additional libraries when linking applications
 ADDITIONAL_GUI_LIBS +=
 
+libgg_gdl2_LIBRARIES_DEPEND_UPON += -lgnustep-db2 -lgnustep-db2control
+
 ifeq ($(GNUSTEP_TARGET_OS),mingw32)
 libgstep_guile_LIBRARIES_DEPEND_UPON += -lgnustep-base -lobjc $(GUILE_LIBS)
 libgg_base_LIBRARIES_DEPEND_UPON += -lgstep_guile -lgnustep-base -lobjc $(GUILE_LIBS)
