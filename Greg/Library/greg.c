@@ -228,7 +228,7 @@ scm_pty_child(SCM args)
 	      i = setpgid(i, i);
 	    }
 #endif
-#if	TIOCNOTTY
+#ifdef	TIOCNOTTY
 	  i = open("/dev/tty", O_RDWR);
 	  if (i >= 0)
 	    {
