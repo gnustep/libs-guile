@@ -1,0 +1,614 @@
+Thu Mar  4 20:25:55 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): 0.2.3.
+	ScriptKit now part of gstep_guile.
+
+	* (Examples/GNUmakefile): include config.make if existing.
+	* (Library/GNUmakefile): Ditto.
+
+Mon Mar  1 10:27:17 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* Examples/Makefile.preamble(ADDITIONAL_LIB_DIRS): ScriptKit ->
+	Library.
+
+	* GNUmakefile (SUBPROJECTS): Likewise.
+
+	* Library/Makefile.preamble: Likewise.
+
+
+Mon Mar  1 07:14:58 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* README.jp: New file.
+
+	* Examples: New directory.
+
+	* GNUmakefile (GNUSTEP_INSTALLATION_DIR): Removed.
+
+	* (*.m *.h *.m4): Added Copyright of FSF.
+	Removed Eiichi TAKAMORI from the maintainer list. He is too busy now
+	to maintain this library.
+
+	* ScriptKit/test_skit.m : Rewrote. Use print_result to show 
+	  the result of testing.
+
+Sun Feb 28 01:59:25 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/test_skit.m (print_header): Write header to stderr.
+
+Sat Feb 27 22:39:29 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/test_skit.m (test_update): Don't use -scmWithLong:. 
+
+Sun Feb 21 16:08:14 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* HACKING (TODO): Remove an item.
+
+Sat Feb 20 08:25:07 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileInvocation.m ([GuileInvocation -procedureArgc]): 
+	New method.
+
+	* GuileInvocation.h([GuileInvocation -initWithArgc:]): Add a declaration.
+
+	* ScriptKit/GuileInterpreter.m (script_kit_update_fn): Use only
+	[GuileSCM +scmWithSCM:] to update SCM value.
+
+Fri Feb 19 17:49:11 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/test_skit.m (test_guile_script): No need to invoke -cString.
+	(test_guile_script): Create NSString from C String.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -init]): Change the 
+	default mode to batch.
+
+Thu Feb 18 14:45:13 1999 Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+        * GuileC is removed. Use GuileSCM instead of it.
+
+Thu Feb 18 04:15:04 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileInterpreter.m (script_kit_lookup_fn): Use
+	-scmValue only.
+
+	* ScriptKit/GuileC.m ([GuileC -scmValue]): New method.
+
+	* ScriptKit/GuileInterpreter.m (add_let_entry): Change exception 
+	message.
+
+	* ScriptKit/GuileSCM.[mh]: Includes Protocol.h and Object.h.
+	Added [Object(GuileSCM) +scmValue], [Protocol(GuileSCM) -scmValue].
+
+Tue Feb 16 12:01:48 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileInterpreter.m (script_kit_lookup_fn): Add a new
+	 local variable.
+	 (script_kit_lookup_fn): if a GuileSCM object is looked up,
+	 return SCM value instead of GuileSCM object itself.
+
+Sun Feb 14 04:26:03 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/test_skit.m: Don't include objc/Object.h.
+	(test_repl): Added new variable, prompt.
+
+	* ScriptKit/run-test.sh: Add code checking the sub directories
+	 existence.
+
+Sat Jan 23 17:48:11 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): Version 0.2.2.
+
+	* ScriptKit/GuileInterpreter.m (script_kit_update_fn): New function.
+	(script_kit_update_n): New variable.
+
+	* ScriptKit/GuileInterpreter.[hm](GuileInterpreterKeyWord_Update): 
+	New key word.
+
+	* ScriptKit/test_skit.m (test_update): New test function.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -loadFile:filename]): 
+	([GuileInterpreter -define:name:val]): 	Return result.
+	([GuileInterpreter -generateRealScript:]): Use let* instead of let.
+	(add_let_script): New function.
+
+	* ScriptKit/GuileSCM.m: Use NSMapTable instead of o_map_XXX
+        in SCM<->GuileSCM mapper.
+        
+	* ScriptKit/Makefile.preamble(ADDITIONAL_INCLUDE_DIRS): Added 
+	GUILE_CFLAGS.
+
+Tue Jan 19 07:02:05 1999  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* path_guile.m4 (ac_path_guile_dummy_path): New variable.
+	(Suggested by Takaaki MORIYAMA <taka@airlab.cs.ritsumei.ac.jp>).
+
+Mon Dec 14 14:47:06 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): Version 0.2.1.
+
+	* GNUmakefile :  Renamed preamble and postamble make file names.
+
+	* Makefile.postamble: New file.
+
+	* GNUmakefile: Include SCRIPT_KIT_VERSION.
+
+	* SCRIPT_KIT_VERSION (VERSION): 
+	(PACKAGE): New constant.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -eval:sexpinUserDictionary:]):
+	New method.
+	([GuileInterpreter -eval:]): use
+	[GuileInterpreter -eval:sexpinUserDictionary:].
+
+	* ScriptKit/GuileC.[ch]: New files.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -setUserDictionary:]): 
+	Implement. Don't use shared_let directly.
+	([GuileInterpreter -executeScript:]): New method.
+
+	* ScriptKit/test_skit.m (test_guilec): New test function.
+
+	* ScriptKit/GuileInterpreter.m: Include string.h.
+	(add_let_entry): Accept an instance of GuileC.
+
+Sun Non 22 11:50:25 1998  Hideki Fujimoto  <hdk@ku3g.org>
+
+	* path_guile.m4
+
+	Change build-guile to guile-config for guile-1.3.
+
+Wed Dec  9 08:29:50 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/test_skit.m (test_repl): New test function.
+	Include NSArray.h and NSSet.h.
+	(test_nx_constant_string): Added a new test.
+	(test_main): Added autorelase pool.
+	(test_main): Call repl.
+	(test_keyword): New test function.
+
+	* ScriptKit/GuileInvocation.[mh]: New files.
+	
+	* ScriptKit/Guile.h: Include GuileInvocation.h.
+
+	* ScriptKit/GuileProcedure.m ([GuileProcedure -callWithArray:]): 
+	New methods.
+	Include NSArray.h.
+
+	* ScriptKit/GuileInterpreter.h(GuileInterpreterKeyWord_Dictionary): 
+	New constant keyword.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -batchMode]): 
+	([GuileInterpreter -isInBatchMode]): 
+	([GuileInterpreter -isInInteractiveMode]): 
+	([GuileInterpreter -isInInteractiveMode]): New methods.
+	(gopenstep_interactive_handler): Renamed from gopenstep_handler.
+	(gopenstep_batch_handler): New function.
+	([GuileInterpreter -executeScript:]): Select the exception handler
+	by running mode.
+	(batch_mode): New instance variable.
+	Include <Foundation/NSString.h>, <Foundation/NSException.h> and 
+	<Foundation/NSDictionary.h>.
+	([GuileInterpreter -replWithPrompt:]): 
+	Use eval: instead of gh_eval_str.
+	([GuileInterpreter -executeScript:]): Remove #if 1...#endif.
+	([GuileInterpreter -executeScript:]): Return nil if scr is nil.
+	(add_let_entry): New function.
+	(GuileInterpreterKeyWord_Interpreter): New constant.
+	([GuileInterpreter -executeScript:]): Some local variables are
+	removed.
+	([GuileInterpreter -executeScript:]): Pass the interpreter object
+	itself to guile and a script through `let'.
+	(#define INSTEAD(a...)): Removed.
+	([GuileInterpreter -replWithPrompt:]): Set the mode 
+	interactive.
+
+	* ScriptKit/GuileSCM.h(GuileWrongTypeException): Remove a declaration.
+
+	* ScriptKit/SKScript.m ([SKScript -stringValue]): 
+	Use -respondsToSelector:.
+	It didn't work well with NXConstantString.
+	But the problem is fixed. See comments. 
+	
+Mon Aug 31 19:50:46 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileProcedure.m ([GuileProcedure -initWithExpression:sexp]): 
+	Release self if the expression SEXP is not a procedure.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter +initializeInterpreter]): 
+	Use scm_make_gsubr instead of gscm_define_procedure.
+	(gscm_define_procedure): Macro definition is removed.
+	([GuileInterpreter -write:guile_scm]): Remove declaration of
+	gh_write.
+
+Sun Aug 30 10:36:11 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/SKInterpreter.h: Include objc/encoding.h.
+	  Put ifdef block around the definition of byref.
+
+	* ScriptKit/test_skit.m: Added comments.
+	(test_guile_script): Remove a test that doesn't 
+	use a let dictionary.
+
+	* ScriptKit/GNUmakefile: Comment out `internal-testtool-install'.
+	I think the bug in GNUstep make package is fixed.
+
+Sat Aug 22 00:03:05 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/run-test.sh : Run test_skit instead of skit. The test program
+	name was changed.
+
+	* ScriptKit/GuileInterpreter.m (gopenstep_user_dictionary_n): 
+	(gopenstep_user_dictionary_fn): Removed.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -replWithPrompt:]): 
+	gstep_guile_set_prompt_scm_code is renamed to script_kit_set_prompt_scm_code.
+	
+	* ScriptKit/GuileInterpreter.m (gstep_guile_lookup_fn): 
+	  (gstep_guile_lookup_n):
+	  ([GuileInterpreter +initializeInterpreter]): Change the prefix of variables
+	  and functions names to `script_kit'.
+		
+	* ScriptKit/GuileProcedure.m ([GuileProcedure -initWithExpression:sexp]): 
+	* ScriptKit/GuileSCM.m ([GuileSCM scm2str:]): Throw NSInvalidArgumentException
+	instead of GuileWrongTypeException.
+
+	* ScriptKit/GuileSCM.m (GuileWrongTypeException) : removed.
+
+Fri Aug 21 23:56:57 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/Makefile.preamble (ADDITIONAL_OBJCFLAGS): Removed -g flag.
+	If you want to add debug informations to output object file, invoke make
+	with `debug=yes'.
+	
+Tue Aug 18 07:44:03 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileSCM.m ([GuileSCM scm2str:]):
+	Added a '@'. 
+	(The second arguments for [NSException +raise:format:] should be
+	NSString *).
+
+	* ScriptKit/GuileSCM.m:
+	* ScriptKit/GuileProcedure.m: <Foundation/NSException.h> is included.
+
+Mon Aug 17 06:32:00 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileSCM.[mh] (GuileWrongTypeException): New exception.
+
+	* ScriptKit/GuileProcedure.m ([GuileProcedure -initWithExpression:sexp]): 
+	ScriptKit/GuileSCM.m ([GuileSCM +scm2str:scm]):
+	Throw an exception.
+
+	* ScriptKit/GuileSCM.m (gstep_scm2id): 
+	(gstep_id_p): Removed. These are in gstep_guile.m.
+
+	* ScriptKit/test_skit.m (test_guile_procedure_1): 
+
+	* ScriptKit/GuileProcedure.h(GUILE_PROC_EOA): 
+	* ScriptKit/GuileProcedure.[hm] ([GuileProcedure endOfArgumentsMark]): 
+	Removed.
+
+        * ScriptKit/GuileProcedure.m([-callWithObjects:]):
+	Use GUILE_EOA instaed of  GUILE_PROC_EOA.
+
+	* ScriptKit/Guile.h (Guile_end_of_arguments): New function.
+	(GUILE_EOA): New macro.
+
+	* ScriptKit/GuileSCM.m ([GuileSCM +list:,...]): Use EOA instead of nil
+	as va args terminator.
+
+	* ScriptKit/test_skit.m (test_guile_procedure_2): 
+	(test_guile_procedure_1): Use GUILE_EOA instead of GUILE_PROC_EOA.
+
+	* ScriptKit/test_skit.m: Renamed from skit.m.
+	(test_main): Renamed from skit_main.m.
+
+	* ScriptKit/GuileSCM.m ([GuileSCM +nilValue]):
+	([GuileSCM +nilSCMValue]): 
+	([GuileSCM id2scm:]):  Use gstep_id2scm instead of gstep_guile_make_gstep_id.
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -loadFile:filename]):
+	([GuileInterpreter -define:name:val]): 
+	([GuileInterpreter -lookup:name]): 
+	Cast to char * in order to discard const.
+
+	Call gstep_init instead of gstep_guile_init().
+	(gstep_guile_lookup_fn): 
+
+	* ScriptKit/GuileSCM.m (gstep_id2scm): Remove the function.
+	gstep_id2scm is extern'ed in gstep-guile-0.5.8. 
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter +initializeInterpreter]): 
+	* ScriptKit/GuileSCM.m ([GuileSCM -initWithObject:]): 
+	([NSObject -scmValue]): 
+	([GuileSCM +scmWithObject:]): Pass YES as the second argument for
+        gstep_id2scm. Is it OK?
+
+Wed Aug 12 07:41:11 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* HACKING (TODO): Added.
+
+	* ScriptKit/*.[hm]: Translated some Japanese comment to English.
+
+Wed Aug 12 07:24:30 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -loadFile:filename]): 
+	([GuileInterpreter -define:name:val]): 
+	([GuileInterpreter -lookup:name]): Implementated. But not tested.
+
+	* ScriptKit/GuileSCM.m ([GuileSCM +scmWithSCM:]): If the argument
+	 SCM is a procedure, this method returns an instance of GuileProcedure.
+	 
+
+Mon Jul 13 00:18:43 1998 Masatake Yamato <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GNUmakefile (LIBRARY_NAME): 
+	(libScriptKit_OBJC_FILES): 
+	(libScriptKit_HEADER_FILES_DIR): 
+	(libScriptKit_HEADER_FILES_INSTALL_DIR): 
+	(libScriptKit_HEADER_FILES): Renamed from libskit to
+	libScriptKit.
+
+	* ScriptKit/Makefile.preamble: Added -lScriptKit and removed -lskit.
+
+Mon Jun 29 23:23:41 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/skit.m (test_guile_script): Added test case that
+	tests evaluating a script without `let' dictionary.
+
+Sat Jun 27 23:09:14 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/skit.m (test_guile_procedure_1): 
+	(test_guile_procedure_2): Use GUILE_PROC_EOA instead of nil in 
+	order to show the end of arguments.
+
+	One will want to pass the `nil' to a guile procedure as its arguments
+	But if nil is used as the mark that shows end of arguments, one cannot
+	pass the nil. So I introduced GUILE_PROC_EOA as the mark for the end 
+	of arguments.
+	
+	* ScriptKit/GuileProcedure.h (GUILE_PROC_EOA): New macro.
+	
+	* ScriptKit/GuileProcedure.[hm] ([GuileProcedure endOfArgumentsMark]): 
+	New method.
+
+Fri Jun 26 06:18:03 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* HACKING: Remove tasks proposed by masata-y.
+	These tasks are archived by Eiichi.
+
+	* ScriptKit/skit.m (test_guile_eval): A new function that
+	tests [GuileInterpreter -eval:].
+	(skit_main): Added test_guile_eval and sent -release to
+	GuileInterpreter.
+	
+Thu Jun 25 00:59:22 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileInterpreter.m ([GuileInterpreter -eval:sexp]): 
+	Implementated.
+
+Sun Jun 21 16:37:39 1998  Eiichi Takamori  <taka@ma1.seikyou.ne.jp>
+
+	* ScriptKit/GuileSCM.h:
+	Including of Guile.h has a trouble with recursive inclusion, so
+	include gstep_guile.h instead.
+
+	* ScriptKit/Guile.h:
+	Removed inclusion of gh.h, since it is included via gstep_guile.h.
+
+Sun Jun 21 16:08:56 1998  Eiichi Takamori  <taka@ma1.seikyou.ne.jp>
+
+	* ScriptKit/Guile.h:
+	Added GuileProcedure.h. Changed ".." to <..>.
+
+	* ScriptKit/GNUmakefile: Added GuileProcedure.[mh].
+
+	* ScriptKit/GuileInterpreter.m
+	(gstep_guile_lookup_fn): Use assert () for checking shared_let.
+	(executeScript:): Add paren around assignment as condition.  Return
+	SCM value with capsulating it into GuileSCM, even if it isn't a
+	gstep-id.
+
+	* ScriptKit/GuileInterpreter.[mh]:
+	(eval:, loadFile:, define:withValue:, lookup:, display:, write:,
+	newline): New methods.  Some of them haven't been implemented yet.
+
+	* ScriptKit/skit.m:
+	Added tests for GuileProcedure.
+	Added test for gh_*, which is irrevant, but may be useful for
+	comparing between class interface and gh_*.
+	(test_guile_script): Do newline when printing.  Print out to stdout,
+	not stderr, so buffering will be done properly.
+
+	* ScriptKit/GuileProcedure.[mh]:
+	New files.  This class is intened to be an alternative of
+	GuileScript.  This class encapsulates Scheme's procedures, and can
+	be applied or passed as argument as well as ordinary GuileSCM's.
+
+	* ScriptKit/GuileSCM.[mh]:
+	Almost completely rewritten.
+	
+	Many methods are categorized and re-ordered.  Added Debugging,
+	TypeConversions, TypePredicates, EqualityPredicates, and
+	ListOperations categories. Added conversion from instances of
+	several classes to SCM.
+	
+	Renamed valueWithSCM to scmWithSCM; the former is confusing as
+	there are scmValue, xxxValue. (Is the latter confusing too? :)
+	scmWithSCM and dealloc are primary creation/decreation methods.
+
+Sat Jun 20 07:08:23 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* ScriptKit/GuileInterpreter.m(gopenstep_handler): Use scm_write
+	instead of scm_puts to avoid the incompatible probolem of scm_puts
+	and scm_gen_puts.
+
+	* .cvsignore: 
+	Add config.mak. config.mak is generated by configure.
+
+Thu Jun 18 19:22:25 1998  Eiichi Takamori <taka@ma1.seikyou.ne.jp>
+
+	* ScriptKit/run-test.sh:
+	New file.  Maybe convienient for running compiled test programs.
+
+	* ScriptKit/run-test.sh:
+	file run-test.sh was initially added on branch branch-0-2.
+
+	* ScriptKit/.cvsignore: Added shared_obj.
+
+	* HACKING:
+	Changed notes to reflect uses of autoconf and gstep-make.
+
+	* autogen.sh: Removed.
+
+	* ScriptKit/SKInterpreter.m:
+	Removed #define VERSION, and use SCRIPT_KIT_VERSION instead.
+
+	* ScriptKit/Makefile.preamble (ADDITIONAL_CPPFLAGS):
+	Added $(DEFS), which is defined in config.mak.
+	(ADDITIONAL_INCLUDE_DIRS): Added $(GUILE_CFLAGS), but then disabled it.
+	See comments.
+	(ADDITIONAL_TOOL_LIBS): Changed -lguile to $(GUILE_LIBS).
+
+	* ScriptKit/GNUmakefile:
+	Include config.mak.
+	Define libsk_HEADER_FILES_INSTALL_DIR so that header files will be
+	installed under $GNUSTEP_LOCAL_ROOT/Headers/ScriptKit.
+
+	* config.mak.in:
+	New file.  This file is included from GNUmakefile.
+
+	* configure.in:
+	Use path_guile.m4.  (sinclude it and use AC_PATH_GUILE)
+	Define SCRIPT_KIT_VERSION and GUILE_VERSION into @DEF@.
+	Remove AC_CANONICAL_SYSTEM and AM_INIT_AUTOMAKE.
+	Output config.mak.
+
+	* path_guile.m4: New file.
+Mon Jun 15 07:46:23 1998  Eiichi Takamori <taka@ma1.seikyou.ne.jp>
+
+	* ScriptKit/GNUmakefile:
+	Renamed TEST_APPLICATION_NAME to TEST_TOOL_NAME.
+	Include test-tool.make instead of test-application.make.
+	Add internal-testtool-install dummy target.
+
+	* ScriptKit/Makefile.preamble (ADDITIONAL_LIB_DIRS):
+	Changed ../Library to ../ScriptKit.
+
+Sun Jun 14 21:50:53 1998  Eiichi Takamori <taka@ma1.seikyou.ne.jp>
+
+	NOTE: Created branch-0-2 to cvs and commited ScriptKit-0.2.0
+	by Hideki Fujimoto.  Changelog entries below are written by me.
+
+	* SCRIPT_KIT_VERSION:
+	Changed to 0.2.0.
+
+	* ScriptKit/Guile.h, ScriptKit/skit.m:
+	Changed guileobjc.h to gstep_guile.h.
+
+	* ScriptKit/SKInterpreter.m:
+	add #define VERSION.
+
+	* ScriptKit/GuileSCM.m:
+	Changed guileobjc.h to gstep_guile.h.
+	Changed guileobjc_*() to gstep_guile_*() in every place.
+	(scm2id): use gh_cdr because gstep_guile_scm2id have a problem.
+	(isObject): return YES.
+
+	* ScriptKit/GuileSCM.h:
+	Comment out gopenstep_id_smob and scm_tc16_gopenstep_id.
+
+	* ScriptKit/GuileInterpreter.m (gstep_guile_lookup_fn):
+	Renamed from objcguile_lookup_fn.
+	(initializeInterpreter): Uncomment GUILE_VERSION kludge.
+	(replWithPrompt): s/guileobjc/gstep_guile/.
+
+	* Makefile.am, ScriptKit/Makefile.am, ScriptKit/automake-fack.c:
+	Removed.
+
+	* GNUmakefile, ScriptKit/GNUmakefile,
+	ScriptKit/Makefile.preamble, ScriptKit/Makefile.postamble:
+	New file for gstep-make.
+
+Thu Jun  4 09:32:07 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* (ScriptKit/*.[mh]) Added copy right notices.
+
+Fri May 22 01:37:33 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): Release 0.1.5.
+
+        * configure: Regenerated.
+
+Wed May 20 11:45:10 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): Release 0.1.4.
+
+Wed May 13 00:32:28 JST 1998 Yasuhiro Shirasaki <joke@awa.tohoku.ac.jp>
+
+	* ScriptKit/.cvsignore: added Makefile
+
+	* ScriptKit/Guile.h: #undef id before override previous definition.
+
+Mon Apr 20 05:55:28 1998  Eiichi Takamori  <taka@ma1.seikyou.ne.jp>
+
+	* .cvsignore, ScriptKit/.cvsignore: New files.
+
+	* HACKING, autogen.sh: New file, for use of CVS.
+
+	* Imported files from 0.1.3, except those that can be regenerated.
+
+Mon Apr 13 15:54:34 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* SCRIPT_KIT_VERSION (SCRIPT_KIT_VERSION): Version 0.1.3 is released.
+
+	* ScriptKit/Makefile.am (skit_LDADD): Added -lm.
+
+	* configure.in(AM_INIT_AUTOMAKE):  Define version.
+
+	* ScriptKit/Makefile.am (noinst_PROGRAMS): New entry.
+	An entry bin_PROGRAMS is removed.
+
+	* ScriptKit/ScriptKit.h(script_kit_version): 
+	* ScriptKit/SKInterpreter.m(script_kit_version): New function.
+
+Sun Apr 12 09:06:44 JST 1998  Eiichi Takamori  <taka@ma1.seikyou.ne.jp>
+
+	* Version 0.1.2 is released.
+
+Sun Apr 12 00:00:15 1998  Eiichi Takamori  <taka@ma1.seikyou.ne.jp>
+
+	* ScriptKit/Makefile.in, configure, aclocal.m4, Makefile.in:
+	Regenerated with automake-1.3.
+
+	* ScriptKit/Makefile.am: Added @GUILEOBJC_INC@.
+
+	* configure.in: Removed xxx_CHECK_GUILEOBJC.
+	Use AM_PATH_GUILEOBJC, not xxx_CHECK_GUILEOBJC.
+
+Thu Apr  2 01:17:08 1998  Masatake Yamato  <masata-y@is.aist-nara.ac.jp>
+
+	* configure.in(xxx_CHECK_GUILEOBJC): Added -lm to GUILEOBJC_LIBS.
+
+Thu Apr  2 00:53:05 1998  Eiichi Takamori  <taka@ma1.seikyou.ne.jp>
+
+	* SCRIPT_KIT_VERSION, Makefile.in, Makefile.am:
+	(config.status) Added SCRIPT_KIT_VERSION to dependency.
+	bumped to 0.1.0.
+
+	* configure.in, configure, SCRIPT_KIT_VERSION, Makefile.in,
+	Makefile.am: Added SCRIPT_KIT_VERSION.
+
+Thu Apr  2 00:30:01 1998  Eiichi Takamori  <taka@ma1.seikyou.ne.jp>
+
+	* configure, aclocal.m4, Makefile.in: Regenerated.
+
+	* configure.in: subst GUILEOBJC_LIBS for librarys used by guileobjc.
+
+	* ScriptKit/SKScript.m (stringValue):
+	check if delegate is kind of NSString.
+	it seems respondsToSelector does not work. hmm.
+
+	* ScriptKit/Makefile.in, ScriptKit/Makefile.am:
+	use $(GUILEOBJC_LIBS) in skit_LDADD.
+
+	* ScriptKit/GuileInterpreter.m (initializeInterpreter):
+	load boot-9.scm if using guile-1.3a.
+
