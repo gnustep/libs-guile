@@ -127,7 +127,6 @@ gstep_gui_classes()
     CCLS(NSControl);
     CCLS(NSCursor);
     CCLS(NSCustomImageRep);
-    CCLS(NSDPSContext);
     CCLS(NSDataLink);
     CCLS(NSDataLinkManager);
     CCLS(NSDataLinkPanel);
@@ -172,7 +171,6 @@ gstep_gui_classes()
     CCLS(NSTextView);
     CCLS(NSView);
     CCLS(NSWindow);
-    CCLS(NSWindowView);
     CCLS(NSWorkspace);
     [arp release];
 }
