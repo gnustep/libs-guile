@@ -63,7 +63,7 @@ Free Software Foundation instead of in the original English.
 @c @subtitle last updated October 27, 1998
 @subtitle Version 0.5.13
 @subtitle (for use with @samp{gstep-base} version 0.5.xxx
-@subtitle and @samp{libguile} version 1.2 (or greater)
+@subtitle and @samp{libguile} version 1.2 and 1.3.1 (or greater)
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
 @page
 @vskip 0pt plus 1filll
@@ -164,6 +164,9 @@ cvs -z3 checkout guile@*
 
 @item guile-1.2		@*
 Should be available from any GNU ftp site @*
+guile-1.3.1 (via anon cvs - see
+@url{http://www.red-bean.com/guile/guile-anon-cvs.html} @*
+NB. guile 1.3 contains bugs that prevent gstep-guile from working fully.
 
 @item gstep-core-0.5.xxx	@*
 You need a snapshot from October 1998 or later - Should be available
@@ -185,9 +188,9 @@ The patch for gdb-4.17 is available at
 
 @item Make sure you have gcc-2.8.* installed.
 
-@item Make sure you have Guile-1.2 or later built and installed.
+@item Make sure you have Guile-1.2 or Guile-1.3.1 or later built and installed.
 This library will has been tested with both 1.2 and recent developer
-snapshots of Guile.
+snapshots of Guile.  The library does not work fully with Guile-1.3
 
 @item Make sure you have gstep-core-0.5.0 (October 1998 snapshot or later)
 installed and have your account properly set up to use GNUstep.sh from
