@@ -1,3 +1,8 @@
+2002-09-16 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/link_base.m: Adjust for new constants for NSFileManager
+	file attributes.
+
 2002-03-14  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 1.0.3
