@@ -79,7 +79,7 @@ all: $(LIB)
 	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
 
 libgreg.la: $(LIB_OBJECTS)
-	$(LINK) -rpath $(libdir)/guile $(LIB_LDFLAGS) $(LIB_OBJECTS) $(LIBS)
+	$(LINK) -rpath $(libdir) $(LIB_LDFLAGS) $(LIB_OBJECTS) $(LIBS)
 
 %.o: %.c
 	@echo '$(COMPILE) -c $<'; \
@@ -91,10 +91,10 @@ libgreg.la: $(LIB_OBJECTS)
 
 install: libgreg.la
 	$(MKINSTDIRS) $(INSTALL_ROOT_DIR)$(GUILE_SCM_PATH); \
-	$(MKINSTDIRS) $(libdir)/guile; \
+	$(MKINSTDIRS) $(libdir); \
 	$(MKINSTDIRS) $(bindir); \
 	if test -f ${LIB}; then \
-	  $(INSTALL_DATA) .libs/libgreg.so $(libdir)/guile/libgreg.so; \
+	  $(INSTALL_DATA) .libs/libgreg.so $(libdir)/libgreg.so; \
 	fi; \
 	$(INSTALL_DATA) greg.scm $(INSTALL_ROOT_DIR)${GUILE_SCM_PATH}/greg.scm; \
 	$(INSTALL_SCRIPT) greg ${bindir}/greg;
