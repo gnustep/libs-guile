@@ -1,3 +1,11 @@
+1999-03-14  Adam Fedor  <fedor@gnu.org>
+
+	* README: New file
+	* NEWS: Likewise
+	* Documentation/readme.tmpl.texi: Likewise.
+	* Documentation/news.tmpl.texi: Likewise.
+	* Documentation/intall.tmpl.texi: Likewise.
+
 1999-03-12  Adam Fedor  <fedor@gnu.org>
 
 	* Version: New file
