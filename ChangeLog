@@ -1,3 +1,7 @@
+2001-03-13  Adam Fedor  <fedor@gnu.org>
+
+	* guile.make.in: New file.
+
 2001-03-10  Adam Fedor  <fedor@gnu.org>
 
 	* Version 0.9.2
