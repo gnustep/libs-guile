@@ -70,3 +70,5 @@ include $(GNUSTEP_MAKEFILES)/library.make
 
 include Makefile.postamble
 
+include CompatibilityHeaders.make
+
