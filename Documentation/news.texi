@@ -4,6 +4,13 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.0.1}
+
+@itemize @bullet
+@item Fixes to allow subclassing.
+@item guile-base and guile-gui moved here from testing package
+@end itemize
+
 @section Noteworthy changes in version @samp{1.0.0}
 
 @itemize @bullet
