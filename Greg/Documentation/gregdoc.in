@@ -115,7 +115,7 @@ extension or not.
 Added @code{greg-paths} variable to permit direct running of named files
 rather than using the DejaGNU-like tools directory structure.
 @item
-Added @code{greg-pass} and @code{greg-fail} macros.
+Added @code{greg-expect-pass} and @code{greg-expect-fail} macros.
 @end itemize
 
 New in 1.1
@@ -381,7 +381,7 @@ appeared outside the testcase, but that would have been less safe.
 @end itemize
  
 Here is the same example in a slightly different form - using the
-@code{greg-pass} macro -
+@code{greg-expect-pass} macro -
 
 @cartouche
 @smallexample
@@ -391,7 +391,7 @@ Here is the same example in a slightly different form - using the
 ; Create an object using the NSString [stringWithCString:] method and
 ; check that the resulting object is of the correct class.
 ;
-(greg-pass "The `stringWithCString:' method creates an NSString object"
+(greg-expect-pass "The `stringWithCString:' method creates an NSString object"
   (define obj ([] "NSString" stringWithCString: "Hello world"))
   (gstep-bool ([] obj isKindOfClass: ([] "NSString" class)))
 )
@@ -1103,11 +1103,11 @@ Your file might contain code like -
 @smallexample
 ; A simple test that basic arithmetic works
 
-(greg-pass "one plus one is two"
+(greg-expect-pass "one plus one is two"
   (eq? (+ 1 1) 2)
 )
 
-(greg-pass "one minus one is zero"
+(greg-expect-pass "one minus one is zero"
   (eq? (- 1 1) 0)
 )
 @end smallexample
@@ -1212,18 +1212,19 @@ that the script is meant to test.  A testcase is always written
 using the @code{greg-testcase} procedure, though this procedure could
 be invoked by a convenience macro.
 
-@subsection greg-pass
-@cindex greg-pass
+@subsection greg-expect-pass
+@cindex greg-expect-pass
 
-The @code{greg-pass} macro is a shorthand method of writing the most usual
-sort of testcase - where a fragment of Guile code is run and is expected to
-return a @emph{true} result.  It passes an assertion and a fragment of Guile
+The @code{greg-expect-pass} macro is a shorthand method of writing
+the most usual sort of testcase - where a fragment of Guile code is
+run and is expected to return a @emph{true} result.
+It passes an assertion and a fragment of Guile
 code that performs a test to the @code{greg-testcase} procedure -
 @cartouche
 @smallexample
 ; A simple test that basic arithmetic works
 
-(greg-pass "one plus one is two" (eq? (+ 1 1) 2))
+(greg-expect-pass "one plus one is two" (eq? (+ 1 1) 2))
 
 is equivalent to -
 
@@ -1235,17 +1236,17 @@ is equivalent to -
 @end smallexample
 @end cartouche
 
-@subsection greg-fail
-@cindex greg-fail
+@subsection greg-expect-fail
+@cindex greg-expect-fail
 
-The @code{greg-fail} macro is a shorthand method of writing a testcase to
-confirm that a known bug is still present in the code being tested.  Once
-the bug is fixed, it would be altered to be a @code{greg-pass} testcase.
+The @code{greg-expect-fail} macro is a shorthand method of writing a testcase
+to confirm that a known bug is still present in the code being tested.  Once
+the bug is fixed, it would be altered to be a @code{greg-expect-pass} testcase.
 @cartouche
 @smallexample
 ; A test that basic arithmetic DOESN'T work!
 
-(greg-fail "one plus one is two" (eq? (+ 1 1) 2))
+(greg-expect-fail "one plus one is two" (eq? (+ 1 1) 2))
 
 is equivalent to -
 

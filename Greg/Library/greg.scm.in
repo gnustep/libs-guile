@@ -1141,12 +1141,12 @@
 ; Shorthand for the most common sort of testcase - the test body
 ; is expected to pass.
 ;
-(defmacro-public greg-pass (assertion body)
+(defmacro-public greg-expect-pass (assertion body)
   `(greg-testcase ,assertion #t (lambda () ,body))
 )
 ;
 ; And a test that is expected to fail.
 ;
-(defmacro-public greg-fail (assertion body)
+(defmacro-public greg-expect-fail (assertion body)
   `(greg-testcase ,assertion #f (lambda () ,body))
 )
