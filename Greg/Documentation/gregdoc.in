@@ -159,7 +159,7 @@ DejaGNU, but also provides Guile modules to permit `embedded' testing of
 applications that use Guile as a scripting language and libraries that
 are directly accessible to Guile.
 
-This release has been tested with Guile-1.2 and 1.3
+This release has been tested with Guile-1.3
 
 Apologies to Guile/Scheme/Lisp programmers out there - I came to this from
 Objective-C programming and taught myself during the last four weeks while
@@ -508,8 +508,8 @@ Doing this will ensure that non-posix extensions are not used.
 @subsection Requirements
 @cindex requirements
 
-Greg needs to have Guile installed.  It should work with Guile-1.2
-or later (it has been tested with 1.2 and 1.3).
+Greg needs to have Guile installed.  It should work with Guile-1.3
+or later.
 You need to have the @code{guile} program in your path in
 order for the installation process to determine the proper locations
 for things.
