@@ -47,8 +47,9 @@ static SCM
 mark_gstep_voidp (SCM obj)
 {
   if (SCM_GC8MARKP (obj))
-    return SCM_BOOL_F;
-  
+    {
+      return SCM_BOOL_F;
+     } 
   SCM_SETGC8MARK (obj);
   return SCM_BOOL_F;
 }
@@ -57,22 +58,27 @@ static SCM
 equal_gstep_voidp (SCM s1, SCM s2)
 {
   if (((voidp)gh_cdr(s1))->ptr == ((voidp)gh_cdr(s2))->ptr)
-    return SCM_BOOL_T;
+    {
+      return SCM_BOOL_T;
+    }
   else
-    return SCM_BOOL_F;
+    {
+      return SCM_BOOL_F;
+    }
 }
 
 static scm_sizet 
 free_gstep_voidp (SCM obj)
 {
-    voidp	v = (voidp)gh_cdr(obj);
+  voidp	v = (voidp)gh_cdr(obj);
 
-    if (v->isMallocMem) {
-	objc_free(v->ptr);
+  if (v->isMallocMem)
+    {
+      objc_free(v->ptr);
     }
-    objc_free(v);
-    
-    return (scm_sizet)0;
+  objc_free(v);
+  
+  return (scm_sizet)0;
 }
 
 static int
@@ -87,46 +93,50 @@ print_gstep_voidp (SCM exp, SCM port, scm_print_state *pstate)
 SCM
 gstep_voidp2scm(void* ptr, BOOL isMallocMem, BOOL lengthKnown, int len)
 {
-    voidp	v;
-    SCM		answer;
+  voidp	v;
+  SCM	answer;
 
-    gh_defer_ints();
-    v = (voidp)objc_malloc(sizeof(struct voidp_struct));
-    v->ptr = ptr;
-    v->len = len > 0 ? len : 0;
-    v->lengthKnown = lengthKnown;
-    v->isMallocMem = isMallocMem;
-    SCM_NEWCELL(answer);
-    SCM_SETCAR(answer, gstep_scm_tc16_voidp); 
-    SCM_SETCDR(answer, (SCM)v); 
-    gh_allow_ints();
-    return answer;
+  gh_defer_ints();
+  v = (voidp)objc_malloc(sizeof(struct voidp_struct));
+  v->ptr = ptr;
+  v->len = len > 0 ? len : 0;
+  v->lengthKnown = lengthKnown;
+  v->isMallocMem = isMallocMem;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, gstep_scm_tc16_voidp); 
+  SCM_SETCDR(answer, (SCM)v); 
+  gh_allow_ints();
+  return answer;
 }
 
 void
 gstep_voidp_set(SCM o, void *ptr, BOOL m, BOOL lenKnown, int len)
 {
-    if (SCM_NIMP(o) && OBJC_VOIDP_P(o)) {
-	voidp	p = (voidp)gh_cdr(o);
+  if (SCM_NIMP(o) && OBJC_VOIDP_P(o))
+    {
+      voidp	p = (voidp)gh_cdr(o);
 
-	if (p->isMallocMem && p->ptr != ptr && p->ptr != 0) {
-	    objc_free(p->ptr);
+      if (p->isMallocMem && p->ptr != ptr && p->ptr != 0)
+	{
+	  objc_free(p->ptr);
 	}
-	p->ptr = ptr;
-	p->isMallocMem = m;
-	p->lengthKnown = lenKnown;
-	p->len = (len > 0) ? len : 0;
+      p->ptr = ptr;
+      p->isMallocMem = m;
+      p->lengthKnown = lenKnown;
+      p->len = (len > 0) ? len : 0;
     }
 }
 
 void*
 gstep_scm2voidp (SCM o)
 {
-    if (SCM_NIMP(o) && OBJC_VOIDP_P(o)) {
-	return ((voidp)gh_cdr(o))->ptr;
+  if (SCM_NIMP(o) && OBJC_VOIDP_P(o))
+    {
+      return ((voidp)gh_cdr(o))->ptr;
     }
-    else {
-	return 0;
+  else
+    {
+      return 0;
     }
 }
 
@@ -137,9 +147,11 @@ static char gstep_voidp_p_n[] = "voidp?";
 SCM
 gstep_scm_voidp_p(SCM v)
 {
-    if (SCM_NIMP(v) && OBJC_VOIDP_P(v))
-	return SCM_BOOL_T;
-    return SCM_BOOL_F;
+  if (SCM_NIMP(v) && OBJC_VOIDP_P(v))
+    {
+      return SCM_BOOL_T;
+    }
+  return SCM_BOOL_F;
 }
 
 int
@@ -155,14 +167,14 @@ static char gstep_string_voidp_n[] = "string->voidp";
 static SCM
 gstep_string_voidp_fn(SCM str)
 {
-    char *s;
-    int	l;
-    SCM v;
+  char	*s;
+  int	l;
+  SCM	v;
 
-    SCM_ASSERT(gh_string_p(str), str, SCM_ARG1, gstep_string_voidp_n);
+  SCM_ASSERT(gh_string_p(str), str, SCM_ARG1, gstep_string_voidp_n);
 
-    s = gh_scm2newstr(str, &l);
-    v = gstep_voidp2scm(s, YES, YES, l);
+  s = gh_scm2newstr(str, &l);
+  v = gstep_voidp2scm(s, YES, YES, l);
 }
 
 
@@ -172,27 +184,29 @@ static char gstep_voidp_set_n[] = "voidp-set!";
 static SCM
 gstep_voidp_set_fn(SCM v, SCM o, SCM s)
 {
-    int	offset;
-    int	length;
-    voidp obj;
-    char *ptr;
+  int	offset;
+  int	length;
+  voidp	obj;
+  char	*ptr;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_set_n);
-    SCM_ASSERT(gh_number_p(o), o, SCM_ARG2, gstep_voidp_set_n);
-    SCM_ASSERT(gh_string_p(s), s, SCM_ARG3, gstep_voidp_set_n);
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_set_n);
+  SCM_ASSERT(gh_number_p(o), o, SCM_ARG2, gstep_voidp_set_n);
+  SCM_ASSERT(gh_string_p(s), s, SCM_ARG3, gstep_voidp_set_n);
 
-    obj = (voidp)gh_cdr(v);
-    offset = gh_scm2int(o);
-    length = gh_scm2int(scm_string_length(s));
-    if (offset < 0 || length < 0) {
-        gstep_scm_error("bad offset or length", o);
+  obj = (voidp)gh_cdr(v);
+  offset = gh_scm2int(o);
+  length = gh_scm2int(scm_string_length(s));
+  if (offset < 0 || length < 0)
+    {
+      gstep_scm_error("bad offset or length", o);
     }
-    if (obj->lengthKnown == YES && (offset + length > obj->len)) {
-        gstep_scm_error("bad offset plus length", o);
+  if (obj->lengthKnown == YES && (offset + length > obj->len))
+    {
+      gstep_scm_error("bad offset plus length", o);
     }
-    ptr = (char*)obj->ptr;
-    gh_get_substr(s, &ptr[offset], 0, length);
-    return v;
+  ptr = (char*)obj->ptr;
+  gh_get_substr(s, &ptr[offset], 0, length);
+  return v;
 }
 
 
@@ -202,28 +216,30 @@ static char gstep_voidp_string_n[] = "voidp->string";
 static SCM
 gstep_voidp_string_fn(SCM v, SCM o, SCM l)
 {
-    int	offset;
-    int	length;
-    voidp obj;
-    char *ptr;
-    SCM	answer;
+  int	offset;
+  int	length;
+  voidp obj;
+  char	*ptr;
+  SCM	answer;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_string_n);
-    SCM_ASSERT(gh_number_p(o), o, SCM_ARG2, gstep_voidp_string_n);
-    SCM_ASSERT(gh_number_p(l), l, SCM_ARG3, gstep_voidp_string_n);
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_string_n);
+  SCM_ASSERT(gh_number_p(o), o, SCM_ARG2, gstep_voidp_string_n);
+  SCM_ASSERT(gh_number_p(l), l, SCM_ARG3, gstep_voidp_string_n);
 
-    obj = (voidp)gh_cdr(v);
-    offset = gh_scm2int(o);
-    length = gh_scm2int(l);
-    if (offset < 0 || length < 0) {
-        gstep_scm_error("bad offset or length", o);
+  obj = (voidp)gh_cdr(v);
+  offset = gh_scm2int(o);
+  length = gh_scm2int(l);
+  if (offset < 0 || length < 0)
+    {
+      gstep_scm_error("bad offset or length", o);
     }
-    if (obj->lengthKnown && (offset + length > obj->len)) {
-        gstep_scm_error("bad offset plus length", o);
+  if (obj->lengthKnown && (offset + length > obj->len))
+    {
+      gstep_scm_error("bad offset plus length", o);
     }
-    ptr = (char*)obj->ptr;
-    answer = gh_str2scm(&ptr[offset], length);
-    return answer;
+  ptr = (char*)obj->ptr;
+  answer = gh_str2scm(&ptr[offset], length);
+  return answer;
 }
 
 
@@ -233,26 +249,33 @@ static char gstep_voidp_length_n[] = "voidp-length";
 int
 gstep_scm2voidplength(SCM v)
 {
-    if (gstep_voidp_p(v)) {
-	voidp obj = (voidp)gh_cdr(v);
+  if (gstep_voidp_p(v))
+    {
+      voidp obj = (voidp)gh_cdr(v);
 
-	if (obj->lengthKnown)
-	    return obj->len;
+      if (obj->lengthKnown)
+	{
+	  return obj->len;
+	}
     }
-    return -1;
+  return -1;
 }
  
 static SCM
 gstep_voidp_length_fn(SCM v)
 {
-    voidp obj;
+  voidp obj;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_length_n);
-    obj = (voidp)gh_cdr(v);
-    if (obj->lengthKnown)
-	return gh_int2scm(obj->len);
-    else
-	return SCM_UNDEFINED;
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_length_n);
+  obj = (voidp)gh_cdr(v);
+  if (obj->lengthKnown)
+    {
+      return gh_int2scm(obj->len);
+    }
+  else
+    {
+      return SCM_UNDEFINED;
+    }
 }
  
 
@@ -262,14 +285,18 @@ static char gstep_voidp_lengthp_n[] = "voidp-length?";
 static SCM
 gstep_voidp_lengthp_fn(SCM v)
 {
-    voidp obj;
+  voidp obj;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_lengthp_n);
-    obj = (voidp)gh_cdr(v);
-    if (obj->lengthKnown)
-	return SCM_BOOL_T;
-    else
-	return SCM_BOOL_F;
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v), v, SCM_ARG1, gstep_voidp_lengthp_n);
+  obj = (voidp)gh_cdr(v);
+  if (obj->lengthKnown)
+    {
+      return SCM_BOOL_T;
+    }
+  else
+    {
+      return SCM_BOOL_F;
+    }
 }
  
 
@@ -279,21 +306,23 @@ static char gstep_voidp_setlength_n[] = "voidp-set-length!";
 static SCM
 gstep_voidp_setlength_fn(SCM v, SCM l)
 {
-    voidp obj;
-    int	length;
+  voidp obj;
+  int	length;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_setlength_n);
-    SCM_ASSERT(gh_number_p(l), l, SCM_ARG2, gstep_voidp_setlength_n);
-    obj = (voidp)gh_cdr(v);
-    length = gh_scm2int(l);
-    if (l < 0) {
-	obj->lengthKnown = NO;
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_setlength_n);
+  SCM_ASSERT(gh_number_p(l), l, SCM_ARG2, gstep_voidp_setlength_n);
+  obj = (voidp)gh_cdr(v);
+  length = gh_scm2int(l);
+  if (l < 0)
+    {
+      obj->lengthKnown = NO;
     }
-    else {
-	obj->lengthKnown = YES;
-	obj->len = length;
+  else
+    {
+      obj->lengthKnown = YES;
+      obj->len = length;
     }
-    return v;
+  return v;
 }
  
 
@@ -303,14 +332,18 @@ static char gstep_voidp_mallocp_n[] = "voidp-malloc?";
 static SCM
 gstep_voidp_mallocp_fn(SCM v)
 {
-    voidp obj;
+  voidp obj;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_mallocp_n);
-    obj = (voidp)gh_cdr(v);
-    if (obj->isMallocMem)
-	return SCM_BOOL_T;
-    else
-	return SCM_BOOL_F;
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_mallocp_n);
+  obj = (voidp)gh_cdr(v);
+  if (obj->isMallocMem)
+    {
+      return SCM_BOOL_T;
+    }
+  else
+    {
+      return SCM_BOOL_F;
+    }
 }
  
 
@@ -320,18 +353,20 @@ static char gstep_voidp_setmalloc_n[] = "voidp-set-malloc!";
 static SCM
 gstep_voidp_setmalloc_fn(SCM v, SCM b)
 {
-    voidp obj;
+  voidp obj;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_setmalloc_n);
-    SCM_ASSERT(gh_boolean_p(b), b, SCM_ARG2, gstep_voidp_setmalloc_n);
-    obj = (voidp)gh_cdr(v);
-    if (b == SCM_BOOL_T) {
-	obj->isMallocMem = YES;
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_setmalloc_n);
+  SCM_ASSERT(gh_boolean_p(b), b, SCM_ARG2, gstep_voidp_setmalloc_n);
+  obj = (voidp)gh_cdr(v);
+  if (b == SCM_BOOL_T)
+    {
+      obj->isMallocMem = YES;
     }
-    else {
-	obj->isMallocMem = NO;
+  else
+    {
+      obj->isMallocMem = NO;
     }
-    return v;
+  return v;
 }
  
 
@@ -340,7 +375,7 @@ static char gstep_voidp_nil_n[] = "voidp-nil";
 static SCM
 gstep_voidp_nil_fn()
 {
-    return gstep_voidp2scm(0, NO, YES, 0);
+  return gstep_voidp2scm(0, NO, YES, 0);
 }
 
 
@@ -349,7 +384,7 @@ static char gstep_id_voidp_n[] = "gstep-id->voidp";
 static SCM
 gstep_id_voidp_fn(SCM o)
 {
-    return gstep_voidp2scm(gstep_scm2id(o), NO, YES, 0);
+  return gstep_voidp2scm(gstep_scm2id(o), NO, YES, 0);
 }
 
 
@@ -358,7 +393,7 @@ static char gstep_voidp_id_n[] = "voidp->gstep-id";
 static SCM
 gstep_voidp_id_fn(SCM o)
 {
-    return gstep_id2scm(gstep_scm2voidp(o), YES);
+  return gstep_id2scm(gstep_scm2voidp(o), YES);
 }
 
 
@@ -368,72 +403,80 @@ static char gstep_voidp_list_n[] = "voidp->list";
 static SCM
 gstep_voidp_list_fn(SCM v, SCM t, SCM l)
 {
-    SCM answer = 0;
-    SCM end;
-    voidp obj;
-    char *type;
-    int	offset = 0;
-    int	align;
-    int	count;
-    int	i;
+  SCM	answer = 0;
+  SCM	end;
+  voidp obj;
+  char	*type;
+  int	offset = 0;
+  int	align;
+  int	count;
+  int	i;
 
-    SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_list_n);
-    SCM_ASSERT(gh_string_p(t), t, SCM_ARG2, gstep_voidp_list_n);
-    SCM_ASSERT(gh_number_p(l), l, SCM_ARG3, gstep_voidp_list_n);
-    obj = (voidp)gh_cdr(v);
-    count = gh_scm2int(l);
-    if (count <= 0) {
-        gstep_scm_error("list length bad", l);
+  SCM_ASSERT(SCM_NIMP(v)&&OBJC_VOIDP_P(v),v,SCM_ARG1,gstep_voidp_list_n);
+  SCM_ASSERT(gh_string_p(t), t, SCM_ARG2, gstep_voidp_list_n);
+  SCM_ASSERT(gh_number_p(l), l, SCM_ARG3, gstep_voidp_list_n);
+  obj = (voidp)gh_cdr(v);
+  count = gh_scm2int(l);
+  if (count <= 0)
+    {
+      gstep_scm_error("list length bad", l);
     }
-    type = gh_scm2newstr(t, 0);
-    if (gstep_guile_check_type(type) == 0) {
-	free(type);
-        gstep_scm_error("bad type spec", t);
+  type = gh_scm2newstr(t, 0);
+  if (gstep_guile_check_type(type) == 0)
+    {
+      free(type);
+      gstep_scm_error("bad type spec", t);
     }
 
-    align = objc_alignof_type(type); /* pad to alignment */
+  align = objc_alignof_type(type); /* pad to alignment */
 
-    if (obj->lengthKnown) {
-	int	total;
+  if (obj->lengthKnown)
+    {
+      int	total;
 
-	total = ROUND(objc_sizeof_type(type), align) * (count-1) + objc_sizeof_type(type);
-	if (total > obj->len) {
-	    free(type);
-	    gstep_scm_error("list size too large", l);
+      total = ROUND(objc_sizeof_type(type), align)
+	* (count-1) + objc_sizeof_type(type);
+      if (total > obj->len)
+	{
+	  free(type);
+	  gstep_scm_error("list size too large", l);
 	}
     }
 
-    for (i = 0; i < count; i++) {
-	const char	*tmptype = type;
-	void	*where;
-	SCM	tmp;
-	SCM	val;
-	int	pos = 0;
+  for (i = 0; i < count; i++)
+    {
+      const char	*tmptype = type;
+      void	*where;
+      SCM	tmp;
+      SCM	val;
+      int	pos = 0;
 
-	offset = ROUND(offset, align);
-	where = obj->ptr + offset;
-	offset += objc_sizeof_type(type);
+      offset = ROUND(offset, align);
+      where = obj->ptr + offset;
+      offset += objc_sizeof_type(type);
 
-	val = gstep_guile_encode_item(where, &pos, &tmptype, NO, NO, nil, 0);
-	gh_defer_ints();
-	if (answer == 0) {
-	    SCM_NEWCELL(tmp);
-	    SCM_SETCAR(tmp, val); 
-	    SCM_SETCDR(tmp, SCM_EOL);
-	    answer = tmp;
-	    end = tmp;
+      val = gstep_guile_encode_item(where, &pos, &tmptype, NO, NO, nil, 0);
+      gh_defer_ints();
+      if (answer == 0)
+	{
+	  SCM_NEWCELL(tmp);
+	  SCM_SETCAR(tmp, val); 
+	  SCM_SETCDR(tmp, SCM_EOL);
+	  answer = tmp;
+	  end = tmp;
 	}
-	else {
-	    SCM_NEWCELL(tmp);
-	    SCM_SETCAR(tmp, val); 
-	    SCM_SETCDR(tmp, gh_cdr(end));
-	    SCM_SETCDR(end, tmp);
-	    end = tmp;
+      else
+	{
+	  SCM_NEWCELL(tmp);
+	  SCM_SETCAR(tmp, val); 
+	  SCM_SETCDR(tmp, gh_cdr(end));
+	  SCM_SETCDR(end, tmp);
+	  end = tmp;
 	}
-	gh_allow_ints();
+      gh_allow_ints();
     }
-    free(type);
-    return answer;
+  free(type);
+  return answer;
 }
 
 static char gstep_list_voidp_n[] = "list->voidp";
@@ -441,47 +484,52 @@ static char gstep_list_voidp_n[] = "list->voidp";
 static SCM
 gstep_list_voidp_fn(SCM l, SCM t)
 {
-    SCM obj;
-    void *ptr;
-    char *type;
-    int	offset = 0;
-    int	total;
-    int	align;
-    int	count;
+  SCM	obj;
+  void	*ptr;
+  char	*type;
+  int	offset = 0;
+  int	total;
+  int	align;
+  int	count;
 
-    SCM_ASSERT(gh_list_p(l),l,SCM_ARG1,gstep_list_voidp_n);
-    SCM_ASSERT(gh_string_p(t), t, SCM_ARG2, gstep_list_voidp_n);
-    if ((count = gstep_guile_list_length(l)) == 0) {
-        gstep_scm_error("list length bad", l);
+  SCM_ASSERT(gh_list_p(l),l,SCM_ARG1,gstep_list_voidp_n);
+  SCM_ASSERT(gh_string_p(t), t, SCM_ARG2, gstep_list_voidp_n);
+  if ((count = gstep_guile_list_length(l)) == 0)
+    {
+      gstep_scm_error("list length bad", l);
     }
-    type = gh_scm2newstr(t, 0);
-    if (gstep_guile_check_type(type) == 0) {
-	free(type);
-        gstep_scm_error("bad type spec", t);
+  type = gh_scm2newstr(t, 0);
+  if (gstep_guile_check_type(type) == 0)
+    {
+      free(type);
+      gstep_scm_error("bad type spec", t);
     }
 
-    align = objc_alignof_type(type); /* pad to alignment */
+  align = objc_alignof_type(type); /* pad to alignment */
 
-    total = ROUND(objc_sizeof_type(type), align) * (count-1) + objc_sizeof_type(type);
-    ptr = (void*)objc_malloc(total);
-    obj = gstep_voidp2scm(ptr, YES, YES, total);
+  total = ROUND(objc_sizeof_type(type), align)
+    * (count-1) + objc_sizeof_type(type);
+  ptr = (void*)objc_malloc(total);
+  obj = gstep_voidp2scm(ptr, YES, YES, total);
 
-    while (l != SCM_EOL) {
-	const char	*tmptype = type;
-	void	*where;
-	int	pos = 0;
+  while (l != SCM_EOL)
+    {
+      const char	*tmptype = type;
+      void	*where;
+      int	pos = 0;
 
-	offset = ROUND(offset, align);
-	where = ptr + offset;
-	offset += objc_sizeof_type(type);
+      offset = ROUND(offset, align);
+      where = ptr + offset;
+      offset += objc_sizeof_type(type);
 
-	if (gstep_guile_decode_item(gh_car(l), where, &pos, &tmptype) == NO) {
-	    free(type);
-	    return SCM_UNDEFINED;
+      if (gstep_guile_decode_item(gh_car(l), where, &pos, &tmptype) == NO)
+	{
+	  free(type);
+	  return SCM_UNDEFINED;
 	}
-	l = gh_cdr(l);
+      l = gh_cdr(l);
     }
-    return obj;
+  return obj;
 }
 
 
