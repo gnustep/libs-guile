@@ -625,8 +625,9 @@ gstep_add_methods(Class dest, SCM mlist, BOOL instance)
 	char	*type;
 	int	len;
 
-	if (gstep_guile_list_length(list) != 3) {
-	    gstep_scm_error("wrong number of items in method specification", classn);
+	if (list == 0 || gstep_guile_list_length(list) != 3) {
+	    gstep_scm_error("wrong number of items in method specification",
+		classn);
 	}
 	val = gh_car(list);
 	if ((SCM_NIMP(val) && SCM_STRINGP(val)) == 0) {
