@@ -22,10 +22,12 @@ if test "x$prefix" = "x"; then
   prefix=$ac_default_prefix ;
 fi
 
+AC_PROG_CC
+AC_PROG_CPP
 AC_PATH_GUILE
 
 AC_CHECK_HEADERS(AppKit/AppKit.h)
 AC_SUBST(ac_cv_header_AppKit_AppKit_h)
 
 AC_CONFIG_SUBDIRS(Greg ScriptKit)
-AC_OUTPUT(config.mak Test/GNUmakefile)
+AC_OUTPUT(config.mak guile.make Test/GNUmakefile)

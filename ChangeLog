@@ -1,3 +1,14 @@
+2001-03-10  Adam Fedor  <fedor@gnu.org>
+
+	* Version 0.9.2
+	* guile.make.in: New file
+	* configure.in: Check for CC and CPP, make guile.make
+	* GNUmakefile: Install it.
+	* Greg/Makefile: Add dummy check target.
+	* Library/Makefile.preamble: Include GUILE flags from config.make
+	* Test/go.m: If GS_PASS_ARGUMENTS, call NSProcessInfo arg 
+	initialization.
+
 2001-02-13  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 0.9.1

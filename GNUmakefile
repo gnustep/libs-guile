@@ -30,3 +30,9 @@ include $(GNUSTEP_MAKEFILES)/aggregate.make
 
 after-distclean::
 	rm -f config.status config.log config.cache TAGS
+
+# Things to do before installing
+before-install::
+	$(INSTALL_DATA) guile.make \
+	  $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional
+
