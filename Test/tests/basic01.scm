@@ -97,6 +97,22 @@
   (list? l0)
 ))
 
+(greg-testcase "Creation of a voidp from an ivar is OK" #t
+(lambda ()
+  (define ns ([] "NSString" stringWithCString: "Hello"))
+  (set! v0 (gstep-ptr-ivar ns "_count"))
+  (greg-dlog v0)
+  (set! l0 (voidp->list v0 "I" 1))
+  (greg-dlog l0)
+  (list? l0)
+  (and
+    (voidp? v0)
+    (list? l0)
+    (eq? (car l0) 5)
+  )
+))
+
+
 (greg-testcase "We can create an NSData object from a Guile string" #t
 (lambda ()
   (set! s0 "This is a test string")

@@ -341,6 +341,76 @@ gstep_get_ivar_fn (SCM receiver, SCM ivarname)
 }
 
 
+
+static char gstep_ptr_ivar_n[] = "gstep-ptr-ivar";
+
+static SCM 
+gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
+{
+    char	*name;
+    Class	class;
+    id		self = nil;
+    struct objc_ivar_list	*ivars;
+    struct objc_ivar		*ivar = 0;
+    SCM		item;
+    int		offset;
+    const char	*type;
+    void	*addr;
+
+    if (SCM_NIMP(receiver) && OBJC_ID_P(receiver)) {
+	self = (id)gh_cdr(receiver);
+	if (!self) {
+	    return gstep_voidp2scm(0, NO, YES, 0);	// nul pointer
+	}
+	if (gstep_guile_object_is_class(self)) {
+	    self = nil;
+	}
+    }
+    if (self == nil) {
+	gstep_scm_error("not an object instance", receiver);
+    }
+
+    if (SCM_NIMP(ivarname) && SCM_SYMBOLP(ivarname)) {
+	ivarname = scm_symbol_to_string(ivarname);
+    }
+    if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname)) {
+	int	len;
+	id	class;
+
+	name = gh_scm2newstr(ivarname, &len);
+    }
+    else {
+	gstep_scm_error("not a symbol or string", ivarname);
+    }
+
+    class = self->class_pointer;
+    while (class != nil && ivar == 0) {
+	ivars = class->ivars;
+	class = class->super_class;
+	if (ivars) {
+	    int	i;
+
+	    for (i = 0; i < ivars->ivar_count; i++) {
+		if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0) {
+		    ivar = &ivars->ivar_list[i];
+		    break;
+		}
+	    }
+	}
+    }
+    free(name);
+    if (ivar == 0) {
+	gstep_scm_error("not defined for object", ivarname);
+    }
+
+    offset = ivar->ivar_offset;
+    addr = ((void*)self)+offset;
+    type = ivar->ivar_type;
+
+    return gstep_voidp2scm(addr, NO, YES, objc_sizeof_type(type));
+}
+
+
 static char gstep_set_ivar_n[] = "gstep-set-ivar";
 
 static SCM 
@@ -700,6 +770,7 @@ gstep_init_id()
   scm_make_gsubr(gstep_msg_send_n, 2, 0, 1, gstep_msg_send_fn);
   scm_make_gsubr(gstep_ivarnames_n, 1, 0, 0, gstep_ivarnames_fn);
   scm_make_gsubr(gstep_get_ivar_n, 2, 0, 0, gstep_get_ivar_fn);
+  scm_make_gsubr(gstep_ptr_ivar_n, 2, 0, 0, gstep_ptr_ivar_fn);
   scm_make_gsubr(gstep_set_ivar_n, 3, 0, 0, gstep_set_ivar_fn);
 
 }
