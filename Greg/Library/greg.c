@@ -23,19 +23,19 @@
 
 #include "config.h"
 
-#ifdef	HAVE_SIGNAL_H
+#if	HAVE_SIGNAL_H
 #include <signal.h>
 #endif
-#ifdef	HAVE_SYS_FILE_H
+#if	HAVE_SYS_FILE_H
 #include <sys/file.h>
 #endif
-#ifdef	HAVE_SYS_FCNTL_H
+#if	HAVE_SYS_FCNTL_H
 #include <sys/fcntl.h>
 #endif
-#ifdef	HAVE_SYS_IOCTL_H
+#if	HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
 #endif
-#ifdef	HAVE_SYS_WAIT_H
+#if	HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
 
@@ -45,7 +45,7 @@
  *	If we are on a streams based system, we need to include stropts.h
  *	for definitions needed to set up slave pseudo-terminal stream.
  */
-#ifdef	HAVE_SYS_STROPTS_H
+#if	HAVE_SYS_STROPTS_H
 #include <sys/stropts.h>
 #endif
 
@@ -62,7 +62,7 @@ pty_master(char* name, int len)
    *	If we have grantpt(), assume we are using sysv-style pseudo-terminals,
    *	otherwise assume bsd style.
    */
-#ifdef	HAVE_GRANTPT
+#if	HAVE_GRANTPT
   master = open("/dev/ptmx", O_RDWR);
   if (master >= 0)
     {
@@ -115,17 +115,20 @@ pty_slave(const char* name)
   int	slave;
 
   slave = open(name, O_RDWR);
-#ifdef	HAVE_SYS_STROPTS_H
-  if (ioctl(slave, I_PUSH, "ptem") < 0)
+#if	HAVE_SYS_STROPTS_H
+#if	HAVE_PTS_STREAM_MODULES
+  if (slave >= 0)
     {
-      (void)close(slave);
-      slave = -1;
+      if (ioctl(slave, I_PUSH, "ptem") < 0)
+	{
+	  perror("unable to push 'ptem' streams module");
+	}
+      else if (ioctl(slave, I_PUSH, "ldterm") < 0)
+	{
+	  perror("unable to push 'ldterm' streams module");
+	}
     }
-  if (ioctl(slave, I_PUSH, "ldterm") < 0)
-    {
-      (void)close(slave);
-      slave = -1;
-    }
+#endif
 #endif
   return slave;
 }
@@ -157,7 +160,6 @@ scm_pty_child(SCM args)
     {
       int	p[2];
       int	pid;
-
       if (pipe(p) < 0)
 	{
 	  (void)close(master);
@@ -174,35 +176,56 @@ scm_pty_child(SCM args)
       if (pid == 0)
 	{
 	  int	i;
+	  int	s;
 
 	  for (i = 1; i < 32; i++)
 	    {
 	      signal(i, SIG_DFL);
 	    }
-	  if (p[1] != 3)
+
+	  s = pty_slave(slave_name);
+	  if (s < 0)
 	    {
-	      (void)dup2(p[1], 3);
-	      p[1] = 3;
+	      extern int	errno;
+	      char		buf[256];
+	      int		len;
+#if	HAVE_STRERROR
+	      const char	*msg = strerror(errno);
+#else
+	      char		msg[32];
+
+	      sprintf(msg, "system error %d", errno);
+#endif
+
+	      len = strlen(msg);
+	      if (len > 255)
+		len = 255;
+	      buf[0] = len;
+	      memcpy(&buf[1], msg, len);
+	      write(p[1], buf, len+1);	/* Tell parent we failed.	*/
+	      exit(1);			/* Failed to open slave!	*/
 	    }
+
 	  for (i = 0; i < MAX_OPEN; i++)
 	    {
-	      if (i != 2 && i != p[1])
+	      if (i != s && i != 2 && i != p[1])
 		{
 		  (void)close(i);
 		}
 	    }
+
 	  i = -1;
-#ifdef	HAVE_SETSID
+#if	HAVE_SETSID
 	  i = setsid();
 #endif
-#ifdef	HAVE_SETPGID
+#if	HAVE_SETPGID
 	  if (i < 0)
 	    {
 	      i = getpid();
 	      i = setpgid(i, i);
 	    }
 #endif
-#ifdef	TIOCNOTTY
+#if	TIOCNOTTY
 	  i = open("/dev/tty", O_RDWR);
 	  if (i >= 0)
 	    {
@@ -210,40 +233,42 @@ scm_pty_child(SCM args)
 	      (void)close(i);
 	    }
 #endif
-	  i = pty_slave(slave_name);
-	  if (i < 0)
+
+	  /*
+	   * Make sure pty operates on stdin and stdout.
+	   * If the pipe to our parent is on stdin or stdout, duplicate
+	   * it so that it doesn't get closed prematurely.
+           */
+	  if (s != 0)
 	    {
-	      write(p[1], "-", 1);	/* Tell parent we failed.	*/
-	      exit(1);			/* Failed to open slave!	*/
+	      if (p[1] == 0)
+		p[1] = dup(p[1]);
+	      (void)dup2(s, 0);
 	    }
-	  if (i != 0)
+	  if (s != 1)
 	    {
-	      (void)dup2(i, 0);
+	      if (p[1] == 1)
+		p[1] = dup(p[1]);
+	      (void)dup2(s, 1);
 	    }
-	  if (i != 1)
+
+	  /*
+	   * Discard original descriptor - we no longer need it.
+	   */
+	  if (s > 1)
 	    {
-	      (void)dup2(i, 1);
+	      (void)close(s);
 	    }
-	  if (i > 1)
-	    {
-	      (void)close(i);
-	    }
-	  (void)write(p[1], "*", 1);	/* Tell parent we are ready.	*/
+
+	  (void)write(p[1], "", 1);	/* Tell parent we are ready.	*/
 	  (void)close(p[1]);
-	  (void)dup2(1, 2);
-#if	HAVE_RECENT_GUILE
+	  (void)dup2(1, 2);		/* Send stderr to pty.		*/
+
 	  if (scm_string_equal_p(prg, gh_str02scm("")) != SCM_BOOL_T)
 	    {
 	      scm_execl(prg, args);
 	      exit(1);
 	    }
-#else
-	  if (scm_string_equal_p(prg, gh_str02scm("")) != SCM_BOOL_T)
-	    {
-	      scm_execl(scm_cons(prg, args));
-	      exit(1);
-	    }
-#endif
 	  else
 	    {
 	      /*
@@ -256,7 +281,7 @@ scm_pty_child(SCM args)
 	}
       else
 	{
-	  char	info;
+	  unsigned char	info;
 	  int	len;
 	  SCM	cpid;
 	  SCM	rport;
@@ -268,11 +293,11 @@ scm_pty_child(SCM args)
 	   *	when everything is set up - immediately before the exec.
 	   */
 	  len = read(p[0], &info, 1);
-	  (void)close(p[0]);
 	  if (len != 1)
 	    {
+	      (void)close(p[0]);
 	      (void)close(master);
-#ifdef HAVE_WAITPID
+#if	HAVE_WAITPID
 	      {
 		int	status;
 		int	opts = 0;
@@ -282,11 +307,28 @@ scm_pty_child(SCM args)
 	      scm_misc_error("pty-child", "failed to sync with child",
 			SCM_EOL);
 	    }
-	  if (info == '-')
+	  if (info == '\0')
 	    {
-	      char	buf[128];
+	      (void)close(p[0]);
+	    }
+	  else
+	    {
+	      char	buf[1024];
+	      int	base;
 
-	      sprintf(buf, "child failed to open %s", slave_name);
+	      sprintf(buf, "child failed to open %s: ", slave_name);
+	      base = strlen(buf);
+	
+	      len = read(p[0], &buf[base], (int)info);
+	      if (len > 0)
+		{
+		  buf[base+len] = '\0';
+		}
+	      else
+		{
+		  strcat(buf, "unknown error");
+		}
+	      (void)close(p[0]);
 	      scm_misc_error("pty-child", buf, SCM_EOL);
 	    }
 	  cpid = SCM_MAKINUM(pid);

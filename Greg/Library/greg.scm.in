@@ -149,9 +149,8 @@
 ;
 ; Procedure to start a test run
 ;
-(define (greg-init name)
+(define (greg-init file)
   (begin
-    (define file name)
     (if (or (string=? file "") (string=? file "."))
       (set! file "tests")
     )
@@ -162,9 +161,9 @@
       (open-output-file (string-append (greg-out-file file) ".log")))
     (if greg-debug
       (begin
-        (if (output-port? greg-dbg-port)
-          (close-output-port greg-dbg-port))
-        (set! greg-dbg-port
+	(if (output-port? greg-dbg-port)
+	  (close-output-port greg-dbg-port))
+	(set! greg-dbg-port
 	  (open-output-file (string-append (greg-out-file file) ".dbg")))
       )
     )
@@ -350,49 +349,57 @@
 (define (greg-list-directories name)
   (if (and (access? name R_OK) (access? name X_OK)
 	    (eqv? (stat:type (stat name)) 'directory))
-    (begin
-      (define dir ())
-      (define dirp (opendir name))
-      (do
-	((entry (readdir dirp) (readdir dirp)))
-	((eof-object? entry) (closedir dirp) dir)
-	(if (and
-	      (not (string=? entry "."))
-	      (not (string=? entry ".."))
-	      (or
-		(= (length greg-tools) 0)
-		(member entry greg-tools)
-	      )
-	      ( (lambda (path)
-		  (and (access? path R_OK) (access? path X_OK)
-			(eqv? (stat:type (stat path)) 'directory)))
-		(string-append name "/" entry)
-	      )
-	    )
-	  (set! dir (insert dir entry))
-	)
+    (let
+      (
+	(dir ())
+	(dirp (opendir name))
       )
-      (if (eq? (length dir) 0)
-	(begin
-	  (greg-log "\nThe directory '")
-	  (greg-log name)
-	  (greg-log "' does not contain any suitable tool directories!\n\n")
-	  ()
-	)
-	(if (> (length greg-tools) 0)
-	  (begin
-	    (define tmpdir ())
-	    (for-each
-	      (lambda (e)
-		(if (member e dir)
-		  (set! tmpdir (cons e tmpdir))
+      (begin
+	(do
+	  ((entry (readdir dirp) (readdir dirp)))
+	  ((eof-object? entry) (closedir dirp) dir)
+	  (if (and
+		(not (string=? entry "."))
+		(not (string=? entry ".."))
+		(or
+		  (= (length greg-tools) 0)
+		  (member entry greg-tools)
+		)
+		( (lambda (path)
+		    (and (access? path R_OK) (access? path X_OK)
+			  (eqv? (stat:type (stat path)) 'directory)))
+		  (string-append name "/" entry)
 		)
 	      )
-	      greg-tools
-	    )
-	    (reverse tmpdir)
+	    (set! dir (insert dir entry))
 	  )
-	  dir
+	)
+	(if (eq? (length dir) 0)
+	  (begin
+	    (greg-log "\nThe directory '")
+	    (greg-log name)
+	    (greg-log "' does not contain any suitable tool directories!\n\n")
+	    ()
+	  )
+	  (if (> (length greg-tools) 0)
+	    (let
+	      (
+		(tmpdir ())
+	      )
+	      (begin
+		(for-each
+		  (lambda (e)
+		    (if (member e dir)
+		      (set! tmpdir (cons e tmpdir))
+		    )
+		  )
+		  greg-tools
+		)
+		(reverse tmpdir)
+	      )
+	    )
+	    dir
+	  )
 	)
       )
     )
@@ -412,57 +419,65 @@
 (define (greg-list-files-in-directory name)
   (if (and (access? name R_OK) (access? name X_OK)
 	    (eqv? (stat:type (stat name)) 'directory))
-    (begin
-      (define dir ())
-      (define dirp (opendir name))
-      (do
-	((entry (readdir dirp) (readdir dirp)))
-	((eof-object? entry) (closedir dirp) dir)
-	(if
-	  (and
-	    (> (string-length entry) 4)
-	    (string=? (substring entry (- (string-length entry) 4)
-			      (string-length entry)) ".scm")
-	    ( (lambda (path)
-		(if (and (access? path R_OK)
-		      (eqv? (stat:type (stat path)) 'regular))
-		  #t
-		  (begin
-		    (greg-log "\nThe file '")
-		    (greg-log path)
-		    (greg-log "' is not a normal readable file!\n\n")
-		    #f
+    (let
+      (
+	(dir ())
+	(dirp (opendir name))
+      )
+      (begin
+	(do
+	  ((entry (readdir dirp) (readdir dirp)))
+	  ((eof-object? entry) (closedir dirp) dir)
+	  (if
+	    (and
+	      (> (string-length entry) 4)
+	      (string=? (substring entry (- (string-length entry) 4)
+				(string-length entry)) ".scm")
+	      ( (lambda (path)
+		  (if (and (access? path R_OK)
+			(eqv? (stat:type (stat path)) 'regular))
+		    #t
+		    (begin
+		      (greg-log "\nThe file '")
+		      (greg-log path)
+		      (greg-log "' is not a normal readable file!\n\n")
+		      #f
+		    )
 		  )
 		)
+		(string-append name "/" entry)
 	      )
-	      (string-append name "/" entry)
 	    )
+	    (set! dir (insert dir entry))
 	  )
-	  (set! dir (insert dir entry))
 	)
-      )
-      (if (eq? (length dir) 0)
-	(begin
-	  (greg-log "\nThe directory '")
-	  (greg-log name)
-	  (greg-log "' does not contain any suitable scripts!\n\n")
-	  ()
-	)
-	(if (> (length greg-files) 0)
+	(if (eq? (length dir) 0)
 	  (begin
-	    (define tmpdir ())
-	    (for-each
-	      (lambda (e)
-		(set! e (string-append e ".scm"))
-		(if (member e dir)
-		  (set! tmpdir (cons e tmpdir))
-		)
-	      )
-	      greg-files
-	    )
-	    (reverse tmpdir)
+	    (greg-log "\nThe directory '")
+	    (greg-log name)
+	    (greg-log "' does not contain any suitable scripts!\n\n")
+	    ()
 	  )
-	  dir
+	  (if (> (length greg-files) 0)
+	    (let
+	      (
+		(tmpdir ())
+	      )
+	      (begin
+		(for-each
+		  (lambda (e)
+		    (set! e (string-append e ".scm"))
+		    (if (member e dir)
+		      (set! tmpdir (cons e tmpdir))
+		    )
+		  )
+		  greg-files
+		)
+		(reverse tmpdir)
+	      )
+	    )
+	    dir
+	  )
 	)
       )
     )
@@ -482,100 +497,103 @@
 (define (greg-do-test name)
   (begin
     (greg-start-tool name)
-    (define ok-to-continue #t)
-    (define path (string-append name "/begin.grg"))
-    (if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
-      (catch #t
-	(lambda ()
-	  (greg-vlog 3 "Loading " path " ...\n")
-	  (define fullpath
-	    (if (string=? (substring path 0 1) "/")
-	      path
-	      (string-append (getcwd) "/" path)
-	    )
-	  )
-	  (load fullpath)
-	  (greg-vlog 3 "Loaded " path "\n")
-	)
-	(lambda key
-	  (begin
-	    (set! greg-test-exceptions (+ greg-test-exceptions 1))
-	    (set! greg-tool-unresolved (+ greg-tool-unresolved 1))
-	    (set! greg-total-unresolved (+ greg-total-unresolved 1))
-	    (greg-log "ERROR: " name " - Exception in " path ": " key "\n")
-	    (set! ok-to-continue #f)
-	    (if (eqv? (car key) 'quit)
-	      (quit)
-	    )
-	  )
-	)
-      )
-    )
 
-    (if ok-to-continue
-      (do
-	((file-list (greg-list-files-in-directory name) (cdr file-list)))
-	((eq? file-list ()) (greg-end-tool))
-	(begin
-	  (set! greg-file-name (car file-list))
-	  (greg-vlog 2 "Running " greg-file-name " ...\n")
+    (let
+      (
+	(ok-to-continue #t)
+	(path (string-append name "/begin.grg"))
+      )
+      (begin
+	(if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
 	  (catch #t
 	    (lambda ()
-	      (define path (string-append name "/" greg-file-name))
-	      (define fullpath
+	      (greg-vlog 3 "Loading " path " ...\n")
+	      (load
 		(if (string=? (substring path 0 1) "/")
 		  path
 		  (string-append (getcwd) "/" path)
 		)
 	      )
-	      (load fullpath)
+	      (greg-vlog 3 "Loaded " path "\n")
 	    )
 	    (lambda key
 	      (begin
 		(set! greg-test-exceptions (+ greg-test-exceptions 1))
 		(set! greg-tool-unresolved (+ greg-tool-unresolved 1))
 		(set! greg-total-unresolved (+ greg-total-unresolved 1))
-		(greg-log greg-tool-name " - " greg-file-name)
-		(greg-log " - Exception: " key "\n")
-	        (if (eqv? (car key) 'quit)
+		(greg-log "ERROR: " name " - Exception in " path ": " key "\n")
+		(set! ok-to-continue #f)
+		(if (eqv? (car key) 'quit)
 		  (quit)
 		)
 	      )
 	    )
 	  )
-	  (greg-vlog 2 "Ended " greg-file-name "\n")
+	)
+
+	(if ok-to-continue
+	  (do
+	    ((file-list (greg-list-files-in-directory name) (cdr file-list)))
+	    ((eq? file-list ()) (greg-end-tool))
+	    (begin
+	      (set! greg-file-name (car file-list))
+	      (greg-vlog 2 "Running " greg-file-name " ...\n")
+	      (catch #t
+		(lambda ()
+		  (set! path (string-append name "/" greg-file-name))
+		  (load
+		    (if (string=? (substring path 0 1) "/")
+		      path
+		      (string-append (getcwd) "/" path)
+		    )
+		  )
+		)
+		(lambda key
+		  (begin
+		    (set! greg-test-exceptions (+ greg-test-exceptions 1))
+		    (set! greg-tool-unresolved (+ greg-tool-unresolved 1))
+		    (set! greg-total-unresolved (+ greg-total-unresolved 1))
+		    (greg-log greg-tool-name " - " greg-file-name)
+		    (greg-log " - Exception: " key "\n")
+		    (if (eqv? (car key) 'quit)
+		      (quit)
+		    )
+		  )
+		)
+	      )
+	      (greg-vlog 2 "Ended " greg-file-name "\n")
+	    )
+	  )
+	)
+
+	(set! path (string-append name "/end.grg"))
+	(if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
+	  (catch #t
+	    (lambda ()
+	      (greg-vlog 3 "Loading " path " ...\n")
+	      (load
+		(if (string=? (substring path 0 1) "/")
+		  path
+		  (string-append (getcwd) "/" path)
+		)
+	      )
+	      (greg-vlog 3 "Loaded " path "\n")
+	    )
+	    (lambda key
+	      (begin
+		(set! greg-test-exceptions (+ greg-test-exceptions 1))
+		(set! greg-tool-unresolved (+ greg-tool-unresolved 1))
+		(set! greg-total-unresolved (+ greg-total-unresolved 1))
+		(greg-log "ERROR: " name " - Exception in " path ": " key "\n")
+		(if (eqv? (car key) 'quit)
+		  (quit)
+		)
+	      )
+	    )
+	  )
 	)
       )
     )
-
-    (set! path (string-append name "/end.grg"))
-    (if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
-      (catch #t
-	(lambda ()
-	  (greg-vlog 3 "Loading " path " ...\n")
-	  (define fullpath
-	    (if (string=? (substring path 0 1) "/")
-	      path
-	      (string-append (getcwd) "/" path)
-	    )
-	  )
-	  (load fullpath)
-	  (greg-vlog 3 "Loaded " path "\n")
-	)
-	(lambda key
-	  (begin
-	    (set! greg-test-exceptions (+ greg-test-exceptions 1))
-	    (set! greg-tool-unresolved (+ greg-tool-unresolved 1))
-	    (set! greg-total-unresolved (+ greg-total-unresolved 1))
-	    (greg-log "ERROR: " name " - Exception in " path ": " key "\n")
-	    (if (eqv? (car key) 'quit)
-	      (quit)
-	    )
-	  )
-	)
-      )
-    )
-
     (greg-end-tool)
   )
 )
@@ -588,128 +606,137 @@
 (define-public (greg-testcase assertion expecting thunk)
   (greg-vlog 4 "Entered testcase - " assertion "\n")
   (if (string=? greg-case-name "")
-    (begin
-      (set! greg-case-name assertion)
-      (set! greg-tool-attempts (+ greg-tool-attempts 1))
-      (set! greg-total-attempts (+ greg-total-attempts 1))
-      (define testcase-return #f)
-      (define testcase-handled #f)
-      (define testcase-result
-        (catch #t
-	  (lambda ()
-	    (define tmpval (thunk))
-	    (gc)
-	    tmpval
-	  )
-	  (lambda key
-	    (set! testcase-handled #t)
-	    (cond
-	      ((eqv? (car key) 'fail)
-		(if expecting
-		  (begin
-		    (set! greg-tool-ufailures (+ greg-tool-ufailures 1))
-		    (set! greg-total-ufailures (+ greg-total-ufailures 1))
-		    (greg-log "FAIL: " greg-case-name "\n")
-		  )
-		  (begin
-		    (set! greg-tool-failures (+ greg-tool-failures 1))
-		    (set! greg-total-failures (+ greg-total-failures 1))
-		    (if greg-posix
+    (let
+      (
+	(testcase-return #f)
+	(testcase-handled #f)
+	(testcase-result #f)
+      )
+      (begin
+	(set! greg-case-name assertion)
+	(set! greg-tool-attempts (+ greg-tool-attempts 1))
+	(set! greg-total-attempts (+ greg-total-attempts 1))
+	(set! testcase-result
+	  (catch #t
+	    (lambda ()
+	      (let
+		((tmpval (thunk)))
+		(begin
+		  (gc)
+		  tmpval
+		)
+	      )
+	    )
+	    (lambda key
+	      (set! testcase-handled #t)
+	      (cond
+		((eqv? (car key) 'fail)
+		  (if expecting
+		    (begin
+		      (set! greg-tool-ufailures (+ greg-tool-ufailures 1))
+		      (set! greg-total-ufailures (+ greg-total-ufailures 1))
 		      (greg-log "FAIL: " greg-case-name "\n")
-		      (greg-vlog 1 "XFAIL: " greg-case-name "\n")
+		    )
+		    (begin
+		      (set! greg-tool-failures (+ greg-tool-failures 1))
+		      (set! greg-total-failures (+ greg-total-failures 1))
+		      (if greg-posix
+			(greg-log "FAIL: " greg-case-name "\n")
+			(greg-vlog 1 "XFAIL: " greg-case-name "\n")
+		      )
 		    )
 		  )
 		)
-	      )
-	      ((eqv? (car key) 'pass)
-		(if expecting
-		  (begin
-		    (set! greg-tool-passes (+ greg-tool-passes 1))
-		    (set! greg-total-passes (+ greg-total-passes 1))
-		    (greg-vlog 1 "PASS: " greg-case-name "\n")
-		  )
-		  (begin
-		    (set! greg-tool-upasses (+ greg-tool-upasses 1))
-		    (set! greg-total-upasses (+ greg-total-upasses 1))
-		    (if greg-posix
+		((eqv? (car key) 'pass)
+		  (if expecting
+		    (begin
+		      (set! greg-tool-passes (+ greg-tool-passes 1))
+		      (set! greg-total-passes (+ greg-total-passes 1))
 		      (greg-vlog 1 "PASS: " greg-case-name "\n")
-		      (greg-log "UPASS: " greg-case-name "\n")
+		    )
+		    (begin
+		      (set! greg-tool-upasses (+ greg-tool-upasses 1))
+		      (set! greg-total-upasses (+ greg-total-upasses 1))
+		      (if greg-posix
+			(greg-vlog 1 "PASS: " greg-case-name "\n")
+			(greg-log "UPASS: " greg-case-name "\n")
+		      )
 		    )
 		  )
 		)
-	      )
-	      ((eqv? (car key) 'unsupported)
-		(set! greg-tool-unsupported (+ greg-tool-unsupported 1))
-		(set! greg-total-unsupported (+ greg-total-unsupported 1))
-		(greg-log "UNSUPPORTED: " greg-case-name "\n")
-	      )
-	      ((eqv? (car key) 'untested)
-		(set! greg-tool-untested (+ greg-tool-untested 1))
-		(set! greg-total-untested (+ greg-total-untested 1))
-		(greg-log "UNTESTED: " greg-case-name "\n")
-	      )
-	      ((eqv? (car key) 'unresolved)
-		(set! greg-tool-unresolved (+ greg-tool-unresolved 1))
-		(set! greg-total-unresolved (+ greg-total-unresolved 1))
-		(greg-log "UNRESOLVED: " greg-case-name "\n")
-	      )
-	      (else
-		(greg-log "Exception: " key "\n")
-		(set! greg-tool-unresolved (+ greg-tool-unresolved 1))
-		(set! greg-total-unresolved (+ greg-total-unresolved 1))
-		(greg-log "UNRESOLVED: " greg-case-name "\n")
-	        (if (eqv? (car key) 'quit)
-		  (quit)
+		((eqv? (car key) 'unsupported)
+		  (set! greg-tool-unsupported (+ greg-tool-unsupported 1))
+		  (set! greg-total-unsupported (+ greg-total-unsupported 1))
+		  (greg-log "UNSUPPORTED: " greg-case-name "\n")
+		)
+		((eqv? (car key) 'untested)
+		  (set! greg-tool-untested (+ greg-tool-untested 1))
+		  (set! greg-total-untested (+ greg-total-untested 1))
+		  (greg-log "UNTESTED: " greg-case-name "\n")
+		)
+		((eqv? (car key) 'unresolved)
+		  (set! greg-tool-unresolved (+ greg-tool-unresolved 1))
+		  (set! greg-total-unresolved (+ greg-total-unresolved 1))
+		  (greg-log "UNRESOLVED: " greg-case-name "\n")
+		)
+		(else
+		  (greg-log "Exception: " key "\n")
+		  (set! greg-tool-unresolved (+ greg-tool-unresolved 1))
+		  (set! greg-total-unresolved (+ greg-total-unresolved 1))
+		  (greg-log "UNRESOLVED: " greg-case-name "\n")
+		  (if (eqv? (car key) 'quit)
+		    (quit)
+		  )
 		)
 	      )
 	    )
 	  )
 	)
-      )
-      (if (boolean? testcase-result)
-	(if testcase-result
-	  (if expecting
-	    (begin
-	      (set! greg-tool-passes (+ greg-tool-passes 1))
-	      (set! greg-total-passes (+ greg-total-passes 1))
-	      (greg-vlog 1 "PASS: " greg-case-name "\n")
-	      (set! testcase-return #t)
+	(if (boolean? testcase-result)
+	  (if testcase-result
+	    (if expecting
+	      (begin
+		(set! greg-tool-passes (+ greg-tool-passes 1))
+		(set! greg-total-passes (+ greg-total-passes 1))
+		(greg-vlog 1 "PASS: " greg-case-name "\n")
+		(set! testcase-return #t)
+	      )
+	      (begin
+		(set! greg-tool-upasses (+ greg-tool-upasses 1))
+		(set! greg-total-upasses (+ greg-total-upasses 1))
+		(if greg-posix
+		  (greg-vlog 1 "PASS: " greg-case-name "\n")
+		  (greg-log "UPASS: " greg-case-name "\n")
+		)
+	      )
 	    )
-	    (begin
-	      (set! greg-tool-upasses (+ greg-tool-upasses 1))
-	      (set! greg-total-upasses (+ greg-total-upasses 1))
-	      (if greg-posix
-	        (greg-vlog 1 "PASS: " greg-case-name "\n")
-	        (greg-log "UPASS: " greg-case-name "\n")
+	    (if expecting
+	      (begin
+		(set! greg-tool-ufailures (+ greg-tool-ufailures 1))
+		(set! greg-total-ufailures (+ greg-total-ufailures 1))
+		(greg-log "FAIL: " greg-case-name "\n")
+	      )
+	      (begin
+		(set! greg-tool-failures (+ greg-tool-failures 1))
+		(set! greg-total-failures (+ greg-total-failures 1))
+		(if greg-posix
+		  (greg-log "FAIL: " greg-case-name "\n")
+		  (greg-vlog 1 "XFAIL: " greg-case-name "\n")
+		)
 	      )
 	    )
 	  )
-	  (if expecting
+	  (if (not testcase-handled)
 	    (begin
-	      (set! greg-tool-ufailures (+ greg-tool-ufailures 1))
-	      (set! greg-total-ufailures (+ greg-total-ufailures 1))
-	      (greg-log "FAIL: " greg-case-name "\n")
-	    )
-	    (begin
-	      (set! greg-tool-failures (+ greg-tool-failures 1))
-	      (set! greg-total-failures (+ greg-total-failures 1))
-	      (if greg-posix
-	        (greg-log "FAIL: " greg-case-name "\n")
-	        (greg-vlog 1 "XFAIL: " greg-case-name "\n")
-	      )
+	      (set! greg-tool-unresolved (+ greg-tool-unresolved 1))
+	      (set! greg-total-unresolved (+ greg-total-unresolved 1))
+	      (greg-log "UNRESOLVED: " greg-case-name "\n")
 	    )
 	  )
 	)
-	(if (not testcase-handled)
-	  (begin
-	    (set! greg-tool-unresolved (+ greg-tool-unresolved 1))
-	    (set! greg-total-unresolved (+ greg-total-unresolved 1))
-	    (greg-log "UNRESOLVED: " greg-case-name "\n")
-	  )
-	)
+	(set! greg-case-name "")
+	testcase-return
       )
-      (set! greg-case-name "")
-      testcase-return
     )
     (begin
       (greg-log "ERROR: nested calls to greg-testcase are not permitted\n")
@@ -734,74 +761,76 @@
         (set! greg-individual-test #f)
       )
     )
-    (define greg-old-home (getcwd))
-
-    (define ok-to-continue #t)
-    (define path (string-append home "/begin.grg"))
-    (if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
-      (catch #t
-	(lambda ()
-	  (greg-vlog 3 "Loading " path " ...\n")
-	  (define fullpath
-	    (if (string=? (substring path 0 1) "/")
-	      path
-	      (string-append (getcwd) "/" path)
+    (let
+      (
+	(greg-old-home (getcwd))
+	(ok-to-continue #t)
+	(path (string-append home "/begin.grg"))
+      )
+      (begin
+	(if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
+	  (catch #t
+	    (lambda ()
+	      (greg-vlog 3 "Loading " path " ...\n")
+	      (load
+		(if (string=? (substring path 0 1) "/")
+		  path
+		  (string-append (getcwd) "/" path)
+		)
+	      )
+	      (greg-vlog 3 "Loaded " path "\n")
+	    )
+	    (lambda key
+	      (begin
+		(set! greg-total-unresolved (+ greg-total-unresolved 1))
+		(greg-log "ERROR: Exception in " path ": " key "\n")
+		(set! ok-to-continue #f)
+		(if (eqv? (car key) 'quit)
+		  (quit)
+		)
+	      )
 	    )
 	  )
-	  (load fullpath)
-	  (greg-vlog 3 "Loaded " path "\n")
 	)
-	(lambda key
-	  (begin
-	    (set! greg-total-unresolved (+ greg-total-unresolved 1))
-	    (greg-log "ERROR: Exception in " path ": " key "\n")
-	    (set! ok-to-continue #f)
-	    (if (eqv? (car key) 'quit)
-	      (quit)
+
+	(if ok-to-continue
+	  (do
+	    ((dir-list (greg-list-directories home) (cdr dir-list)))
+	    ((eq? dir-list ()) (greg-summary))
+	    (begin
+	      (chdir home)
+	      (greg-do-test (car dir-list))
+	      (chdir greg-old-home)
+	    )
+	  )
+	)
+
+	(set! path (string-append home "/end.grg"))
+	(if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
+	  (catch #t
+	    (lambda ()
+	      (greg-vlog 3 "Loading " path " ...\n")
+	      (load
+		(if (string=? (substring path 0 1) "/")
+		  path
+		  (string-append (getcwd) "/" path)
+		)
+	      )
+	      (greg-vlog 3 "Loaded " path "\n")
+	    )
+	    (lambda key
+	      (begin
+		(set! greg-total-unresolved (+ greg-total-unresolved 1))
+		(greg-log "ERROR: Exception in " path ": " key "\n")
+		(if (eqv? (car key) 'quit)
+		  (quit)
+		)
+	      )
 	    )
 	  )
 	)
       )
     )
-
-    (if ok-to-continue
-      (do
-	((dir-list (greg-list-directories home) (cdr dir-list)))
-	((eq? dir-list ()) (greg-summary))
-	(begin
-	  (chdir home)
-	  (greg-do-test (car dir-list))
-	  (chdir greg-old-home)
-	)
-      )
-    )
-
-    (set! path (string-append home "/end.grg"))
-    (if (and (access? path R_OK) (eqv? (stat:type (stat path)) 'regular))
-      (catch #t
-	(lambda ()
-	  (greg-vlog 3 "Loading " path " ...\n")
-	  (define fullpath
-	    (if (string=? (substring path 0 1) "/")
-	      path
-	      (string-append (getcwd) "/" path)
-	    )
-	  )
-	  (load fullpath)
-	  (greg-vlog 3 "Loaded " path "\n")
-	)
-	(lambda key
-	  (begin
-	    (set! greg-total-unresolved (+ greg-total-unresolved 1))
-	    (greg-log "ERROR: Exception in " path ": " key "\n")
-	    (if (eqv? (car key) 'quit)
-	      (quit)
-	    )
-	  )
-	)
-      )
-    )
-
     (greg-reset)
   )
 )
@@ -957,58 +986,64 @@
     (if (list? (car args))
       (set! args (car args))
     )
-    (define name (car args))
-    ;
-    ; If the program name is not nul, and does not begin with a slash -
-    ; see if the program exists in the 'greg-obj-dir' directory and, if it
-    ; does, arrange to run that executable.
-    ;
-    (if (not (string=? "" name))
+    (let
+      (
+	(name (car args))
+      )
       (begin
-	(if (not (string=? "/" (substring name 0 1)))
-	  (set! name (greg-obj-file name))
-	)
-	(if (and (access? name R_OK) (access? name X_OK)
-		(eqv? (stat:type (stat name)) 'regular))
-	  (set! args (cons name (cdr args)))
-	  (greg-log "Unable to find executable - " name "\n")
-	)
-      )
-    )
-    ;
-    ; Now try to launch the child process and set things up to talk to it.
-    ;
-    (set! greg-child-info (pty-child args))
-    ;
-    ;
-    (if (> (length greg-child-info) 0)
-      (if (input-port? (car greg-child-info))
-	(begin
-	  (greg-expect-push)
-	  (set! expect-port (car greg-child-info))
-	  (set! expect-timeout greg-timeout)
-	  (set! expect-timeout-proc
-	    (lambda (arg)
-	      (begin
-		(greg-dlog "timed out in expect\n")
-		()
-	      )
+	;
+	; If the program name is not nul, and does not begin with a slash -
+	; see if the program exists in the 'greg-obj-dir' directory and, if it
+	; does, arrange to run that executable.
+	;
+	(if (not (string=? "" name))
+	  (begin
+	    (if (not (string=? "/" (substring name 0 1)))
+	      (set! name (greg-obj-file name))
+	    )
+	    (if (and (access? name R_OK) (access? name X_OK)
+		    (eqv? (stat:type (stat name)) 'regular))
+	      (set! args (cons name (cdr args)))
+	      (greg-log "Unable to find executable - " name "\n")
 	    )
 	  )
-	  (set! expect-eof-proc
-	    (lambda (arg)
-	      (begin
-		(greg-dlog "end-of-file in expect\n")
-		()
-	      )
-	    )
-	  )
-	  (set! expect-char-proc greg-dlog)
-	  greg-child-info
 	)
-	greg-child-info
+	;
+	; Now try to launch the child process and set things up to talk to it.
+	;
+	(set! greg-child-info (pty-child args))
+	;
+	;
+	(if (> (length greg-child-info) 0)
+	  (if (input-port? (car greg-child-info))
+	    (begin
+	      (greg-expect-push)
+	      (set! expect-port (car greg-child-info))
+	      (set! expect-timeout greg-timeout)
+	      (set! expect-timeout-proc
+		(lambda (arg)
+		  (begin
+		    (greg-dlog "timed out in expect\n")
+		    ()
+		  )
+		)
+	      )
+	      (set! expect-eof-proc
+		(lambda (arg)
+		  (begin
+		    (greg-dlog "end-of-file in expect\n")
+		    ()
+		  )
+		)
+	      )
+	      (set! expect-char-proc greg-dlog)
+	      greg-child-info
+	    )
+	    greg-child-info
+	  )
+	  (throw 'failed-to-create-child args)
+	)
       )
-      (throw 'failed-to-create-child args)
     )
   )
 )
