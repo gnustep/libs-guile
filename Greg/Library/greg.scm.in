@@ -70,7 +70,7 @@
 ;;; but only when it isn't already present.
 
 (if (not (feature? 'greg-pty))
-    (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so")))
+    (dynamic-call "scm_init_greg" (dynamic-link "guile/libgreg.so")))
 
 
 (define-public (greg-version)
