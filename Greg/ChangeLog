@@ -1,3 +1,7 @@
+2000-09-28 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Documentation/Makefile.in: Handle re-install of info file nicely.
+
 2000-03-24  Thien-Thi Nguyen  <ttn@gnu.org>
 
 	* Documentation/gregdoc.in: Replaced `@emph' w/ `@code',
