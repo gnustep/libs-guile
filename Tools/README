@@ -1,0 +1,10 @@
+This directory contains a ready to use guile-interpreter linked in
+with gnustep-base library and all the gnustep-guile support stuff.
+
+To use gnustep-guile, you can simply run `guile-base', then type at
+the prompt
+
+guile> (use-modules (languages gstep-guile))
+
+And you are ready to play with it; see the documentation for things you can
+do with it.
