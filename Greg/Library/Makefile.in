@@ -33,6 +33,10 @@ bindir = @bindir@
 libdir = @libdir@
 SED = sed
 
+# New versions of libtool only work if SED is defined, so we need to export
+# it from the makefile.
+export SED
+
 GUILE_SCM_PATH = @GUILE_SCM_PATH@
 
 MAJOR_VERSION = @MAJOR_VERSION@
