@@ -8,8 +8,10 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 # The application to be compiled
 ifneq ($(GUI_LIB),nil)
-  APP_NAME = gui
-  gui_OBJC_FILES = gui.m
+  ifneq (@ac_cv_header_AppKit_AppKit_h@,no)
+    APP_NAME = gui
+    gui_OBJC_FILES = gui.m
+  endif
 endif
 
 #The tool to be compiled

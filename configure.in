@@ -1,6 +1,11 @@
 AC_INIT(configure.in)
 
 #--------------------------------------------------------------------
+# Use a .h file with #define's, instead of -D command-line switches
+#--------------------------------------------------------------------
+AC_CONFIG_HEADER(config.h)
+
+#--------------------------------------------------------------------
 # The GNUstep root directory.
 # The user should have the GNUSTEP_SYSTEM_ROOT environment variable
 # defined, but if not then we have a global default.
@@ -18,5 +23,8 @@ fi
 AC_ARG_WITH(guile-path,
            [  --with-guile-path=DIR   How to call guile], ,)
 
+AC_CHECK_HEADERS(AppKit/AppKit.h)
+AC_SUBST(ac_cv_header_AppKit_AppKit_h)
+
 AC_CONFIG_SUBDIRS(Greg ScriptKit)
-AC_OUTPUT()
+AC_OUTPUT(Test/GNUmakefile)
