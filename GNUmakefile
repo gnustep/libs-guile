@@ -9,6 +9,7 @@ include Version
 
 RPM_DISABLE_RELOCATABLE=YES
 PACKAGE_NEEDS_CONFIGURE=YES
+CVS_MODULE_NAME = guile
 
 # 
 # Pass it down to Greg
