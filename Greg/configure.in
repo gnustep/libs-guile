@@ -24,6 +24,7 @@ AC_SUBST(HAVE_PTS_STREAM_MODULES)
 #--------------------------------------------------------------------
 AC_PROG_CC
 AC_PROG_CPP
+AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
 
 AC_ARG_WITH(guile-path,
@@ -42,7 +43,7 @@ fi
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS(libc.h limits.h malloc.h memory.h string.h signal.h sys/file.h sys/fcntl.h sys/ioctl.h sys/stropts.h unistd.h utime.h libguile.h)
+AC_CHECK_HEADERS(libc.h limits.h malloc.h memory.h string.h signal.h sys/file.h sys/fcntl.h sys/ioctl.h sys/stropts.h unistd.h utime.h libguile.h errno.h)
 
 AC_TYPE_GETGROUPS
 AC_TYPE_SIGNAL

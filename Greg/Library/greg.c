@@ -39,6 +39,11 @@
 #if	HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
+#if HAVE_ERRNO_H
+#include <errno.h>
+#else
+extern int	errno;
+#endif
 
 #include <libguile.h>
 
@@ -189,7 +194,6 @@ scm_pty_child(SCM args)
 	  s = pty_slave(slave_name);
 	  if (s < 0)
 	    {
-	      extern int	errno;
 	      char		buf[256];
 	      int		len;
 #if	HAVE_STRERROR
