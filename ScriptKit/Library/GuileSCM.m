@@ -925,94 +925,38 @@ GuileSCM_mapper_remove (SCM scm)
 }
 @end
 
-@implementation NSBoolNumber (GuileSCM)
+@implementation NSNumber (GuileSCM)
 - (SCM) scmValue
 {
-  return gh_bool2scm ([self boolValue]);
-}
-@end
+  switch (*[self objCType])
+    {
+      case _C_CHR:  return gh_char2scm  ([self charValue]);
+      case _C_UCHR: return gh_ulong2scm ([self unsignedCharValue]);
+      case _C_SHT:  return gh_long2scm  ([self shortValue]);
+      case _C_USHT: return gh_ulong2scm ([self unsignedShortValue]);
+      case _C_INT:  return gh_int2scm   ([self intValue]);
+      case _C_UINT: return gh_ulong2scm ([self unsignedIntValue]);
+      case _C_LNG:  return gh_long2scm  ([self longValue]);
+      case _C_ULNG: return gh_ulong2scm ([self unsignedLongValue]);
 
-@implementation NSUCharNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_char2scm ((char) [self unsignedCharValue]);
-}
-@end
+#ifdef _C_LNGLNG
+      case _C_LNGLNG:
+#else
+      case 'q':
+#endif
+	return gh_long2scm ((long) [self unsignedLongLongValue]);
 
-@implementation NSCharNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_char2scm ([self charValue]);
-}
-@end
+#ifdef _C_ULNGLNG
+      case _C_ULNGLNG: 
+#else
+      case 'Q':
+#endif
+	return gh_ulong2scm ((unsigned long) [self unsignedLongLongValue]);
 
-@implementation NSUShortNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_ulong2scm ([self unsignedShortValue]);
-}
-@end
-
-@implementation NSShortNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_long2scm ([self shortValue]);
-}
-@end
-
-@implementation NSUIntNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_ulong2scm ([self unsignedIntValue]);
-}
-@end
-
-@implementation NSIntNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_long2scm ([self intValue]);
-}
-@end
-
-@implementation NSULongNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_ulong2scm ([self unsignedLongValue]);
-}
-@end
-
-@implementation NSLongNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_long2scm ([self longValue]);
-}
-@end
-
-@implementation NSULongLongNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_ulong2scm ((unsigned long) [self unsignedLongLongValue]);
-}
-@end
-
-@implementation NSLongLongNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_long2scm ((long) [self longLongValue]);
-}
-@end
-
-@implementation NSFloatNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_double2scm ((double) [self floatValue]);
-}
-@end
-
-@implementation NSDoubleNumber (GuileSCM)
-- (SCM) scmValue
-{
-  return gh_double2scm ([self doubleValue]);
+      case _C_FLT: return gh_double2scm ((double) [self floatValue]);
+      case _C_DBL: return gh_double2scm ([self doubleValue]);
+      default:  return gh_double2scm ([self doubleValue]);
+    }
 }
 @end
 
