@@ -36,7 +36,7 @@ if test "$GUILEPATH" = "NONE"; then
   echo "********************************************************************"
   echo "You need guile in order to use this library. If it is not in your"
   echo "path, set the correct path by calling configure with --with-guile-path"
-  echo "set to the correct path (e.g. configure --with-guile-path=/usr/bin/guile)"
+  echo "set to the correct path (e.g. configure --with-guile-path=/usr/local/bin)"
   echo "********************************************************************"
   AC_MSG_ERROR([No guile found - cannot continue])
 fi
