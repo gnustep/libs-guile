@@ -1,6 +1,10 @@
 #!@GUILEPATH@ -s
 !#
 
+;;;; greg - Regression testing command-line tool
+;;;;
+;;;; Copyright (C) 1998 Free Software Foundation, Inc.
+;;;;
 ;;;; Written by:  Richard frith-Macdonald <richard@brainstorm.co.uk>
 ;;;; Date: 1998
 ;;;;   

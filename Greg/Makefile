@@ -73,7 +73,9 @@ distrib:
 	. GREG-VERSION; \
 	mkdir /tmp/greg-$$VERSION; \
 	tar -cf - . | (cd /tmp/greg-$$VERSION; tar -xf -); \
-	cd /tmp; tar -cf greg-$$VERSION.tar greg-$$VERSION; \
+	cd /tmp; \
+	rm -rf greg-$$VERSION/CVS greg-$$VERSION/*/CVS; \
+	tar -cf greg-$$VERSION.tar greg-$$VERSION; \
 	gzip greg-$$VERSION.tar; \
 	rm -rf /tmp/greg-$$VERSION; \
 	)
