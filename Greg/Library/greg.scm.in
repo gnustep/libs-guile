@@ -240,10 +240,9 @@
 ; Procedure to reset stuff at the end of a test run.
 ;
 (define (greg-reset)
-  (begin
-    (define ok
+  (let ((ok
       (= (+ greg-total-upasses greg-total-ufailures greg-total-unresolved greg-total-unsupported greg-total-untested) 0)
-    )
+    ))
     (greg-end-child)
     (greg-close-logs)
     (set! greg-num-tools 0)
