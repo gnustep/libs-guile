@@ -1,3 +1,9 @@
+2003-09-19  Adam Fedor  <fedor@gnu.org>
+
+	* configure.in: Fix comment about with-guile-path
+	* configure: Regenerate using 2.57 to fix path error.
+	Fixes #5274
+
 2003-05-26  Joe Marcus Clarke  <marcus@FreeBSD.org>
 
 	* configure.in: Use %library-dir
