@@ -24,8 +24,8 @@
 #
 
 prefix = @prefix@
-infodir=$(prefix)/info
-mandir = $(prefix)/man
+infodir= @infodir@
+mandir = @mandir@
 man1dir = $(mandir)/man1
 
 INSTALL_DATA = install -m 644

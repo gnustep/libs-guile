@@ -1,3 +1,11 @@
+Thu Dec 13 12:16:33 2001  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* Documentation/Makefile.in (infodir, mandir): Import configure's
+	definitions so that they can be customized as per autoconf
+	policies.  In particular, if we're running under GNUstep, this
+	fixes them by allowing the GNUstep config.site script to define
+	them correctly.
+
 Thu Sep 13 18:27:09 2001  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* Library/greg.c (scm_init_greg): Added code (#ifdeffed out) for
