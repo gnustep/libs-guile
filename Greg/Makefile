@@ -35,41 +35,41 @@ all:	library
 #  The 'configure' program MUST be run before building.
 #
 library:	config.cache
-	(cd Library; make);
+	(cd Library; $(MAKE));
 
 config.status:	configure
 	echo "You must run configure before building Greg"
 	exit 1
 
 install: library
-	(cd Library; make install); \
+	(cd Library; $(MAKE) install); \
 
 test:
-	(cd Test; make check); \
+	(cd Test; $(MAKE) check); \
 
 documentation:
-	(cd Documentation; make)
+	(cd Documentation; $(MAKE))
 
 clean:
-	(cd Library; make clean); \
-	(cd Test; make clean); \
-	(cd Documentation; make clean)
+	(cd Library; $(MAKE) clean); \
+	(cd Test; $(MAKE) clean); \
+	(cd Documentation; $(MAKE) clean)
 
 distclean:
 	rm -f config.cache config.log config.status; \
-	(cd Library; make distclean); \
-	(cd Test; make distclean); \
-	(cd Documentation; make distclean)
+	(cd Library; $(MAKE) distclean); \
+	(cd Test; $(MAKE) distclean); \
+	(cd Documentation; $(MAKE) distclean)
 
 distrib:
 	( \
 	autoconf; \
 	./configure; \
-	(cd Documentation; make); \
+	(cd Documentation; $(MAKE)); \
 	rm -f config.cache config.log config.status; \
-	(cd Library; make distclean); \
-	(cd Test; make distclean); \
-	(cd Documentation; make distclean); \
+	(cd Library; $(MAKE) distclean); \
+	(cd Test; $(MAKE) distclean); \
+	(cd Documentation; $(MAKE) distclean); \
 	. GREG-VERSION; \
 	mkdir /tmp/greg-$$VERSION; \
 	tar -cf - . | (cd /tmp/greg-$$VERSION; tar -xf -); \

@@ -1,3 +1,9 @@
+Sun Jan 24  4:55:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Suggestions by masata-y@is.aist-nara.ac.jp
+	* Makefile: Use $(MAKE) instead of make
+	* configure: updated using aclocal
+
 Wed Jan  6  8:15:00 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
         * Documentation/gregdoc.in: More fixes provided by
