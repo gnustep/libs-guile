@@ -36,11 +36,22 @@
 #include <ScriptKit/GuileInvocation.h>
 #include <ScriptKit/GuileScript.h>
 
+#if BUILD_ScriptKit_DLL
+#  define SK_EXPORT  __declspec(dllexport)
+#  define SK_DECLARE __declspec(dllexport)
+#elif ScriptKit_ISDLL
+#  define SK_EXPORT  extern __declspec(dllimport)
+#  define SK_DECLARE __declspec(dllimport)
+#else
+#  define SK_EXPORT extern
+#  define SK_DECLARE
+#endif
+
 /* VA ARGS terminator.
    See:
    [GuileProcedure -callWithObjects:]
    [GuileSCM(ListOperations) +list:] */
-extern id Guile_end_of_arguments();
+SK_EXPORT id Guile_end_of_arguments();
 #define GUILE_EOA Guile_end_of_arguments()
 
 #endif /* Not def: SK_GUILE_H */

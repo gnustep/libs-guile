@@ -36,6 +36,8 @@ libScriptKit_HEADER_FILES = \
 
 test_skit_HEADER_FILES_DIR = .
 
+libScriptKit_DLL_DEF=libScriptKit.def
+
 include Makefile.preamble
 
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/library.make
