@@ -1,3 +1,7 @@
+Tue Jan 23 14:43:49 2001  Nicola Pero  <nicola@brainstorm.co.uk>
+
+	* GNUmakefile: Install into GNUSTEP_SYSTEM_ROOT by default.
+
 Mon Jan 22 15:12:03 2001  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* GNUmakefile: Added RPM packaging.
