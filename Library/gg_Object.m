@@ -114,7 +114,7 @@ static NSMapTable	*objectMap = 0;
     }
   else
     {
-      *val++;
+      ++*val;
     }
   [gstep_guile_object_lock unlock];
   return self;

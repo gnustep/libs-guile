@@ -1,3 +1,7 @@
+Tue Sep 21  5:14:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Misc changes to tidy compiler warnings etc.
+
 Tue Aug  3 11:40:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Changes to make it straightforward to build and install on systems

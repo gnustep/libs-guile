@@ -154,6 +154,7 @@ proc_error(void *data, SCM tag, SCM throw_args)
 {
   [NSException raise: NSGenericException
 	      format: @"%s: guile threw an exception", (char*)data];
+  return gh_bool2scm(0);
 }
 
 /*
@@ -167,8 +168,6 @@ static retval_t
 gstep_send_msg_to_guile(id rcv, SEL sel, ...)
 {
   va_list	ap;
-  arglist_t	frame;
-  BOOL		out_parameters;
   Class		rclass;
   class_info	*cls;
   const char	*type;
@@ -180,7 +179,6 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
   SCM		val = 0;
   SCM		proc = 0;
   SCM		receiver;
-  SCM		method;
   SCM		argsList = SCM_EOL;
   SCM		argsEnd = 0;
   BOOL		rcvIsClass = gstep_guile_object_is_class(rcv);
@@ -755,6 +753,7 @@ gstep_lookup_class_fn (SCM classname)
     }
     else {
 	gstep_scm_error("not a symbol or string", classname);
+	return gstep_id2scm(nil, NO);
     }
 }
 
@@ -793,7 +792,6 @@ gstep_new_class_fn(SCM classn, SCM supern, SCM ilist, SCM mlist, SCM clist)
     char	*sname = 0;
     id		sclass = nil;
     SCM		tmp;
-    int		count;
     int		ivarsize = 0;
     int		num_ivars = 0;
 
@@ -942,26 +940,29 @@ static char gstep_class_methods_n[] = "gstep-class-methods";
 static SCM
 gstep_class_methods_fn(SCM classn, SCM mlist)
 {
-    SCM		wrap;
-    char	*cname;
-    Class	dest;
+  char	*cname;
+  Class	dest;
 
-    if (SCM_NIMP(classn) && SCM_SYMBOLP(classn)) {
-	classn = scm_symbol_to_string(classn);
+  if (SCM_NIMP(classn) && SCM_SYMBOLP(classn))
+    {
+      classn = scm_symbol_to_string(classn);
     }
-    if (SCM_NIMP(classn) && SCM_STRINGP(classn)) {
-	cname = gh_scm2newstr(classn, 0);
-	dest = objc_lookup_class(cname);
-	free(cname);
-	if (dest == nil) {
-	    gstep_scm_error("the named class does not exists", classn);
+  if (SCM_NIMP(classn) && SCM_STRINGP(classn))
+    {
+      cname = gh_scm2newstr(classn, 0);
+      dest = objc_lookup_class(cname);
+      free(cname);
+      if (dest == nil)
+	{
+	  gstep_scm_error("the named class does not exists", classn);
 	}
     }
-    else {
-	gstep_scm_error("not a symbol or string", classn);
+  else
+    {
+      gstep_scm_error("not a symbol or string", classn);
     }
 
-    return gstep_add_methods(dest, mlist, NO);
+  return gstep_add_methods(dest, mlist, NO);
 }
 
 static char gstep_instance_methods_n[] = "gstep-instance-methods";
@@ -971,7 +972,6 @@ static char gstep_instance_methods_n[] = "gstep-instance-methods";
 static SCM
 gstep_instance_methods_fn(SCM classn, SCM mlist)
 {
-    SCM		wrap;
     char	*cname;
     Class	dest;
 
