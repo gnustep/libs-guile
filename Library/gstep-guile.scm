@@ -28,12 +28,6 @@
 (if (not (feature? 'gstep-guile))
     (dynamic-call "gstep_init" (dynamic-link "libgstep_guile.so")))
 
-; I want to be able to do -
-;
-;(define-module (languages gstep-guile)
-;  :use-module (languages gstep-guile compiled))
-
-
 ;
 ; You need to load this file to define convenience procedures for
 ; using the gstep_guile library.
