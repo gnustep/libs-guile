@@ -1,4 +1,9 @@
-2003-03-16 Richard Frith-Macdonald <rfm@gnu.org>
+003-03-17 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/gstep-guile.scm.in: Use 'defined?' rather than the
+	guile version.
+
+003-03-16 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Version: Increase in preparation for new release
 	* configure: regenerate

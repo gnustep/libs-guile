@@ -25,13 +25,8 @@
 
 (define-module (languages gstep-guile))
 
-(define gversion
-  (+ (* 100 (string->number (major-version))) (string->number (minor-version)))
-)
-
-(if (> gversion 104)
+(if (defined? 'load-extension)
   (begin
-;;; IF NEW_GUILE
     (load-extension "libgstep_guile_d" "gstep_init")
     (load-extension "libgg_base_d" "gstep_link_base")
     (define-public (gstep-gui)
@@ -54,7 +49,6 @@
     )
   )
   (begin
-;;; ELSE /* OLD_GUILE */
     (if (not (feature? 'gstep-guile))
       (dynamic-call "gstep_init" (dynamic-link "libgstep_guile_d.so"))
     )
