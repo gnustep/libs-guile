@@ -34,7 +34,7 @@ all:	library
 #
 #  The 'configure' program MUST be run before building.
 #
-library:	config.cache
+library:	config.status
 	(cd Library; $(MAKE));
 
 config.status:	configure
