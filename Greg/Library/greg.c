@@ -358,7 +358,11 @@ scm_pty_child(SCM args)
 void
 scm_init_greg()
 {
+#ifdef NEW_GUILE
+  scm_c_define_gsubr(s_pty_child, 0, 0, 1, scm_pty_child);
+#else /* OLD_GUILE */
   scm_make_gsubr(s_pty_child, 0, 0, 1, scm_pty_child);
   scm_add_feature("greg-pty");
+#endif
 }
 
