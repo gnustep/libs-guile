@@ -4,7 +4,7 @@
 #  
 #  Copyright (C) 1998 Free Software Foundation, Inc.
 #
-#  Written by:	Richard Frith-Macdonald <richard@brainstorm.co.uk>
+#  Written by:	Richard Frith-Macdonald <rfm@gnu.org>
 #
 #  This file is part of the GNUstep Base Library.
 #
@@ -40,7 +40,7 @@ dvi:	gregdoc.texi
 	texi2dvi gregdoc.texi
 
 html:	gregdoc
-	texi2html -split_chapter -expandinfo gregdoc
+	texi2html -monolithic -expandinfo gregdoc
 
 info:	gregdoc
 	makeinfo -D NO-TEXI2HTML -o gregdoc.info gregdoc

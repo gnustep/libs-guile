@@ -30,7 +30,7 @@ END-INFO-DIR-ENTRY
 @subtitle for Greg Version @VERSION@
 @sp 1
 @subtitle February 2000
-@author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
+@author Richard Frith-Macdonald <rfm@@gnu.org>
 @page
 
 @vskip 0pt plus 1filll
@@ -104,6 +104,17 @@ See the file @emph{COPYING.LIB}.
 @node News, Overview, Copying, Top
 @chapter New in this release
 @cindex News
+
+New in 1.1
+
+@itemize @bullet
+@item
+Changed from using GNU Library General Public License to the newer
+GNU Lesser General Public License.
+@item
+Changed from using a compiled module (deprecated in guile) to using a
+dynamic library for pty support.
+@end itemize
 
 New in 1.0
 
@@ -193,7 +204,7 @@ The code to run a child process in a pseudo-terminal works for
 GNU/Linux and SysV4.2 systems - it probably needs work to make it
 more portable -
 Please email bugfixes and comments to <bug-gnustep@@gnu.org> or directly to
-me <richard@@brainstorm.co.uk>
+me <rfm@@gnu.org>
 
 @node Overview, Installation, News, Top
 @chapter Greg in brief
@@ -564,8 +575,11 @@ type @emph{make install} to build and install things.
 
 You should end up with -
 
-A compiled module, which can be dynamically linked into Guile with
-@code{(use-modules (greg compiled))},
+A dynamic library, which can be dynamically linked into Guile with
+@code{
+(if (not (feature? 'greg-pty))
+    (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so")))
+}
 
 a module defining Guile procedures and variables providing the main
 test framework, which can be accessed using
@@ -603,11 +617,24 @@ and installed Greg, but after that, most stuff should just work.
 
 The single area where you are most likely to encounter problems is if you are
 using Greg to test external programs run in a child process using the
-@code{(greg-child)} procedure.  The @emph{C} code for this procedure is quite
-system-dependent and has only been tested on a few operating systems.
+@code{(greg-child)} procedure.
+
+@itemize @bullet
+@item
+If you install Greg in a non-standard location, it's possible that guile
+will not be able to find the @code{libgreg.so} dynamic library to load it.
+In this case, you will need to change/set the @code{GUILE_LOAD_PATH}
+environment variable to include the directory in which the library has
+been installed.
+@item
+The @emph{C} code for this procedure is quite system-dependent and
+has only been tested on a few operating systems.
 If you have problems with this, look at @emph{greg.c} in the Library
-directory.  Please attempt to make a patch to fix things on your
-operating-system and send it to me - <richard@@brainstorm.co.uk> or to
+directory.
+@end itemize
+
+Please attempt to make a patch to fix things on your
+operating-system and send it to me - <rfm@@gnu.org> or to
 <bug-gnustep@@gnu.org>
 
 @node Invoking Greg, Writing tests, Installation, Top
