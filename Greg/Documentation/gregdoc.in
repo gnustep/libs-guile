@@ -133,7 +133,7 @@ New in 0.4
 @item
 Allow an empty string as the program name for creating a child process -
 in which case, we fork without execing to another program.
-Modified Greg to allow @emph{(quit)} to exit from the test system.
+Modified Greg to allow @code{(quit)} to exit from the test system.
 @end itemize
 
 New in 0.3
@@ -197,10 +197,10 @@ be dynamically linked into Guile to permit you to run an application as
 a child process on a pseudo-terminal.  In conjunction with the standard
 Guile `expect' module, this lets you test external programs.
 
-Also provided is @emph{greg} - a Guile script to invoke the Greg test
-framework in much the same way that @emph{runtest} is used in DejaGNU.
+Also provided is @code{greg} - a Guile script to invoke the Greg test
+framework in much the same way that @code{runtest} is used in DejaGNU.
 
-All tests have the same output format (enforced by the @emph{greg-testcase}
+All tests have the same output format (enforced by the @code{greg-testcase}
 procedure).
 Greg's output is designed to be both readable and readily parsed by other
 software, so that it can be used as input to customised testing processes.
@@ -251,7 +251,7 @@ files needed by the tests.
 
 Alternatively, if you are in the top-level source directory of an existing
 testsuite (ie. there are subdirectories containing files with a @code{.scm}
-extension), you can get the @emph{greg} script to test all the tools in the
+extension), you can get the @code{greg} script to test all the tools in the
 directory by typing  -
 
 @example
@@ -299,7 +299,7 @@ the main features of Greg test scripts:
 The test case does not deal with accessing the library - the Guile interpreter
 in use is linked with the library.  If you were testing an external application
 which needed to be started up as a child process running on a pseudo-terminal,
-the process startup would have been performed in a separate @emph{begin.grg}
+the process startup would have been performed in a separate @code{begin.grg}
 script.
 
 @item
@@ -456,7 +456,7 @@ framework.  Any unresolved test should resolved to @code{PASS} or
 Note that for @sc{posix}, each assertion must produce a test result
 code.  If the test isn't actually run, it must produce @code{UNRESOLVED}
 rather than just leaving that test out of the output.  With Greg this is
-not a problem - any unexpected termination of a @emph{greg-testcase}
+not a problem - any unexpected termination of a @code{greg-testcase}
 procedure will produce @code{UNRESOLVED}.
 
 Here are some of the ways a test may wind up @code{UNRESOLVED}:
@@ -493,7 +493,6 @@ There is no support for the tested case.  This may mean that a
 conditional feature of an operating system, or of a compiler, is not
 implemented.
 @end ftable
-  
 Greg uses the same output procedures to produce these messages for
 all test suites, and these procedures are already known to conform to
 @sc{posix} 1003.3.  For a Greg test suite to conform to @sc{posix}
@@ -510,7 +509,7 @@ Doing this will ensure that non-posix extensions are not used.
 
 Greg needs to have Guile installed.  It should work with Guile-1.2
 or later (it has been tested with 1.2 and 1.3).
-You need to have the @emph{guile} program in your path in
+You need to have the @code{guile} program in your path in
 order for the installation process to determine the proper locations
 for things.
 
@@ -542,14 +541,14 @@ type @emph{make install} to build and install things.
 You should end up with -
 
 A compiled module, which can be dynamically linked into Guile with
-@emph{(use-modules (greg compiled))},
+@code{(use-modules (greg compiled))},
 
 a module defining Guile procedures and variables providing the main
 test framework, which can be accessed using
-@emph{(use-modules (ice-9 greg))},
+@code{(use-modules (ice-9 greg))},
 
 and a Guile script that you can use to run tests from the unix
-command-line (@emph{greg}).
+command-line (@code{greg}).
 
 You @emph{MUST} install Greg before you attempt to use it (or run it's
 self-tests) because the Guile modules making it up must be in place in
@@ -580,7 +579,7 @@ and installed Greg, but after that, most stuff should just work.
 
 The single area where you are most likely to encounter problems is if you are
 using Greg to test external programs run in a child process using the
-@emph{(greg-child)} procedure.  The @emph{C} code for this procedure is quite
+@code{(greg-child)} procedure.  The @emph{C} code for this procedure is quite
 system-dependent and has only been tested on a few operating systems.
 If you have problems with this, look at @emph{greg.c} in the Library
 directory.  Please attempt to make a patch to fix things on your
@@ -694,13 +693,13 @@ a Guile @emph{test} script.
 When a normal Greg test run is done, Greg goes through each @emph{tool}
 directory in turn and loads each @emph{test} script in turn.
 
-You may set the Guile variable @emph{greg-tools} or use the @emph{--tools ...}
+You may set the Guile variable @code{greg-tools} or use the @code{--tools ...}
 command-line option to specify a list of tools directories to use rather than
 assuming that @emph{all} subdirectories are @emph{tool} directories.
 If you do this, the tools are tested in the order in which they appear in
 the list rather than the default order (ASCII sorted by name).
 
-You may set the Guile variable @emph{greg-files} or use the @emph{--files ...}
+You may set the Guile variable @code{greg-files} or use the @code{--files ...}
 command-line option to specify a list of file names to use rather than
 assuming that @emph{all} @emph{.scm} files in each @emph{tool} directory are
 test scripts.
@@ -744,11 +743,11 @@ various procedures (used to run tests) and variables (used to modify the
 behavior of a test run).
 
 Before trying to use any part of Greg, You need to load the Greg module with
-@emph{(use-modules (ice-9 greg))}
+@code{(use-modules (ice-9 greg))}
 
 @cindex run test procedure
-The main procedure to run Greg tests is @emph{(greg-test-run)}.
-You can use this to run tests in much the same way as the @emph{greg} script
+The main procedure to run Greg tests is @code{(greg-test-run)}.
+You can use this to run tests in much the same way as the @code{greg} script
 is used to run tests from the command-line.  The behavior of this
 procedure is modified by setting the following top-level variables -
 
@@ -758,15 +757,15 @@ procedure is modified by setting the following top-level variables -
 @item greg-debug
 @cindex greg-debug
 @cindex debug variable
-The @emph{greg-debug} variable is a boolean used to determine whether to
+The @code{greg-debug} variable is a boolean used to determine whether to
 output extra debug information.  The debug information is written to a
-@emph{.dbg} file.  Test scripts may use the @emph{greg-dlog} procedure to
+@emph{.dbg} file.  Test scripts may use the @code{greg-dlog} procedure to
 output debug information.
 
 @item greg-files
 @cindex greg-files
 @cindex files variable
-The @emph{greg-files} variable is a list of strings used to specify the names
+The @code{greg-files} variable is a list of strings used to specify the names
 of the test scripts to be run.  If this list is empty, all the files with the
 @code{.scm} extension in a @emph{tool} subdirectory are loaded.  If the list
 contains names, the named scripts are loaded in the order in which they occur
@@ -777,27 +776,27 @@ extension - it will be added automatically by Greg.
 @item greg-obj-dir
 @cindex greg-obj-dir
 @cindex obj-dir variable
-The @emph{greg-obj-dir} variable is a string naming the directory in which
+The @code{greg-obj-dir} variable is a string naming the directory in which
 Greg expects to find binaries to be run as child processes.@*
 By default, this is the current directory (@code{.}).
 
 @item greg-out-dir
 @cindex greg-out-dir
 @cindex out-dir variable
-The @emph{greg-out-dir} variable is a string naming the directory in which
+The @code{greg-out-dir} variable is a string naming the directory in which
 Greg will generate log and debug output files.@*
 By default, this is the current directory (@code{.}).
 
 @item greg-posix
 @cindex greg-posix
 @cindex posix variable
-The @emph{greg-posix} variable is a boolean used to determine whether to
+The @code{greg-posix} variable is a boolean used to determine whether to
 produce strict posix output, or permit non-posix extensions.
 
 @item greg-src-dir
 @cindex greg-src-dir
 @cindex src-dir variable
-The @emph{greg-src-dir} variable is a string naming the directory in which
+The @code{greg-src-dir} variable is a string naming the directory in which
 Greg will look for @emph{tool} subdirectories and where it expects to find
 the main initialisation and cleanup scripts
 (@emph{begin.grg} and @emph{end.grg}) for a test run.@*
@@ -806,7 +805,7 @@ By default, this is the current directory (@code{.}).
 @item greg-tools
 @cindex greg-tools
 @cindex tools variable
-The @emph{greg-tools} variable is a list of strings used to specify the names
+The @code{greg-tools} variable is a list of strings used to specify the names
 of the tools to be tested (ie the names of the subdirectories of the main
 source directory).  If this list is empty, all the subdirectories of the
 main source directory (normally @code{.}) are assumed to be valid @emph{tool}
@@ -816,7 +815,7 @@ in the order in which they occur in the list.@*
 @item greg-verbose
 @cindex greg-verbose
 @cindex verbose variable
-The @emph{greg-verbose} variable is a number used to determine the level of
+The @code{greg-verbose} variable is a number used to determine the level of
 detail produced in the log output.  At zero (the default), only minimal
 information is output (unexpected testcase results and a summary of the
 number of testcases passed).  At one, the result of each testcase is reported
@@ -870,7 +869,7 @@ Initialisation code (including executable tool startup) for each tool may
 be placed in @file{begin.grg} in the appropriate tool subdirectory.
 Cleanup code may be placed in @file{end.grg}.
 
-For example, including @emph{--tool gcc} on the @code{greg} command
+For example, including @code{--tool gcc} on the @code{greg} command
 line runs tests from the @code{gcc} subdirectory.
 
 The order in which the tools are tested will be the same as the order in
@@ -923,7 +922,7 @@ needed with @code{make}.
 @cindex output directory
 @cindex @code{--outdir} (@code{greg} option)
 @cindex log files, where to write
-Write output logs in directory @var{path}.  The default is @emph{.}, the
+Write output logs in directory @var{path}.  The default is @code{.}, the
 directory where you start @code{greg}.  This option affects only the
 log and the debug files @file{@var{tool}.log} and
 @file{@var{tool}.dbg}.
@@ -933,7 +932,7 @@ log and the debug files @file{@var{tool}.log} and
 @cindex @code{--srcdir} (@code{greg} option)
 Use @var{path} as the top directory for test scripts to run.
 @code{greg} looks in this directory for any subdirectory whose name
-matches any toolname (specified with @emph{--tool}).
+matches any toolname (specified with @code{--tool}).
 
 @item --verbose
 @itemx -v
@@ -942,13 +941,13 @@ matches any toolname (specified with @emph{--tool}).
 @cindex turning on output
 @cindex output, additional
 By default, @code{greg} shows only the output of tests that produce unexpected
-results; that is, tests with status @emph{FAIL} (unexpected failure),
-@emph{UPASS} (unexpected success), or @emph{ERROR} (a severe error in the test
+results; that is, tests with status @code{FAIL} (unexpected failure),
+@code{UPASS} (unexpected success), or @code{ERROR} (a severe error in the test
 case itself).
-Specifying @emph{--verbose} to see output for tests with status @emph{PASS}
-(success, as expected) and @emph{XFAIL} (failure, as expected). It also
+Specifying @code{--verbose} to see output for tests with status @code{PASS}
+(success, as expected) and @code{XFAIL} (failure, as expected). It also
 causes a more detailed summary to be displayed.@*
-Specifying @emph{--verbose} more than once causes more detail to be displayed.
+Specifying @code{--verbose} more than once causes more detail to be displayed.
 
 @item --version
 @itemx -V
@@ -982,7 +981,7 @@ your program and the Guile interpreter.
 
 Your testcases can use that interface to test your program directly, and
 you run the tests by loading the @emph{Greg} framework and then doing
-@emph{(greg-test-run)}
+@code{(greg-test-run)}
 
 A testsuite for @emph{embedded} use does not normally need @emph{begin.grg}
 or @emph{end.grg} since the application to be tested will be running the
@@ -1027,7 +1026,7 @@ consist of Guile code to send commands to the child process and wait
 for responses from it.
 
 The child process is normally started by a @emph{begin.grg} script
-using the @emph{(greg-child)} procedure.
+using the @code{(greg-child)} procedure.
 
 @end itemize
 
@@ -1044,12 +1043,12 @@ language to write most tests.
 A script file will contain one or more testcases - each of which
 constitutes a test of a single well defined feature of the @emph{tool}
 that the script is meant to test.  A testcase is always written
-using the @emph{greg-testcase} procedure.
+using the @code{greg-testcase} procedure.
 
 @subsection greg-testcase
 @cindex greg-testcase
 
-The @emph{greg-testcase} procedure takes three arguments -
+The @code{greg-testcase} procedure takes three arguments -
 
 @itemize @bullet
 @item The assertion@*
@@ -1057,15 +1056,15 @@ This is a string describing the test to be performed.  It should take the
 form of an assertion that is expected to hold true.
 
 @item The expected outcome@*
-This is a boolean value - @emph{#t} if the test is expected to return
-@emph{#t} (ie. the assertion is expected to be proved correct), and
-@emph{#f} if the test is expected to return @emph{#f} (ie. the assertion
+This is a boolean value - @code{#t} if the test is expected to return
+@code{#t} (ie. the assertion is expected to be proved correct), and
+@code{#f} if the test is expected to return @code{#f} (ie. the assertion
 is expected to be proved to be incorrect).
 
 @item The test itself@*
 This is a @emph{thunk} (a Guile procedure that takes no arguments) and is
 normally a @emph{lambda expression}.  The return value of this procedure
-should be @emph{#t} if the assertion is proved correct, @emph{#f} if it
+should be @code{#t} if the assertion is proved correct, @code{#f} if it
 is proved incorrect.
 @end itemize
 
@@ -1073,17 +1072,17 @@ The Guile programming language permits the @emph{thunk} to return in four
 ways -
 
 @itemize @bullet
-@item Return the boolean value - @emph{#t}@*
+@item Return the boolean value - @code{#t}@*
 In which case, the test has succeeded, the assertion has proved correct,
 and Greg will record either an expected success (PASS) or an unexpected
 success (UPASS) depending on the expected outcome passed to
-@emph{greg-testcase}.
+@code{greg-testcase}.
 
-@item Return the boolean value - @emph{#f}@*
+@item Return the boolean value - @code{#f}@*
 In which case, the test has failed, the assertion has proved incorrect,
 and Greg will record either an expected failure (XFAIL) or an unexpected
 failure (FAIL) depending on the expected outcome passed to
-@emph{greg-testcase}.
+@code{greg-testcase}.
 
 @item Return a non-boolean value@*
 In which case, the test is unresolved (UNRESOLVED).
@@ -1092,15 +1091,15 @@ In which case, the test is unresolved (UNRESOLVED).
 In which case Greg's behavior depends on the exception thrown -
 @itemize @bullet
 @item 'pass@*
-Greg acts as if the test had returned the boolean @emph{#t}
+Greg acts as if the test had returned the boolean @code{#t}
 @item 'fail@*
-Greg acts as if the test had returned the boolean @emph{#f}
+Greg acts as if the test had returned the boolean @code{#f}
 @item 'unsupported@*
 Greg reports this case as unsupported (UNSUPPORTED)
 @item 'untested@*
 Greg reports this case as untested (UNTESTED)
 @item (quit)@*
-If the script calls the @emph{(quit)} primitive - an exception is raised.
+If the script calls the @code{(quit)} primitive - an exception is raised.
 In this special case, the test is reported as unresolved (UNRESOLVED) and
 no further tests are executed.  The testrun is terminated.
 @item any other exception@*
@@ -1113,8 +1112,8 @@ impossible for a testcase to produce a result that doesn't fit into the
 framework (unless your testcase manages either to crash Guile or enter an
 infinite loop - in which case you won't get @emph{any} output).
 
-The value returned by the @emph{greg-testcase} procedure is a boolean -
-@emph{#t} if the test resulted in an expected pass, @emph{#f} otherwise.@*
+The value returned by the @code{greg-testcase} procedure is a boolean -
+@code{#t} if the test resulted in an expected pass, @code{#f} otherwise.@*
 You can use this return value to make the execution of subsequent testcases 
 dependent on the success of an earlier testcase.
 
@@ -1143,14 +1142,14 @@ It is normal to have more than one testcase in a file and this
 produces no problems - the only thing to watch out for is communicating
 information between testcases -
 
-The scope of variables defined in the @emph{thunk} in a @emph{greg-testcase}
+The scope of variables defined in the @emph{thunk} in a @code{greg-testcase}
 procedure call is that @emph{thunk} - the variable will @emph{not} be
 visible to the next testcase.
 
 So - to pass information from one testcase to the next it is necessary to
 define variables that can be seen in each testcase.  The way to do this
 is normally to define these variables at the start of the file and then
-use the @emph{set!} procedure within each testcase to set a value for a
+use the @code{set!} procedure within each testcase to set a value for a
 variable to be passed to the next testcase.
 
 @cartouche
@@ -1183,7 +1182,7 @@ variable to be passed to the next testcase.
 
 Of course, if (as above) the only information you want to pass from a testcase
 is whether the test succeeded or not, you can use the return value from the
-@emph{greg-testcase} procedure directly -
+@code{greg-testcase} procedure directly -
 
 @cartouche
 @smallexample
@@ -1218,23 +1217,23 @@ output from the application.
 @cindex starting a child process
 @cindex greg-child
 
-Greg provides the @emph{greg-child} procedure to start up a child process
+Greg provides the @code{greg-child} procedure to start up a child process
 on a pseudo-terminal.  You would usually call this procedure in the
 @emph{begin.grg} file in your @emph{tool} directory, but you could call it
 at the start of each script to get a new child process for each script.
 
-The @emph{greg-child} procedure expects one argument (the name of
+The @code{greg-child} procedure expects one argument (the name of
 the program to be executed) followed by any number of additional
 arguments which are the arguments to be passed to the child process.@*
 If the program name does not begin with a slash, Greg will look in the
-directory specified in @emph{greg-obj-dir} to find it (by default the
+directory specified in @code{greg-obj-dir} to find it (by default the
 current directory).@*
 If you want your normal PATH to be searched for the program, you should
 use -@*
 @code{(greg-child "/bin/sh" "-c" "foo args")}@*
-to get the shell to execute program @emph{foo} with arguments @emph{args}.
+to get the shell to execute program @code{foo} with arguments @code{args}.
 
-The @emph{greg-child} procedure will automatically close down the I/O
+The @code{greg-child} procedure will automatically close down the I/O
 channels to any process previously started and wait for that process to
 die.  If the old child process is badly behaved and will not die, this
 can result in Greg hanging - in this case you may need to explicitly
@@ -1243,17 +1242,17 @@ process (this is one of the uses of the @emph{end.grg} script).
 
 As a special case, you can use an empty string as the program name -
 if you do this, another copy of the guile process will be created as
-a child and the value returned by @emph{greg-child} in the child process
+a child and the value returned by @code{greg-child} in the child process
 will be a list containing the single number 0 (in the parent it will be
 a list containing the input port, output port and process id of the child).
 You can use this information to get the child copy of the process to 
 be the program under test.  This is useful for embedded testing where you
 want to test the I/O capabilities of the program.
 
-NB. The @emph{greg-child} procedure is implemented on top of the new
-primitive @emph{pty-child}.  This primitive is used to create a new child
+NB. The @code{greg-child} procedure is implemented on top of the new
+primitive @code{pty-child}.  This primitive is used to create a new child
 process on the end of a pseudo-terminal.  Arguments and return values are
-as for @emph{greg-child}.
+as for @code{greg-child}.
 
 @itemize @bullet
 @item
@@ -1272,7 +1271,7 @@ After a failure to create a child process, an empty list is returned.
 @cindex sending to a child process
 @cindex greg-send
 
-The @emph{greg-send} procedure is provided to send instructions to a
+The @code{greg-send} procedure is provided to send instructions to a
 child process.  This procedure takes one or more string arguments and
 sends them to the child process (if one exists).
 
@@ -1280,20 +1279,20 @@ sends them to the child process (if one exists).
 @cindex reading from a child process
 @cindex greg-recv
 
-The @emph{greg-recv} macro is used to read data from a child process.
-This procedure actually provides a simple front-end to the @emph{expect}
-module.  You can use the @emph{expect} module facilities directly if you
-want more control than is offered by @emph{greg-recv}.
+The @code{greg-recv} macro is used to read data from a child process.
+This procedure actually provides a simple front-end to the @code{expect}
+module.  You can use the @code{expect} module facilities directly if you
+want more control than is offered by @code{greg-recv}.
 
-The @emph{greg-recv} macro expects one or more lists as arguments -
+The @code{greg-recv} macro expects one or more lists as arguments -
 each list containing a string (a pattern to match)
 and a result to return on a successful match.  The value returned by
-@emph{greg-recv} is the result for the pattern actually matched.@*
+@code{greg-recv} is the result for the pattern actually matched.@*
 If no pattern is matched within the timeout period then an empty list
-is returned (unless you use @emph{(set! expect-timeout-proc xxx)} to
+is returned (unless you use @code{(set! expect-timeout-proc xxx)} to
 override Gregs timeout handler.@*
 If no pattern is matched before an end-of-file is read, then an empty list
-is returned (unless you use @emph{(set! expect-eof-proc xxx)} to
+is returned (unless you use @code{(set! expect-eof-proc xxx)} to
 override Gregs end-of-file handler.
 
 @node Index, , Writing tests, Top
