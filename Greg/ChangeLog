@@ -1,3 +1,7 @@
+2003-05-26  Joe Marcus Clarke  <marcus@FreeBSD.org>
+
+	* configure.in: Use %library-dir
+
 2003-04-07  David Ayers  <d.ayers@inode.at>
 
 	* Makefile: Added uninstall target.
