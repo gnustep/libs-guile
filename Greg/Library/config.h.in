@@ -1,9 +1,9 @@
 
-/* Define if you have more recent thand guile 1.2.  */
-#undef HAVE_RECENT_GUILE
-
 /* Define if you have sysv style pseudo-terminals.  */
 #undef HAVE_GRANTPT
+
+/* Define if you need sysv stream modules.  */
+#undef HAVE_PTS_STREAM_MODULES
 
 /* Define if you have the setpgid function.  */
 #undef HAVE_SETPGID

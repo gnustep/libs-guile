@@ -5,6 +5,23 @@ AC_INIT(Library/greg.c)
 
 AC_CONFIG_HEADER(Library/config.h)
 
+#--------------------------------------------------------------------
+# Determine the host, build, and target systems
+#--------------------------------------------------------------------
+AC_CANONICAL_SYSTEM
+
+HAVE_PTS_STREAM_MODULES=0
+case "${target}" in
+  *-sysv-*)
+    HAVE_PTS_STREAM_MODULES=1
+    ;;
+esac
+AC_DEFINE_UNQUOTED(HAVE_PTS_STREAM_MODULES, $HAVE_PTS_STREAM_MODULES)
+AC_SUBST(HAVE_PTS_STREAM_MODULES)
+
+#--------------------------------------------------------------------
+# Find the compiler
+#--------------------------------------------------------------------
 AC_PROG_CC
 AC_PROG_CPP
 AM_PROG_LIBTOOL
@@ -31,23 +48,9 @@ AC_TYPE_GETGROUPS
 AC_TYPE_SIGNAL
 AC_TYPE_MODE_T
 
-AC_CHECK_FUNCS(grantpt setpgid setsid tcgetpgrp tcsetpgrp waitpid)
+AC_CHECK_FUNCS(strerror grantpt setpgid setsid tcgetpgrp tcsetpgrp waitpid)
 
-HAVE_RECENT_GUILE=0
-GUILE_LIB_PATH=
-if test "$GUILEPATH" != "NONE"; then
-  AC_MSG_CHECKING(whether we have a recent guile)
-  HAVE_RECENT_GUILE=`$GUILEPATH -c '(display (if (string>? (version) "1.2") 1 0))'`
-  if test $HAVE_RECENT_GUILE = 0; then
-      AC_MSG_RESULT(no)
-  else
-      AC_MSG_RESULT(yes)
-  fi
-  GUILE_LIB_PATH=`$GUILEPATH -c '(display (string-append (%package-data-dir) "/" (version)))'`
-fi
-
-AC_DEFINE_UNQUOTED(HAVE_RECENT_GUILE, $HAVE_RECENT_GUILE)
-AC_SUBST(HAVE_RECENT_GUILE)
+GUILE_LIB_PATH=`$GUILEPATH -c '(display (string-append (%package-data-dir) "/" (version)))'`
 
 AC_DEFINE_UNQUOTED(GUILE_LIB_PATH, $GUILE_LIB_PATH)
 
@@ -59,9 +62,7 @@ GUILE_SCM_PATH=$GUILE_LIB_PATH/ice-9
 AC_DEFINE_UNQUOTED(GUILE_SCM_PATH, $GUILE_SCM_PATH)
 AC_SUBST(GUILE_SCM_PATH)
 
-if test $HAVE_RECENT_GUILE = 1; then
 GUILE_FLAGS
-fi
 
 AC_DEFINE_UNQUOTED(VERSION, $VERSION)
 AC_SUBST(VERSION)

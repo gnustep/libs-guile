@@ -46,18 +46,20 @@
 	)
       )
     )
-    (begin
-      (define file (cadr args))
-      (if 
-	(and
-	  (> (string-length file) 4)
-	  (string=? (substring file (- (string-length file) 4)
-			        (string-length file)) ".scm"))
-	(set! file (substring file (- (string-length file) 4)
-				(string-length file)))
+    (let
+      ((file (cadr args)))
+      (begin
+	(if 
+	  (and
+	    (> (string-length file) 4)
+	    (string=? (substring file (- (string-length file) 4)
+				  (string-length file)) ".scm"))
+	  (set! file (substring file (- (string-length file) 4)
+				  (string-length file)))
+	)
+	(set! greg-files (cons file greg-files))
+	(set! args (cdr args))
       )
-      (set! greg-files (cons file greg-files))
-      (set! args (cdr args))
     )
   )
   args
@@ -83,9 +85,13 @@
   args
 )
 
-(define (options args) (if (> (length args) 1) (begin
-  (define args (cdr args))
-  (define s (car args))
+(define (options args) (if (> (length args) 1)
+(let*
+  (
+    (args (cdr args))
+    (s (car args))
+  )
+(begin
   (if (and (> (string-length s) 1) (string=? "-" (substring s 0 1)))
     (cond
       ((or (string=? s "--debug") (string=? s "-de"))
@@ -184,7 +190,7 @@
     )
   )
   (options args)
-))())
+)))())
 
 (options (command-line))
 
