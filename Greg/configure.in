@@ -71,5 +71,5 @@ AC_SUBST(MAJOR_VERSION)
 AC_DEFINE_UNQUOTED(MINOR_VERSION, $MINOR_VERSION)
 AC_SUBST(MINOR_VERSION)
 
-AC_OUTPUT(Library/Makefile Library/greg Library/greg.scm Documentation/gregdoc config.mak)
+AC_OUTPUT(Library/Makefile Library/greg Library/greg.scm Documentation/Makefile Documentation/gregdoc config.mak)
 
