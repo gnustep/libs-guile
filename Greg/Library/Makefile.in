@@ -44,7 +44,9 @@ INSTALL_SCRIPT =	$(SH) ../install-sh -c -m 0755
 LIBTOOL =		$(SH) ../libtool
 MKINSTDIRS =		$(SH) ../mkinstalldirs
 
-INCLUDES =	-I$(prefix)/include
+GUILE_CFLAGS  = @GUILE_CFLAGS@
+GUILE_LDFLAGS = @GUILE_LDFLAGS@
+INCLUDES = $(GUILE_CFLAGS) -I$(prefix)/include
 
 LIB = libgreg.la
 
@@ -55,7 +57,7 @@ LIB_LDFLAGS = -version-info $(VER_INFO) -export-dynamic
 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-LINK = $(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(LDFLAGS) -o $@
+LINK = $(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(LDFLAGS) $(GUILE_LDFLAGS) -o $@
 
 
 
