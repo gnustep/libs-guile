@@ -638,7 +638,15 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
 	  arp = [NSAutoreleasePool new];
 	  NS_DURING
 	    {
-	      signature = [self methodSignatureForSelector: selector];
+	      if (sel_eq(selector, @selector(methodSignatureForSelector:)))
+		{
+		  signature
+		    = [NSMethodSignature signatureWithObjCTypes: "@@::"];
+		}
+	      else
+		{
+		  signature = [self methodSignatureForSelector: selector];
+		}
 	      if (signature == nil)
 		{
 		  NSLog(@"did not find signature for selector '%s' ..",
@@ -708,11 +716,18 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
     arp = [NSAutoreleasePool new];
     NS_DURING
       {
-	signature = [self methodSignatureForSelector: selector];
-	if (signature == nil)
+	if (sel_eq(selector, @selector(methodSignatureForSelector:)))
 	  {
-	    signature
-	      = [NSMethodSignature signatureWithObjCTypes: method_types];
+	    signature = [NSMethodSignature signatureWithObjCTypes: "@@::"];
+	  }
+	else
+	  {
+	    signature = [self methodSignatureForSelector: selector];
+	    if (signature == nil)
+	      {
+		signature
+		  = [NSMethodSignature signatureWithObjCTypes: method_types];
+	      }
 	  }
 	if (signature == nil)
 	  {
