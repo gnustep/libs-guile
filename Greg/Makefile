@@ -29,7 +29,7 @@
 #  it's standard locations.
 #
 all:	library documentation
-	echo "You must now install Greg in order to use it"
+	@echo "You must now install Greg in order to use it"
 
 #
 #  The 'configure' program MUST be run before building.
@@ -38,7 +38,7 @@ library:	config.status
 	(cd Library; $(MAKE));
 
 config.status:	configure
-	echo "You must run configure before building Greg"
+	@echo "You must run configure before building Greg"
 	exit 1
 
 install: library documentation
