@@ -62,7 +62,7 @@ LIBS="$LIBS $GUILE_LDFLAGS"
 AC_CHECK_FUNCS(scm_c_define_gsubr)
 LIBS="$saved_LIBS"
 
-GUILE_LIB_PATH=`$GUILEPATH -c '(display (string-append (%package-data-dir) "/" (major-version) "." (minor-version)))'`
+GUILE_LIB_PATH=`$GUILEPATH -c '(display (%library-dir))'`
 
 AC_DEFINE_UNQUOTED(GUILE_LIB_PATH, $GUILE_LIB_PATH)
 
