@@ -29,7 +29,6 @@
   (+ (* 100 (string->number (major-version))) (string->number (minor-version)))
 )
 
-(dynamic-call "gstep_init" (dynamic-link "libgstep_guile_d.so"))
 (if (> gversion 104)
 ;;; IF NEW_GUILE
   (load-extension "libgstep_guile_d" "gstep_init")
