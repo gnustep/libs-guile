@@ -5,16 +5,6 @@ AC_INIT(Library/greg.c)
 
 AC_CONFIG_HEADER(Library/config.h)
 
-#---------------------------------------------------------------------
-# If we are running under GNUstep, and no --prefix has been specified,
-# then install into GNUstep sytem root directory
-#---------------------------------------------------------------------
-AC_PREFIX_DEFAULT(`if test "x$GNUSTEP_SYSTEM_ROOT" = "x"; then
-echo /usr/local ;
-else
-echo $GNUSTEP_SYSTEM_ROOT ;
-fi`)
-
 #--------------------------------------------------------------------
 # Determine the host, build, and target systems
 #--------------------------------------------------------------------
@@ -65,7 +55,14 @@ AC_TYPE_MODE_T
 
 AC_CHECK_FUNCS(strerror grantpt setpgid setsid tcgetpgrp tcsetpgrp waitpid)
 
-GUILE_LIB_PATH=`$GUILEPATH -c '(display (string-append (%package-data-dir) "/" (version)))'`
+GUILE_FLAGS
+
+saved_LIBS="$LIBS"
+LIBS="$LIBS $GUILE_LDFLAGS"
+AC_CHECK_FUNCS(scm_c_define_gsubr)
+LIBS="$saved_LIBS"
+
+GUILE_LIB_PATH=`$GUILEPATH -c '(display (string-append (%package-data-dir) "/" (major-version) "." (minor-version)))'`
 
 AC_DEFINE_UNQUOTED(GUILE_LIB_PATH, $GUILE_LIB_PATH)
 
@@ -76,8 +73,6 @@ AC_SUBST(GUILE_BIN_PATH)
 GUILE_SCM_PATH=$GUILE_LIB_PATH/ice-9
 AC_DEFINE_UNQUOTED(GUILE_SCM_PATH, $GUILE_SCM_PATH)
 AC_SUBST(GUILE_SCM_PATH)
-
-GUILE_FLAGS
 
 AC_DEFINE_UNQUOTED(VERSION, $VERSION)
 AC_SUBST(VERSION)

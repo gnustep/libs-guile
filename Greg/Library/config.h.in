@@ -29,6 +29,9 @@
 /* Define if you have the waitpid function.  */
 #undef HAVE_WAITPID
 
+/* Define if you have the scm_c_define_gsubr function. */
+#undef HAVE_SCM_C_DEFINE_GSUBR
+
 /* Define if you have the <signal.h> header file.  */
 #undef HAVE_SIGNAL_H
 
