@@ -1,3 +1,11 @@
+Tue Aug  7 04:12:46 2001  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* GNUmakefile (before-all): New rule - depend on config.status.
+	(config.status): New rule - run ./configure if configure is newer
+	than config.status.
+	(configure): New rule - run autoreconf if configure.in is newer
+	than configure.
+
 2001-07-30  Adam Fedor  <fedor@gnu.org>
 
 	* config.h.in: Add proper define for getting guile export symbols
