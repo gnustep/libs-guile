@@ -4,6 +4,12 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.0.0}
+
+@itemize @bullet
+@item Some fixes for compiling on cgywin/mingw32
+@end itemize
+
 @section Noteworthy changes in version @samp{0.9.2}
 
 @itemize @bullet

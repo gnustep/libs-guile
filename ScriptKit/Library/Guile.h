@@ -36,10 +36,10 @@
 #include <ScriptKit/GuileInvocation.h>
 #include <ScriptKit/GuileScript.h>
 
-#if BUILD_ScriptKit_DLL
+#if BUILD_libScriptKit_DLL
 #  define SK_EXPORT  __declspec(dllexport)
 #  define SK_DECLARE __declspec(dllexport)
-#elif ScriptKit_ISDLL
+#elif libScriptKit_ISDLL
 #  define SK_EXPORT  extern __declspec(dllimport)
 #  define SK_DECLARE __declspec(dllimport)
 #else
