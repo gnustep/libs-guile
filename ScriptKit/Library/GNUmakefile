@@ -1,4 +1,4 @@
--include ../config.mak
+include ../config.mak
 
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
@@ -36,12 +36,12 @@ libScriptKit_HEADER_FILES = \
 
 test_skit_HEADER_FILES_DIR = .
 
--include Makefile.preamble
+include Makefile.preamble
 
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/library.make
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/test-tool.make
 
--include Makefile.postamble
+include Makefile.postamble
 
 # I need this.  test-tool.make bug?		eiichi
 # internal-testtool-install::

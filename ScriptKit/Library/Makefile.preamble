@@ -13,7 +13,8 @@
 #
 
 # Additional flags to pass to the preprocessor
-ADDITIONAL_CPPFLAGS += -I.. $(DEFS) 
+ADDITIONAL_CPPFLAGS += -I.. $(DEFS) \
+	-DGUILE_MAKE_SMOB_TYPE=$(GUILE_MAKE_SMOB_TYPE)
 
 # Additional flags to pass to the Objective-C compiler
 ADDITIONAL_OBJCFLAGS += 
