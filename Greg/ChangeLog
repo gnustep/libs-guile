@@ -1,3 +1,7 @@
+2004-01-24  Adam Fedor  <fedor@gnu.org>
+
+	* Library/greg.in: Use SOEXTENSION.
+
 2004-01-12  Adam Fedor  <fedor@gnu.org>
 
 	* Makefile (library,documentation): Add FORCE target.
@@ -7,6 +11,7 @@
 	* configure.in: Force Apple cc on Darwin as libtool only works
 	with that. Define SOEXTENSION
 	* Library/greg.scm.in: Use SOEXTENSION.
+	* Library/greg.in: Idem.
 	* Library/Makefile.in: Define SED (required by libtool).
 	* Library/Makefile.preamble: Remove -lobjc depend.
 
