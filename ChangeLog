@@ -1,5 +1,10 @@
 1999-03-12  Adam Fedor  <fedor@gnu.org>
 
+	* Version: New file
+	* Library/GNUmakefile: Use it.
+	* Documentation/Makefile.postamble: Likewise to create version.texi
+	* Documentation/gstep_guile: Use info from version.texi.
+
 	* GNUmakefile (SUBPROJECTS): Moved Documentation last, just in
 	case people can't make it.
 	* configure.in: Add with-guile-path for Greg

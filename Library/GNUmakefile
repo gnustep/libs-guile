@@ -25,6 +25,8 @@ GNUSTEP_MAKEFILES = $(GNUSTEP_SYSTEM_ROOT)/Makefiles
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+include ../Version
+
 LIBRARY_NAME=libgstep_guile libgg_base
 
 ifneq ($(GUI_LIB),nil)

@@ -8,8 +8,10 @@
 #   otherwise the normal makefile rules will not be performed.
 #
 
+include ../Version
+
 # Things to do before compiling
-# before-all::
+before-all:: version.texi
 
 # Things to do after compiling
 # after-all::
@@ -32,6 +34,7 @@
 # Things to do after cleaning
 after-clean::
 	rm -f *.bak *.cl *.fns *.pr *.log
+	rm -f version.texi
 
 # Things to do before distcleaning
 # before-distclean::
@@ -44,3 +47,15 @@ after-clean::
 
 # Things to do after checking
 # after-check::
+
+version.texi: ../Version
+	rm -f version.texi
+	echo '@set GNUSTEP-VERSION' $(GNUSTEP_CORE_VERSION) \
+		> version.texi
+	echo '@set GNUSTEP-GCC $(GNUSTEP_GCC)' \
+		>> version.texi
+	echo '@set GUILE-VERSION $(GUILE_VERSION)' \
+		>> version.texi
+	echo '@set GNUSTEP-GUILE-VERSION $(VERSION)' \
+		>> version.texi
+
