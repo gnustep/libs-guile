@@ -315,6 +315,7 @@ NSLog(@"Looking for %@ in %@", meth, NSAllMapTableKeys(cls->instance_methods));
   tmptype = objc_skip_argspec(tmptype);	/* skip selector	*/
 
   va_start(ap, sel);
+  /* Note that the va_arg type is the actual type after default promotion */
   while (*tmptype != '\0')
     {
       switch (*tmptype)
@@ -327,16 +328,16 @@ NSLog(@"Looking for %@ in %@", meth, NSAllMapTableKeys(cls->instance_methods));
 	    val = gh_str02scm((char*)sel_get_name(va_arg(ap, SEL)));
 	    break;
 	  case _C_CHR:
-	    val = gh_long2scm(va_arg(ap, char));
+	    val = gh_long2scm(va_arg(ap, int));
 	    break;
 	  case _C_UCHR:
-	    val = gh_ulong2scm(va_arg(ap, unsigned char));
+	    val = gh_ulong2scm(va_arg(ap, unsigned int));
 	    break;
 	  case _C_SHT:
-	    val = gh_long2scm(va_arg(ap, short));
+	    val = gh_long2scm(va_arg(ap, int));
 	    break;
 	  case _C_USHT:
-	    val = gh_ulong2scm(va_arg(ap, unsigned short));
+	    val = gh_ulong2scm(va_arg(ap, unsigned int));
 	    break;
 	  case _C_INT:
 	    val = gh_long2scm(va_arg(ap, int));
@@ -351,7 +352,7 @@ NSLog(@"Looking for %@ in %@", meth, NSAllMapTableKeys(cls->instance_methods));
 	    val = gh_ulong2scm(va_arg(ap, unsigned long));
 	    break;
 	  case _C_FLT:
-	    val = gh_double2scm(va_arg(ap, float));
+	    val = gh_double2scm(va_arg(ap, double));
 	    break;
 	  case _C_DBL:
 	    val = gh_double2scm(va_arg(ap, double));
