@@ -27,11 +27,11 @@
 # the same distribution terms that you use for the rest of that program.
 
 # This program was configured as follows,
-# on host aloysius.brainstorm.co.uk:
+# on host tts2:
 #
 # CC="gcc" CFLAGS="-g -O2" CPPFLAGS="" \
-# LD="/usr/bin/ld" NM="/usr/bin/nm -B" RANLIB="ranlib" LN_S="ln -s" \
-#   ./ltconfig --with-gcc --with-gnu-ld --no-verify ./ltmain.sh i686-pc-linux-gnu
+# LD="/usr/local/i386-pc-sysv4.2uw2.1.3/bin/ld" NM="/usr/ccs/bin/nm -p" RANLIB="ranlib" LN_S="ln -s" \
+#   ./ltconfig --with-gcc --with-gnu-ld --no-verify ./ltmain.sh i386-pc-sysv4.2uw2.1.3
 #
 # Compiler and other test output produced by ltconfig, useful for
 # debugging ltconfig, is in ./config.log if it exists.
@@ -44,7 +44,7 @@ Xsed="sed -e s/^X//"
 if test "${CDPATH+set}" = set; then CDPATH=; export CDPATH; fi
 
 # An echo program that does not interpret backslashes.
-echo="echo"
+echo="printf %s\\n"
 
 # The version of ltconfig that generated this script.
 LTCONFIG_VERSION="1.2"
@@ -59,8 +59,8 @@ build_libtool_libs=yes
 build_old_libs=yes
 
 # The host system.
-host_alias="i686-pc-linux-gnu"
-host="i686-pc-linux-gnu"
+host_alias="i386-pc-sysv4.2uw2.1.3"
+host="i386-pc-sysv4.2uw2.1.3"
 
 # The archiver.
 AR="ar"
@@ -69,13 +69,13 @@ AR="ar"
 CC="gcc"
 
 # The linker used to build libraries.
-LD="/usr/bin/ld"
+LD="/usr/local/i386-pc-sysv4.2uw2.1.3/bin/ld"
 
 # Whether we need hard or soft links.
 LN_S="ln -s"
 
 # A BSD-compatible nm program.
-NM="/usr/bin/nm -B"
+NM="/usr/ccs/bin/nm -p"
 
 # The name of the directory that contains temporary libtool files.
 objdir=".libs"
@@ -133,13 +133,13 @@ allow_undefined_flag=""
 no_undefined_flag=""
 
 # Commands used to finish a libtool library installation in a directory.
-finish_cmds="PATH=\\\"\$PATH:/sbin\\\" ldconfig -n \$libdir"
+finish_cmds=""
 
 # Same as above, but a single script fragment to be evaled but not shown.
 finish_eval=""
 
 # Take the output of nm and produce a listing of raw symbols and C names.
-global_symbol_pipe="sed -n -e 's/^.* [ABCDGISTUW] \\([_A-Za-z][_A-Za-z0-9]*\\)\$/\\1 \\1/p'"
+global_symbol_pipe="sed -n -e 's/^.* [BCDEGRSTU] \\([_A-Za-z][_A-Za-z0-9]*\\)\$/\\1 \\1/p'"
 
 # This is the shared library runtime path variable.
 runpath_var=LD_RUN_PATH

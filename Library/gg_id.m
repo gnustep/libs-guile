@@ -238,7 +238,6 @@ gstep_ivarnames_fn (SCM receiver)
     Class	class;
     id		self = nil;
     struct objc_ivar_list	*ivars;
-    struct objc_ivar		*ivar = 0;
     SCM	item = SCM_EOL;
 
     if (SCM_NIMP(receiver) && OBJC_ID_P(receiver)) {
@@ -305,7 +304,6 @@ gstep_get_ivar_fn (SCM receiver, SCM ivarname)
     }
     if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname)) {
 	int	len;
-	id	class;
 
 	name = gh_scm2newstr(ivarname, &len);
     }
@@ -352,7 +350,6 @@ gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
     id		self = nil;
     struct objc_ivar_list	*ivars;
     struct objc_ivar		*ivar = 0;
-    SCM		item;
     int		offset;
     const char	*type;
     void	*addr;
@@ -375,7 +372,6 @@ gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
     }
     if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname)) {
 	int	len;
-	id	class;
 
 	name = gh_scm2newstr(ivarname, &len);
     }
@@ -421,7 +417,6 @@ gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
     id		self = nil;
     struct objc_ivar_list	*ivars;
     struct objc_ivar		*ivar = 0;
-    SCM	item;
     int		offset;
     const char	*type;
 
@@ -443,7 +438,6 @@ gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
     }
     if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname)) {
 	int	len;
-	id	class;
 
 	name = gh_scm2newstr(ivarname, &len);
     }
@@ -507,7 +501,6 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
   id self;
   char *method_name;
   const char *method_types;
-  const char **method_types_p = &method_types;
   SEL selector;
   int args_list_len;
   SCM next_arg;
