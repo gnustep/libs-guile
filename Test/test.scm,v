@@ -1,0 +1,33 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.10.08.03.49.44;	author richard;	state Exp;
+branches;
+next	;
+
+
+desc
+@run tests.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@
+(display "\nLoading 'greg' framework...\n\n")
+(use-modules (ice-9 greg))
+(display "\nRunning basic tests...\n\n")
+(set! greg-tools (list "tests"))
+(greg-test-run)
+(display "\nTests complete.\n\n")
+(display "\nThere should be a log in 'tests.log'\n")
+
+@

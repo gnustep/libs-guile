@@ -1,0 +1,39 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.10.08.03.53.18;	author richard;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@
+all:
+	#
+	# Make sure you have run 'configure' before doing anything else.
+	#
+	# type '(cd Library; make)' to build Greg.
+	# as root, type '(cd Library; make install)' to install Greg.
+	# type '(cd Test; make)' to run some simple tests.
+	# type '(cd Documentation; make)' to build the documentation.
+	#
+
+distclean:
+	rm -f config.cache config.log config.status
+	(cd Library; make distclean)
+	(cd Test; make distclean)
+	(cd Documentation; make distclean)
+@

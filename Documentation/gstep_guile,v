@@ -1,0 +1,1372 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.10.08.03.52.12;	author richard;	state Exp;
+branches;
+next	;
+
+
+desc
+@Documentation source.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@\input texinfo @@c -*-texinfo-*-
+
+@@c %**start of header
+@@settitle Guide to the GNUstep-Guile interface library
+@@setfilename gstep_guile.info
+@@c %**end of header
+@@defcodeindex cl
+@@defcodeindex pr
+@@ignore
+I'm using cindex for concepts, findex for procedures and macros.
+@@end ignore
+
+@@ifinfo
+@@format
+START-INFO-DIR-ENTRY
+* Libgstep_guile::                      The GNUstep-Guile interface Library.
+END-INFO-DIR-ENTRY
+@@end format
+@@end ifinfo
+
+@@ifinfo
+This file documents the features and implementation of The GNUstep-Guile
+interface class library.
+
+Copyright (C) 1998 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@@ignore
+Permission is granted to process this file through @@TeX{} and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU Library General Public License'' is included exactly as
+in the original, and provided that the entire resulting derived work is
+distributed under the terms of a permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU Library General Public License'' and
+this permission notice may be included in translations approved by the
+Free Software Foundation instead of in the original English.
+@@end ifinfo
+
+@@iftex
+@@finalout
+@@c @@smallbook
+@@c @@cropmarks
+@@end iftex
+
+@@setchapternewpage odd
+
+@@titlepage
+@@title Guide to the
+@@title GNUstep-Guile interface library
+@@sp 3
+@@c @@subtitle last updated September 28, 1998
+@@subtitle Version 0.5.12
+@@subtitle (for use with @@samp{gstep-base} version 0.5.xxx
+@@subtitle and @@samp{libguile} version 1.2 (or greater)
+@@author Richard Frith-Macdonald <richard@@@@brainstorm.co.uk>
+@@page
+@@vskip 0pt plus 1filll
+Copyright @@copyright{} 1998 Free Software Foundation, Inc.
+
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU Library General Public License'' is included exactly as
+in the original, and provided that the entire resulting derived work is
+distributed under the terms of a permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU Library General Public License'' may be
+included in a translation approved by the author instead of in the original
+English.
+
+@@strong{Note: The GNUstep-Guile library is in alpha release. You will
+be performing a valuable service if you report any bugs you encounter.}
+
+@@end titlepage
+
+@@node Top, Copying, , 
+
+@@menu
+* Copying::	    GNU Library Public License says how you can copy
+                    and share libgstep_guile.
+* Contributors::    People who have contributed to libgstep_guile.
+* Installation::    How to configure, compile and install libgstep_guile.
+* News::	    The latest changes to gstep_guile.
+
+* Overview::        libgstep_guile in brief.
+* Usage::           How to go about using this.
+* Memory::          Notes about memory management and garbage collection.
+
+* Procedure Macro Index::
+* Concept Index::
+@@end menu
+
+@@node Copying, Contributors, Top, Top
+@@unnumbered Copying
+
+See the file @@samp{COPYING.LIB}.
+
+@@node Contributors, Installation, Copying, Top
+@@unnumbered Contributors to GNUstep-Guile interface library
+
+@@itemize @@bullet
+@@item
+Andrew McCallum <mccallum@@@@gnu.ai.mit.edu> wrote the original libguileobjc
+library on which this distribution is based.
+
+@@item
+Masatake YAMATO <masata-y@@@@is.aist-nara.ac.jp> maintained an unofficial
+version of the guileobjc library, some of whose additions to the original
+were incorporated into libgstep_guile.  He has also contributed bugfixes
+and many suggestions to gstep-guile.
+
+@@item
+Eiichi Takamori <taka@@@@ma1.seikyou.ne.jp> made valuable contributions to
+the guileobjc library, particularly in debugging.  He has also contributed
+bugfixes to gstep-guile.
+
+@@item
+Richard Frith-Macdonald <richard@@@@brainstorm.co.uk> put together
+libgstep_guile as part of the GNUstep project, rewrote major chunks
+of the code, added loads of new code, and added the documentation
+and test suite.
+
+@@item
+Helge Hess <helge@@@@mdlink.de> made many suggestions for getting things to work
+with libFoundation  and performed valuable testing.
+
+@@end itemize
+
+@@node Installation, News, Contributors, Top
+@@chapter Installing GNU objc Class Library
+
+@@subsection Required software
+
+@@itemize @@bullet
+
+@@item gstep-guile	@@*
+Available from
+@@url{http://www.tiptree.demon.co.uk/gstep/guile/gstep-guile.tar.gz} @@*
+
+@@item guile-1.2		@@*
+Should be available from any GNU ftp site @@*
+
+@@item gstep-core-0.5.xxx	@@*
+You need a snapshot from October 1998 or later - Should be available
+by ftp from alpha.gnu.org or by anonymous cvs (see the 'resources' section of
+@@url{http://www.gnustep.org/} for further information)	@@*
+
+@@item gcc-2.8.*@@*
+Gcc should be available from any GNU ftp site @@*
+You may also use a recent version of egcs. @@*
+NB. For debugging, you need gdb-4.17 with the objc patch.
+The patch for gdb-4.17 is available at
+@@url{ftp://alpha.gnu.org/gnu/gnustep/contrib/} @@*
+
+@@end itemize
+
+@@subsection Build and Install
+
+@@itemize @@bullet
+
+@@item Make sure you have gcc-2.8.* installed.
+
+@@item Make sure you have Guile-1.2 or later built and installed.
+This library will has been tested with both 1.2 and recent developer
+snapshots of Guile.
+
+@@item Make sure you have gstep-core-0.5.0 (October 1998 snapshot or later)
+installed and have your account properly set up to use GNUstep.sh from
+the gstep-make package to set up your environment.
+
+@@item Run the @@samp{configure} script.
+
+@@item To build the entire gstep-guile package, simply type 'make'
+
+@@item To install - become root and type 'make install'
+The installation process will copy the library into place and will also
+copy Guile scripts into place.
+
+@@item To test it - type 'make check'.@@*
+This will use the 'go' program (built in the Test directory) to run the
+tests in 'Test/tests'.@@*
+Alternatively - you can run the 'go' program directly and work interactively.
+
+@@end itemize
+
+@@subsection Trouble
+
+This package has only been used by me on a GNU/Linux/Intel system -
+I would love to hear about success/failures on other systems.
+
+Likely problems - structure return is likely to fail on other systems.
+it should be possible for you to fix things for your system by adding
+a config file in the src/mframe directory in gstep-base and re-running
+'configure' and rebuilding the base library.
+
+Try to fix the problem.  Send patches to <richard@@@@brainstorm.co.uk>.
+
+
+@@node News, Overview, Installation, Top
+@@chapter News
+
+Note - the major and minor version numbers of this library will be tied
+to those of gstep-core.  This means that changes in the sub-minor version
+number may actually denote major changes in functionality!
+I think that things have stabilised now and future releases will be more
+in the way of bug/portability fixes than the addition of new features.
+@@*
+@@*
+Version 0.5.12
+@@itemize @@bullet
+
+@@item Fixes to permit you to use Distributed Objects (ie send messages to
+remote applications) from Guile.
+
+@@item Fix to installation of shared library for loading as Guile module.
+
+@@item Modifications to the Greg package to permit it to be built outside
+the GNUstep environment.
+
+@@end itemize
+
+Version 0.5.11
+@@itemize @@bullet
+
+@@item Fixes suggested by Helge Hess to tidy things up and to get rid of
+warnings when building for libFoundation instead of gstep-base.
+
+@@item Warning about libFoundation garbage collection added to documentation.
+
+@@end itemize
+
+Version 0.5.10
+@@itemize @@bullet
+
+@@item Many minor code changes to accommodate libFoundation - that can now
+be used as a replacement for gstep-base.
+
+@@item Major reorganisation (simplification) of the source files.
+
+@@item Added +retain, +release, -retain, -release and
+-methodSignatureForSelector: in catagory of Object so that old
+(non-openstep) Object-derived stuff can work with gstep-guile.
+
+@@item Removed the GGHNotifier class (as nobody seemed to want it and it's
+trivial to re-implement anyway).
+
+@@item Fixes to avoid memory leaks due to classes being initialised outside
+autorelease pools.
+
+@@item Changes to let voidp items be automatically type-cast to/from objects
+and strings when calling objective-c methods from guile.
+
+@@item Changed to refrain from building libgg_gui if compiled with library_combo
+specifying no gui.
+
+@@item Changed installation procedure to put libraries in the main GNUstep
+system area rather than the 'Local' area.
+
+@@item More efficient mark routine to speed up garbage collecting of classes.
+
+@@end itemize
+
+Version 0.5.9
+@@itemize @@bullet
+
+@@item Modified to use NSInvocation rather than mframe for improved portability
+to libFoundation and (eventually) MacOS-X, as suggested by Helge Hess.
+
+@@item Removed @@samp{[-forwardToGuile:frame:]} method.  This was messy to
+implemente using NSInvocation, and the preferred way to call a Guile method
+from ObjectiveC is to create a new class or add a (Guile) method to an
+existing class anyway.
+
+@@end itemize
+
+Version 0.5.8
+@@itemize @@bullet
+
+@@item No longer link all Foundation classes by default - you have to call
+the @@samp{gstep_link_base()} function to do it.
+
+@@item The @@samp{gstep_link_base()} function is now in a library of it's
+own called @@samp{libgg_base}.
+
+@@item Added a new function (@@samp{gstep_link_gui()}) in the library
+@@samp{libgg_gui} to link in the AppKit classes in the same way that
+@@samp{gstep_link_base()} links in the foundation stuff.
+
+@@item Modified @@samp{gstep_link_base()} to create Guile variables for
+each of the Foundation classes.
+
+@@item added conversion operators for voidp <--> id
+
+@@item Added all NSHashTable related functions.
+
+@@item Added all NSMapTable related functions.
+
+@@end itemize
+
+Version 0.5.7
+@@itemize @@bullet
+
+@@item Documented more (all?) of the macros.
+
+@@item Added voidp-nil to return a nul pointer.
+
+@@item Fixed bug in scm2voidp() function.
+
+@@item Added NSZone related functions.
+
+@@end itemize
+
+Version 0.5.6
+@@itemize @@bullet
+
+@@item Incorporated bugfix for returing the SCM corresponding to a  'nil'
+object, sent in Masatake YAMATO.
+
+@@item Incorporated bugfix for displaying id and voidp scheme objects, sent
+in by Eiichi TAKAMORI
+
+@@item Incorporated bugfix for gstep_scm2id sent in by Eiichi TAKAMORI.
+
+@@item Removed the 'static' scoping of some functions so that they can be used
+from within C and ObjC programs as requested by Masatake YAMATO.
+
+@@item Revised naming of external symbols to be more consistent (and shorter)
+for the convenience of C/ObjC programmers.  This version should stabilise
+the C/ObjectiveC interface with new functions being added occasionally, but
+no more changes to the names of existing functions.@@*
+@@item @@strong{NB. 'gstep_guile_init()' has been renamed to 'gstep_init()'}
+
+@@item Removed 'compiled-module' make target  - install library in the Guile
+modules directory by default.
+@@end itemize
+
+Version 0.5.5
+@@itemize @@bullet
+
+@@item Lots of work on @@samp{Greg} - now a pretty good replacement for
+@@samp{DejaGNU}, including decent configuration, installation, and self-test.
+
+@@item Improved and extended tests for gstep-guile.
+
+@@item Updated to work with recent developer snapshots of Guile while
+retaining compatibility with the old 1.2 release.
+
+@@end itemize
+
+Version 0.5.4.1
+@@itemize @@bullet
+
+@@item Bugfix for macro @@samp{bool->gstep-bool} supplied by Masatake YAMATO
+
+@@item Changed module location to be the 'languages' directory as suggested
+by Masatake YAMATOa.
+
+@@item Credit Eiichi Takamori for work on guileobjc.
+
+@@end itemize
+
+Version 0.5.4
+
+Gstep-guile is beginning to stabilize - I expect to be working on the
+test-suite for gstep-guile and looking for bugs for a while.  I think
+that all major features are now in place.
+
+@@itemize @@bullet
+
+@@item Added a new type @@samp{voidp} to use as an abstract pointer so that
+we can call Objective-C methods returning pointers from within Guile and
+so that we can pass pointers to methods that require them.
+
+@@item Added the 'Greg' directory - @@samp{Greg} is a regression-testing
+package written in Guile.  The tests for gstep-guile are now written
+using @@samp{Greg}
+
+@@item Added installation code to put 'gstep-guile.scm' and 'greg.scm' in
+the modules directory.
+
+@@item Added 'compiled-module' make target to put a copy of the library in
+the Guile modules directory so that you can type
+@@samp{(use-modules (languages gstep-guile compiled))}
+to get it dynamically loaded.
+
+@@item Improved the documentation some.
+
+@@end itemize
+
+Version 0.5.3
+
+@@itemize @@bullet
+
+@@item Improved class creation to permit creation of classes with new
+instance variables.
+
+@@item Added the ability to list the names of the instance variables of a
+class.
+
+@@item Added the ability to query and modify the value of an instance variable
+of an object.
+
+@@item Tidied calling of Guile procedures as objc methods.
+
+@@item Added code to ensure that all foundation classes are linked in.
+
+@@end itemize
+
+Version 0.5.2
+
+@@itemize @@bullet
+
+@@item Added the ability to create new ObjectiveC classes from Guile using
+the @@samp{gstep-new-class} primitive.
+
+@@item Added the ability to add new methods to existing classes from Guile
+using the @@samp{gstep-class-methods} and @@samp{gstep-instance-methods}
+primitives.
+
+@@item Added facility for invoking a Guile procedure as an Objective-C method.
+
+@@item Now handles @@samp{copy} and @@samp{mutableCopy} methods is the same way
+as @@samp{alloc} and @@samp{new} for memory management.
+
+@@end itemize
+
+Version 0.5.1
+
+@@itemize @@bullet
+
+@@item @@samp{gstep-lookup-nconstant} and @@samp{gstep-lookup-sconstant}
+removed - The initialisation routine @@samp{gstep_init} now defines
+all OpenStep numeric and string constants as Guile variables so that you
+can use them by name in your Guile code.
+
+@@item Gstep-guile now understands which methods return objects that need to
+be retained and which do not.  This means that if you use @@samp{alloc...},
+@@samp{new...}, @@samp{copy} and @@samp{mutableCopy} methods, you don't need
+to explicitly @@samp{release} the resulting objects when you have finished
+with them - the Guile garbage collection mechanism will do it for you (as
+with all other objects).
+
+@@item Added helper macros to gstep-guile.scm for unquoted selector names
+and terse creation of NSStrings from guile strings.
+
+@@end itemize
+
+Version 0.5.0
+
+Initial package put together to work with gstep-base-0.5.0
+
+@@subsection To Do
+
+
+@@itemize @@bullet
+
+@@item Add more of the OpenStep API C functions for the Foundation.
+
+@@item Add Constants and functions for the OpenStep AppKit stuff.
+
+@@item Figure out what needs to be done to make this thread-safe.
+
+@@item Modify voidp stuff to maintain a single voidp object for each address.
+@@end itemize
+
+@@node Overview, Usage, News, Top
+@@chapter Overview
+
+The gstep_guile library lets you use (and extend) the GNUstep libraries
+from within Guile.  This effectively provides you with scripting language for
+GNUstep and an interactive system for developing GNUstep applications.
+
+You can find out more about GNUstep at
+@@url{http://www.gnustep.org}@@*
+You can find out more about Guile at
+@@url{http://www.red-bean.com/guile/} or
+@@url{http://www.fsf.org/software/guile/guile.html}
+
+The package provides a (trivial) program which, when compiled and linked
+with libguile, libgstep_guile, and the GNUstep toolkit libraries, will
+give you a Guile command-line interpreter from which you can create
+Objective-C classes and objects and send messages to them.  
+
+The motivation for the development of this package was primarily to see
+if it was feasible to produce a better regression testing environment for
+the GNUstep libraries than that provided by dejagnu - but its potential
+uses go far beyond that.
+
+This is @@strong{not} intended as a better libguileobjc, rather, it is
+specifically altered to work with the GNUstep libraries (or possibly other
+OpenStep based systems) and assumes that it will be built and used in the
+presence of an OpenStep foundation.  For this reason, most symbols used by
+the library have been renamed to have a 'gstep' prefix rather than the
+'objc' prefix used by libguileobjc.  While making the library depend on
+OpenStep may seem like a restriction, it does permit the library to provide
+many more facilities for use with GNUstep.
+
+@@subsection Major features
+@@cindex features
+
+@@itemize bullet
+@@item
+Adds a new @@samp{id} type (representing an Objective-C object/class/protocol).
+
+@@item
+Adds a new @@samp{voidp} type - used to pass arbitrary pointers to/from objc.
+
+@@item
+Enables any Objective-C method to be called from within Guile.
+
+@@item
+Permits full access to the instance variables of any Objective-C object from
+within Guile.
+
+@@item
+Enables any Objective-C class to be extended by adding factory and instance
+methods which invoke Guile procedures.
+
+@@item
+Enables creating of entire Objective-C classes from within Guile.
+
+@@item
+Provides OpenStep constants and classes as Guile variables.
+
+@@item
+Provides the OpenStep @@samp{C} functions as Guile procedures.
+
+@@end itemize
+
+@@node Usage, Linking, Overview, Top
+@@chapter Usage
+
+@@menu
+* Linking::
+* ObjectiveC::
+* Programming::
+* Primitives::
+* Macros::
+* Data::
+* Classes::
+@@end menu
+
+@@node Linking, ObjectiveC, Usage, Usage
+@@section Linking
+
+In order to use GNUstep-Guile, you must link the libgstep_guile library into
+your program along with the standard Guile library (libguile) and the
+GNUstep foundation library (gstep-base).  You will probably also want to
+link in the libgg_base library (to ensure that all the Foundation classes
+get linked into your application) and possibly the libgg_gui and the gstep_gui
+libraries (to get the AppKit classes).
+
+When you install gstep-guile, a copy of the library is put in the Guile
+modules directory so that you can use the guile command
+@@samp{(use-modules (languages gstep-guile gstep-guile))}
+to get it dynamically loaded rather than having to link it into your program
+at compile-time.  This only works if you have not built the library for
+static linking.  You must also have the gstep-base library linked into your
+program anyway, so I'm not sure how useful this really is.
+
+It is also possible for you to work with other Foundation libraries such as
+libFoundation.
+This library IS restricted to working with the gcc objc runtime -
+unless someone wants to add support for other runtimes.
+The library also depends upon an NSMethodSignature extension
+available in a gstep-base and in libFoundation.  I don't know if
+Rhapsody has a similar undocumented extension.
+
+Your program must call the function 'gstep_init()' to tell the guile
+library about the gstep_guile stuff.  This should be done near the start of
+the 'main' function whose address is passed as the third parameter to
+'gh_enter()' when you invoke the guile system.  If this means nothing to
+you - please read the Guile documentation for information on how to call
+guile from within your program.
+
+If you want to have the OpenStep foundation @@samp{C} functions and constants
+available (as well as all the classes in the OpenStep foundation library -
+rather than just those used in your Objective-C program) you will also
+need to call 'gstep_link_base()' immediately after calling 'gstep_init()'
+and link your program with the 'gg_base' library.  If you do not do this
+then the only foundation classes available to Guile will be those that you
+have used in your main program (plus a few used internally by the gstep-guile
+library).
+
+Similarly, if you want to have the OpenStep appkit @@samp{C} functions and
+constants available (as well as all the classes in the OpenStep appkit
+library - rather than just those used in your Objective-C program) you
+will also need to call 'gstep_link_gui()' and link your program with the
+'gg_gui' library.  If you do not do this then the only appkit classes
+available to Guile will be those that you have used in your main program.
+
+Once you have a working program, you will probably want to load in some
+definitions of guile procedures and macros which make it easy to use the
+facilities in gstep_guile.  This distribution includes a Guile module
+file ('gstep-guile.scm') which is placed in the standard modules directory
+so that you can use it with @@samp{(use-modules (languages gstep-guile))}.
+
+@@node ObjectiveC, Programming, Linking, Usage
+@@section ObjectiveC
+
+To aid in using gstep-guile from within your Objective-C programs, some parts
+of the gstep-guile library are made available as external symbols so that you
+can call functions from C/ObjectiveC in much the same way that you would do
+things from within Guile.
+
+The minimum you need to know is that you need to call @@samp{gstep_init()}
+before starting the Guile system, and @@samp{gstep_link_base()} if you need
+full access to the OpenStep foundation.
+
+Other functions you can call from ObjectiveC (declared in gstep_guile.h) are -
+
+@@itemize @@bullet
+
+@@item 
+@@findex id2scm
+@@samp{SCM gstep_id2scm(id obj, BOOL shouldRetain);} @@*
+This function creates a scheme object encapsulating the ObjectiveC object
+@@samp{obj}.  If a scheme object already exists for this encapsulation, the
+existing object is returned.  The @@samp{shouldRetain} flag is used to specify
+whether the object has already been retained or not.
+If @@samp{shouldRetain==YES} then the ObjectiveC object is retained unless an
+existing scheme object is being returned.
+If @@samp{shouldRetain==NO} then the object is assumed to already be retained
+and will not be retained again.  Either way, the ObjectiveC object will be
+released when the scheme object is garbage collected.
+
+@@item
+@@findex scm2id
+@@samp{id gstep_scm2id(SCM obj);} @@*
+This function returns the ObjectiveC object encapsulated by the scheme object
+@@samp{obj}.
+
+@@item
+@@findex fixup_id
+@@samp{void gstep_fixup_id(SCM obj);} @@*
+This function converts the scheme value encapsulating an ObjectiveC object to
+one containing the 'nil' object.  The retain count for the object being
+removed is @@strong{not} modified.  You might use this if your code had
+destroyed the ObjectiveC object, and you need to make Guile aware that the
+object has gone away.  Normally, you should not need to use this!
+@@samp{obj}.
+
+@@item
+@@findex scm_id_p
+@@samp{SCM gstep_scm_id_p(SCM obj);} @@*
+This function returns a scheme boolean (#t or #f) depending on whether the
+scheme object @@samp{obj} encapsulates an ObjectiveC object or not.
+
+@@item
+@@findex id_p
+@@samp{int gstep_id_p(SCM obj);} @@*
+This function returns a C integer (1 or 0) depending on whether the
+scheme object @@samp{obj} encapsulates an ObjectiveC object or not.
+
+@@item 
+@@findex voidp2scm
+@@samp{SCM gstep_voidpscm(voidp* ptr, BOOL malloced, BOOL lenKnown, int len);} @@*
+This function creates a scheme object encapsulating the pointer to a memory
+location @@samp{ptr}.
+The @@samp{malloced} flag is used to specify if the area of memory pointed
+to has been allocated using malloc() (in which case it will be freed when the
+scheme object is garbage collected).
+The @@samp{lenKnown} flag is used to say if the length of the area of memory
+is known.  If the length is known, the @@samp{len} value is stored as part of
+the scheme object and the library is able to perform boundary checking when
+storing data into and reading data from the area of memory.  You should always
+tell the library the length if you can - to do otherwise risks a crash if
+you try to access unallocated memory through the pointer. @@*
+If you are creating a handle to some C data structure that is merely to be
+passed as input to some methods or functions, you should create it as having
+a known length of zero.  This will prevent any attempts to write into it
+from within Guile
+
+@@item
+@@findex scm2voidp
+@@samp{void* gstep_scm2voidp(SCM obj);} @@*
+This function returns the pointer to void encapsulated by the scheme object
+@@samp{obj}.
+
+@@item
+@@findex scm2voidplength
+@@samp{int gstep_scm2voidplength(SCM obj);} @@*
+This function returns the length of the area of memory pointed to by the
+voidp scheme object.  If the length is not known, this function returns -1.
+
+@@item
+@@findex scm_voidp_p
+@@samp{SCM gstep_scm_voidp_p(SCM obj);} @@*
+This function returns a scheme boolean (#t or #f) depending on whether the
+scheme object @@samp{obj} encapsulates a pointer to abstract memory or not.
+
+@@item
+@@findex id_p
+@@samp{int gstep_voidp_p(SCM obj);} @@*
+This function returns a C integer (1 or 0) depending on whether the
+scheme object @@samp{obj} encapsulates a pointer to memory or not.
+
+@@item
+@@findex id_p
+@@samp{int gstep_voidp_p(SCM obj);} @@*
+This function returns a C integer (1 or 0) depending on whether the
+scheme object @@samp{obj} encapsulates a pointer to memory or not.
+
+@@end itemize
+
+@@node Programming, Primitives, ObjectiveC, Usage
+@@section Programming
+
+Once you have linked gstep-base and gstep_guile into your program and have
+loaded the gstep-guile module (using the
+@@samp{(use-modules (languages gstep-guile))} command),
+you can start programming with GNUstep objects from within Guile.
+
+Gstep-guile provides you with a selection of primitives, macros and procedures
+to perform basic Guile to Objective-C interaction, and also provides some
+specific facilities to help you use the OpenStep libraries.
+
+@@itemize @@bullet
+
+@@item
+The classes defined in the OpenStep Foundation API are defined as Guile
+variables so that you may use them directly.  This definition is performed
+in link_base.m.
+
+@@item
+The numeric constants used by the OpenStep Foundation API are defined as
+Guile variables so that you may pass them to objc methods.  This definition
+is performed in link_base.m.
+
+@@item
+The string constants used by the OpenStep Foundation API are defined as
+Guile variables so that you may pass them to objc methods.  This definition
+is performed in link_base.m.
+
+@@item
+Most of the functions used by the OpenStep Foundation API are defined as
+Guile primitives.  Their definitions are performed in link_base.m.
+
+@@item
+link_gui.m does the same job as link_base.m, but for the OpenStep AppKit API.
+
+@@item
+The new type @@samp{voidp} permits pointers to be passed to and from
+Objective-C methods.  You can use this to work with @@samp{NSData} objects.
+
+@@end itemize
+
+@@node Primitives, Macros, Programming, Usage
+@@section Primitives
+
+The GNUstep-Guile library provides the following primitives -
+
+@@itemize @@bullet
+
+@@item
+@@findex msg-send
+@@samp{(gstep-msg-send receiver method args)}
+is used to send a message to an object.  It takes two or more arguments, the
+first is the object to which the message is to be sent, the second is a string
+which is the name of the method (the selector), and subsequent arguments are
+the arguments to be sent.
+
+@@item
+@@findex ivarnames
+@@samp{(gstep-ivarnames obj)}
+is used to return a list of the names of the instance variables of the
+object @@samp{obj}.@@*
+NB. If @@samp{obj} is a class, this procedure returns a list of the names
+of the instance variables of an object of that class.
+
+@@item
+@@findex get-ivar
+@@samp{(gstep-get-ivar obj name)}
+is used to return the value of the instance variable @@samp{name} in the
+object @@samp{obj}.  The object must be an instance, not a class.
+
+@@item
+@@findex set-ivar
+@@samp{(gstep-set-ivar obj name value)}
+is used to change the value of the instance variable @@samp{name} in the
+object @@samp{obj}.  The object must be an instance, not a class.
+The procedure returns true on success, false on failure.
+
+@@item
+@@cindex class creation
+@@findex new-class
+@@samp{(gstep-new-class name super variables instance-methods class-methods)}
+is used to create a new Objective-C class. The new class will have the name
+@@samp{name} and will inherit from the super-class @@samp{super}.@@*
+NB. The super class MUST be NSObject or one of it's descendents.
+
+The @@samp{variables} parameter is a list of instance variable specifications.@@*
+The @@samp{instance-methods} parameter is a list of instance method specifications.@@*
+The @@samp{class-methods} parameter is a list of class method specifications.@@*
+
+A variable specification is a pair of values -
+a string giving the variable name,
+and a string giving the variable type.
+
+A method specification is a list of three items -
+a string giving the method name,
+a string giving the method type specification,
+and a procedure to be called when the method is invoked.
+
+The procedure will be invoked with three arguments - the object for which it
+was called, the method name by which it was called, and a list containing
+the arguments sent to it.
+
+Permissible types are -
+@@itemize @@bullet
+@@item	@@samp{@@@@}	id
+@@item	@@samp{#}	Class
+@@item	@@samp{:}	SEL
+@@item	@@samp{c}	char
+@@item	@@samp{C}	unsigned char
+@@item	@@samp{s}	short
+@@item	@@samp{S}	unsigned short
+@@item	@@samp{i}	int
+@@item	@@samp{I}	unsigned int
+@@item	@@samp{l}	long
+@@item	@@samp{L}	unsigned long
+@@item	@@samp{f}	float
+@@item	@@samp{d}	double
+@@item	@@samp{*}	char* (string)
+@@item	@@samp{v}	void (only valid as the return type)
+@@end itemize
+
+The type specification for a variable consists of one of the above types
+(excluding void).
+
+The type specification for a method is a string consisting of a return
+type specification followed by parameter type specifications, the first
+two of which must be @@samp{@@@@} to denote an object, and @@samp{:} to denote
+a selector.
+
+In addition to the above type specifications, a structure type may be
+specified as a sequence of the above types (excluding void) enclosed in
+curly brackets -@@*
+eg. @@{iicc@@} specified a structure consisting of two integers and two
+characters.
+
+You may use the prefix @@samp{^} where what you actually want is a pointer
+to an item of the type.  When passing a pointer as a method argument, you
+must supply a @@samp{voidp} item which points to data of the correct type.
+When a pointer type result is returned by a method, you will get a
+@@samp{voidp} item returned.
+
+@@item
+@@findex class-methods
+@@samp{(gstep-class-methods name methods)}
+is used to add class (factory) methods to an existing class, where @@samp{name}
+is the name of the class and @@samp{methods} is a list of method specifications
+as in @@samp{gstep-new-class}.
+
+@@item
+@@findex instance-methods
+@@samp{(gstep-instance-methods name methods)}
+is used to add instance methods to an existing class, where @@samp{name} is the
+name of the class and @@samp{methods} is a list of method specifications as in
+@@samp{gstep-new-class}.
+
+@@item
+@@findex id?
+@@samp{(gstep-id? datum)}
+is used to test whether a guile data object is an objective-c object.
+
+@@item
+@@findex get-nil
+@@samp{(gstep-get-nil)}
+is used to return the @@samp{nil} object.  This is typically used to test
+for equality against the value returned by @@samp{gstep-msg-send}.
+Upon library initialisation, gstep-guile defines a top-level variable
+'gstep-nil' to this value, so you should not need to use this primitive
+directly.
+
+@@item
+@@findex lookup-class
+@@samp{(gstep-lookup-class name)}
+is used to lookup a class whose name matches the string or symbol it is
+given.  If a class of the specified name exists, it is returned, otherwise
+the procedure returns @@samp{nil}.
+
+@@item
+@@findex lookup-protocol
+@@samp{(gstep-lookup-protocol name)}
+is used to lookup a protocol whose name matches the string it is given.
+If a protocol of the specified name exists, it is returned, otherwise
+the procedure returns @@samp{nil}.
+
+@@item
+@@findex class-names
+@@samp{(gstep-class-names)}
+is used to return the names of all existing objective-c class objects.
+
+@@item
+@@findex protocol-names
+@@samp{(gstep-protocol-names)}
+is used to return the names of all existing objective-c protocol objects.
+
+@@item
+@@findex id->voidp
+@@samp{(gstep-id->voidp obj)}
+is used to create a voidp item from an objective-c object so that the
+object can be passed to functions and methods that expect abstract pointers.@@*
+NB. The original objective-c object is still 'owned' by guile and may be
+garbage collected, leaving the new voidp item with a bad memory reference,
+so you must be VERY careful using this procedure.
+
+@@item
+@@findex voidp->gstep-id
+@@samp{(voidp-gstep-id ptr)}
+is used to convert an abstract pointer to an objective-c object under
+guiles management.  The voidp MUST point to an objective-c object before
+you use this.
+
+@@item
+@@findex string->voidp
+@@samp{(string->voidp string)}
+is used to copy the Guile string into a newly created @@samp{voidp} data
+item so that it can be passed to an Objective-C method expecting a pointer
+as an argument.
+
+@@item
+@@findex voidp?
+@@samp{(voidp? item)}
+is used to test to see if a guile data item is actually a pointer to raw
+data (a @@samp{voidp}).
+
+@@item
+@@findex voidp->set!
+@@samp{(voidp->set! item, offset, string)}
+is used to copy the Guile string into an existing @@samp{voidp} data item
+at the specified byte offset.  If the length of the @@samp{voidp} item is
+known then range checking will be performed - otherwise this can be used
+to trash memory!
+
+@@item
+@@findex voidp->string
+@@samp{(voidp->string item offset length)}
+is used to create a new Guile string using 'length' bytes of data from 
+'offset' in the region of memory pointed to by the @@samp{voidp} 'item'.
+If the length of the @@samp{voidp} item is known then range checking will
+be performed - otherwise this can cause an illegal memory access!
+
+@@item
+@@findex voidp-length
+@@samp{(voidp-length item)}
+is used to return the length of the memory buffer pointed to by the
+@@samp{voidp} item.  If the length of the data area is not known then
+value returned by this is undefined.
+
+@@item
+@@findex voidp-length?
+@@samp{(voidp-length? item)}
+returns #t if the length of the area of memory pointed to by 'item' is
+known, #f otherwise.
+
+@@item
+@@findex voidp-set-length!
+@@samp{(voidp-set-length! item length)}
+may be used to change the information about the length of the data pointed
+to by 'item'.  If you are given a @@samp{voidp} item by the Objective-C
+system, you should use this primitive to set the length of the data it
+has given you (assuming you know this), so that range checking may be performed.
+
+@@item
+@@findex voidp-malloc?
+@@samp{(voidp-malloc? item)}
+returns #t if the area of memory pointed to by 'item' is known to have been
+allocated using malloc, and the Guile system is free to deallocate it when
+the @@samp{voidp} item is garbage-collected.
+
+@@item
+@@findex voidp-set-malloc!
+@@samp{(voidp-set-malloc! item flag)}
+may be used to change the information about whether the Guile system should
+deallocate the buffer pointed to by 'item' when 'item' is garbage-collected.
+You may want to do this if you have 'passed ownership' of the memory to the
+Objective-C world.
+
+@@item
+@@findex voidp-nil
+@@samp{(voidp-nil)}
+Returns a pointer to the nil address (zero).
+
+@@item
+@@findex voidp->list
+@@samp{(voidp->list item type length)}
+Attempts to treat the data pointed to by @@samp{item} as an array of
+@@samp{length} data items of type @@samp{type}.  These items are converted
+to Guile data items and returned in a list.
+
+@@item
+@@findex list->voidp
+@@samp{(list->voidp type)}
+This treats @@samp{list} as a list of data items (all of which should be the
+same type) to be converted into an array of Objective-C data items.
+The conversion is done using the type information string @@samp{type} and the
+resulting array is returned as a @@samp{voidp}
+
+
+@@end itemize
+
+@@node Macros, Data, Primitives, Usage
+@@section Macros
+
+The scheme source file 'gstep-guile.scm' implements a Guile module which
+provides you with scheme procedures and macros to make better use of the
+primitives provided by the library -
+
+@@itemize @@bullet
+
+@@item
+@@findex []
+@@samp{([] receiver method-and-args)}
+is used to send a message to 'receiver', which may be either an object or a
+string naming a class.  Everything following 'receiver' and before the closing
+bracket is used like a normal objc method and arguments list.@@*
+
+@@item
+@@findex send
+@@samp{(gstep-send receiver method-and-args)}
+is just like @@samp{[]} except that, if @@samp{receiver} is neither a string
+nor a variable bound in the top-level environment, it will be treated as
+the name of a class - and class lookup will be automatically be performed
+before it is used.
+
+@@item
+@@findex $$
+@@samp{($$ string)}
+is a shorthand way of creating an NSString object from the supplied guile
+string.@@*
+This is equivalent to @@samp{([] "NSString" stringWithCString: string)}
+
+@@item
+@@findex gstep-nsstring->string
+@@samp{(gstep-nsstring->string string)}
+is a shorthand way of creating a Guile string object from the supplied
+NSString object.
+
+@@item
+@@findex string->gstep-nsstring
+@@samp{(string->gstep-nsstring string)}
+is another way of creating an NSString object from the supplied guile
+string.
+
+@@item
+@@findex gstep-nsstring
+@@samp{(gstep-nsstring string)}
+Convert from an NSString object to a Guile string or vice versa.
+
+@@item
+@@findex gstep-nsstring?
+@@samp{(gstep-nsstring? string)}
+Check to see if an object is an instance of NSString.
+
+@@item
+@@findex class
+@@samp{(gstep-class name)}
+is a simple wrapper for gstep-lookup-class.
+
+@@item
+@@findex protocol
+@@samp{(gstep-protocol name)}
+is a simple wrapper for gstep-lookup-protocol.
+
+@@item
+@@findex selector
+@@samp{(selector name)}
+lets you pass a selector to a method - actually this just converts the
+symbol @@samp{name} into a string.
+
+@@item
+@@findex gstep-bool?
+@@samp{(gstep-bool? val)}
+Checks to see if the value given is an OpenStep boolean (integer 0 or 1).
+
+@@item
+@@findex gstep-bool
+@@samp{(gstep-bool val)}
+Converts between OpenStep boolean and Guile boolean values.
+
+@@item
+@@findex gstep-bool->bool
+@@samp{(gstep-bool->bool val)}
+Converts an OpenStep boolean (integer value) to a Guile boolean.
+
+@@item
+@@findex bool->gstep-bool
+@@samp{(bool->gstep-bool val)}
+Converts a Guile boolean to an OpenStep boolean (integer value).
+
+@@item
+@@findex NSMakeRange
+@@samp{(NSMakeRange location length)}
+Creates a list containing the specified location and length - suitable for
+passing to methods expecting NSRange structures.
+
+@@item
+@@findex NSRange-length
+@@samp{(NSRange-length range)}
+Returns the length element of the specified range.
+
+@@item
+@@findex NSRange-location
+@@samp{(NSRange-location range)}
+Returns the location element of the specified range.
+
+@@item
+@@findex NSRange-setLength!
+@@samp{(NSRange-setLength! range length)}
+Sets the length element of the specified range.
+
+@@item
+@@findex NSRange-setLocation!
+@@samp{(NSRange-setLocation! range location)}
+Sets the location element of the specified range.
+
+@@end itemize
+
+@@node Data, Classes, Macros, Usage
+@@section Data
+
+@@subsection Objects
+@@cindex objects
+
+The passing of standard @@samp{C} data types is by value - so the data is
+actually copied from a guile data item to a @@samp{C} one as it is passed
+into the objc world and is copied from the @@samp{C} data item to a guile
+on when it is returned to the guile world.
+
+There are two exceptions to this,  the objc object - these are always passed
+as pointers (by reference), and other pointers such as pointers to arrays
+and abstract data - these are passed as @@samp{voidp} items.
+
+Within the guile world, objc objects are first-class data items -
+gstep-guile adds a guile data type which encapsulates a pointer to an objc
+object and is the equivalent of the 'id' type in objc.
+
+When an object is passed from the guile world to the objc world, the pointer
+to the objc object is unwrapped from the guile data item and passed.
+When an object is passed from the objc world to the guile world, a guile
+data item is created to wrap it.
+
+@@subsection Pointers
+@@cindex pointers
+@@cindex abstract pointers
+@@cindex voidp
+Gstep-guile also adds the @@samp{voidp} data type which is used to pass
+abstract pointers to data between the Objective-C and Guile worlds.
+
+An Objective-C method which expects a pointer (other than a string or
+object) as an argument must be passed a @@samp{voidp} item.
+
+An Objective-C method which returns a pointer (other than a string or
+object) will return it as a @@samp{voidp} item.
+
+The @@samp{voidp} type is used to encapsulate arbitrary pointers to data
+(usually arrays of other types).  Primitives are supplied to manipulate
+@@samp{voidp} items - conversion to/from Guile strings and lists of
+Guile objects.
+
+There is essentially a single mechanism for passing data from one world
+to the other - the @@samp{gstep-msg-send} primitive.
+
+@@subsection Numbers
+@@cindex numbers
+
+The @@samp{C} data types @@samp{char}, @@samp{unsigned char}, @@samp{short},
+@@samp{unsigned short}, @@samp{int}, @@samp{unsigned int}, @@samp{long}, and
+@@samp{unsigned long} all appear in the guile world as numbers.
+
+The numeric constants used by the OpenStep API are defined as Guile variables
+when gstep-guile is initialised, so that you may pass them to objc methods.
+These constants are compiled into link_base.m and you will need to modify
+that file if I have missed any. 
+
+@@subsection Strings
+@@cindex strings
+
+Guile strings are copied into standard @@samp{C} strings in the objc world and
+@@samp{C} strings are copied into guile strings when they are passed back to
+the guile world.
+
+The string constants used by the OpenStep API are defined as Guile variables
+when gstep-guile is initialised, so that you may pass them to objc methods.
+These constants are compiled into link_base.m and you will need to modify
+that file if I have missed any. 
+
+@@subsection Structures
+@@cindex structures
+
+Objc structures are represented as lists in the guile world, with nested
+structures being represented as lists of lists.  I chose the list
+representation rather than guiles structure data type because guile
+structures seemed to offer little advantage over lists and are less
+obvious to someone coming from a lisp or scheme programming background,
+also, guile provides a richer set of primitives for manipulating lists
+than it does for structures.
+
+For instance
+@@samp{([] str rangeOfString: sub)} invokes the @@samp{rangeOfString:} method
+to find the substring @@samp{sub} in the string @@samp{str} and return an
+NSRange structure describing the substring found.  The NSRange structure
+consists of two integers, so the actual value returned in the guile world
+is a list containing two numbers.  The order of the values in the list is
+the same as the order of the values in the structure.
+
+
+@@node Classes, Memory, Data, Usage
+@@section Classes
+
+@@node Memory, Procedure Macro Index, Classes, Top
+@@chapter Memory
+
+@@cindex garbage collection
+@@cindex reference counting
+
+Guile uses a garbage collection system for memory management, while
+the Foundation library (gstep-base, libFoundation, or Foundation) uses a
+reference counting mechanism for objc objects.
+
+Actually, libFoundation has a garbage collection mechanism too - I don't
+think you can use it with gstep-guile though - it might conflict with the
+Guile garbage collection system.
+
+Most data items other than objc objects are of no concern - they are passed
+by copy rather than by reference, so the standard memory management systems
+within each world apply to the copies of each data item.
+
+How to resolve the difference between the two worlds for objc objects?
+
+The basic rules for OpenStep reference counting are -
+If an object is returned to you by an 'alloc', 'new', 'copy' or 'mutableCopy'
+method then you 'own' that object and do not need to retain it.  Otherwise,
+you have to retain any object until you have finished with it.
+
+So - when an objc object is returned to the world of guile by gstep-guile,
+a guile data item is created which is subject to the guile garbage collection
+mechanism.  This item contains a pointer to the objc object which is 'retained' (it's reference count is increased by one) iff the object was not returned
+by a 'new', 'alloc', 'copy' or 'mutableCopy'  method.
+
+When the garbage collection mechanism decides that the data item is no longer
+in use, it is freed and a 'release' message is sent to the corresponding objc
+object (decreasing it's reference count).  If the objc object is not in use
+by any other object in the objc world, it's reference count will drop to
+zero and it will be released.
+
+Objc Class and Protocol objects either do not respond to [-retain] and
+[-release] methods, or implement them as no-ops.  This means that these
+objects are neither retained  nor released - so guile garbage collection
+has no effect on them.  This is 'correct' behavior, since Class and
+protocol objects should normally never be deallocated.
+
+This is all that needs to be done for clean inter-operation between the two
+worlds - guile data items are garbage collected as normal in their world,
+while objc objects are reference counted as normal in their world.
+
+The result of this is that you normally do not need to bother about the
+OpenStep retain/release reference counting system - gstep-guile will do
+it all for you.
+
+That's not all that gstep-guile does though ...
+
+Gstep-guile keeps track of all objc objects for which a guile data item
+exists, and ensures that when an objc object is returned into the guile
+world, a new guile data item is not created if one already exists.
+
+This means that there is guaranteed to be at most one guile data item
+for each objc object and therefore each objc object is 'retained' only once
+by the guile world.  This guarantee makes it easy to use the
+'retainCount' method on an object with predictable and comprehensible results.
+This is important for checking your code for errors in retaining and releasing
+objects.
+
+@@subsection Tricky stuff
+
+Actually the OpenStep reference counting system is not quite as simple as I
+made out above ...  It is legitimate for an objects @@samp{init} methods to
+return a new object to replace it.  In this case the objects init method will
+have released the object itself!  Gstep-guile manages this by checking to see
+if the object returned from an init method is the same as the object to which
+the message was sent.  If not, the Guile wrapper for the original object is
+fixed-up to contain a @@samp{nil} pointer and a new wrapper item is created for
+the newly returned object.
+
+@@cindex pointer memory
+The @@samp{voidp} type is the other tricky aspect of Guile-Objective-C
+interaction.  This type is used to pass pointers to arbitrary data and,
+as such, can be used to trash your memory!  It must be used with care.
+
+An Objective-C method whose return type is @@samp{void*} will return a
+@@samp{voidp} item to the Guile world.  This item will contain a pointer
+to an address in memory, but that is all the information Guile will have
+about it.
+
+As the programmer - you are responsible for making sure that this item is
+used correctly -
+
+@@itemize @@bullet
+
+@@item If the returned memory has been malloced and you are responsible for
+its subsequent release, you should use @@samp{(voidp-set-malloc! item #t)}
+so that the malloced memory will be released when the item is
+garbage-collected.  If you don't do this, you will have a memory leak.
+
+@@item If you know how much memory has been returned - you should use
+@@samp{(voidp-set-length! item length)} to set the information in the
+item so that range checks can be performed on other operations.
+
+@@item If you created a @@samp{voidp} item and passed it to a method like
+@@samp{dataWithBytesNoCopy:length:} that expects to take over control of
+freeing the memory, you must use @@samp{(voidp-set-malloc! item #f)}
+so that the malloced memory will @@strong{not} be released when the item is
+garbage-collected.
+
+@@end itemize
+
+@@node Procedure Macro Index, Concept Index, Memory, Top
+@@unnumbered Procedure and Macro Index
+@@printindex fn
+
+@@node Concept Index, , Procedure Macro Index, Top
+@@unnumbered Concept Index
+@@printindex cp
+
+@@summarycontents
+@@contents
+
+@@bye
+@

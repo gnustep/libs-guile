@@ -1,0 +1,66 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.10.08.03.49.44;	author richard;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#
+#   Makefile.preamble
+#
+#   Project specific makefile variables, and additional
+#
+#   Do not put any Makefile rules in this file, instead they should
+#   be put into Makefile.postamble.
+#
+
+#
+# Flags dealing with compiling and linking
+#
+
+# Additional flags to pass to the preprocessor
+ADDITIONAL_CPPFLAGS +=
+
+# Additional flags to pass to the Objective-C compiler
+ADDITIONAL_OBJCFLAGS += 
+
+# Additional flags to pass to the C compiler
+ADDITIONAL_CFLAGS += 
+
+# Additional include directories the compiler should search
+ADDITIONAL_INCLUDE_DIRS +=
+
+# Additional LDFLAGS to pass to the linker
+# ADDITIONAL_LDFLAGS += 
+
+# Additional library directories the linker should search
+ADDITIONAL_LIB_DIRS += -L../Library/$(GNUSTEP_OBJ_DIR)
+
+# Additional libraries when linking tools
+ADDITIONAL_TOOL_LIBS += -lgstep_guile -lgg_base -lguile
+
+# Additional libraries when linking applications
+ADDITIONAL_GUI_LIBS += -lgg_gui -lFoundationExt
+
+#
+# Flags dealing with installing and uninstalling
+#
+
+# Additional directories to be created during installation
+ADDITIONAL_INSTALL_DIRS +=
+@

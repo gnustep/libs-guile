@@ -1,0 +1,77 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.10.08.03.53.18;	author richard;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@dnl Process this file with autoconf to produce configure.
+
+AC_INIT(Library/greg.c)
+. ./GREG-VERSION
+
+AC_CONFIG_HEADER(Library/config.h)
+
+AC_PROG_CC
+AC_PROG_CPP
+AM_PROG_LIBTOOL
+
+AC_PATH_PROG(GUILEPATH, guile)
+AC_HEADER_STDC
+AC_HEADER_TIME
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(libc.h limits.h malloc.h memory.h string.h signal.h sys/file.h sys/fcntl.h sys/ioctl.h sys/stropts.h unistd.h utime.h libguile.h)
+
+AC_TYPE_GETGROUPS
+AC_TYPE_SIGNAL
+AC_TYPE_MODE_T
+
+AC_CHECK_FUNCS(grantpt setpgid setsid tcgetpgrp tcsetpgrp waitpid)
+
+AC_MSG_CHECKING(whether we have a recent guile)
+HAVE_RECENT_GUILE=`guile -c '(display (if (string>? (version) "1.2") 1 0))'`
+if test $HAVE_RECENT_GUILE = 0; then
+    AC_MSG_RESULT(no)
+else
+    AC_MSG_RESULT(yes)
+fi
+
+AC_DEFINE_UNQUOTED(HAVE_RECENT_GUILE, $HAVE_RECENT_GUILE)
+AC_SUBST(HAVE_RECENT_GUILE)
+
+GUILE_LIB_PATH=`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`
+AC_DEFINE_UNQUOTED(GUILE_LIB_PATH, $GUILE_LIB_PATH)
+
+GUILE_BIN_PATH=$GUILE_LIB_PATH/greg
+AC_DEFINE_UNQUOTED(GUILE_BIN_PATH, $GUILE_BIN_PATH)
+AC_SUBST(GUILE_BIN_PATH)
+
+GUILE_SCM_PATH=$GUILE_LIB_PATH/ice-9
+AC_DEFINE_UNQUOTED(GUILE_SCM_PATH, $GUILE_SCM_PATH)
+AC_SUBST(GUILE_SCM_PATH)
+
+AC_DEFINE_UNQUOTED(VERSION, $VERSION)
+AC_SUBST(VERSION)
+AC_DEFINE_UNQUOTED(MAJOR_VERSION, $MAJOR_VERSION)
+AC_SUBST(MAJOR_VERSION)
+AC_DEFINE_UNQUOTED(MINOR_VERSION, $MINOR_VERSION)
+AC_SUBST(MINOR_VERSION)
+
+AC_OUTPUT(Library/Makefile Library/greg Library/greg.scm Documentation/gregdoc)
+
+@
