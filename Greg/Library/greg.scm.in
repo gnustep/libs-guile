@@ -69,14 +69,10 @@
 ;;; Dynamically link the glue code for accessing the pty library,
 ;;; but only when it isn't already present.
 
-(define gversion
-  (+ (* 100 (string->number (major-version))) (string->number (minor-version)))
-)
-
-(if (> gversion 104)
-;;; IF NEW_GUILE
-  (load-extension "libgreg" "scm_init_greg")
-;;; ELSE /* OLD_GUILE */
+(if (defined? 'load-extension)
+  (begin
+    (load-extension "libgreg" "scm_init_greg")
+  )
   (if (not (feature? 'greg-pty))
     (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so"))
   )
