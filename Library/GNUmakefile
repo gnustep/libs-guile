@@ -31,12 +31,12 @@ include ../Version
 
 LIBRARY_NAME = libgstep_guile libgg_base
 
-ifneq ($(HAVE_APPKIT),no)
+ifneq (S(strip $(HAVE_APPKIT)),no)
   LIBRARY_NAME += libgg_gui
   libgg_gui_OBJC_FILES = link_gui.m
 endif
 
-ifneq ($(HAVE_EOACCESS),no)
+ifneq ($(strip $(HAVE_EOF)),no)
   LIBRARY_NAME += libgg_gdl2
   libgg_gdl2_OBJC_FILES = link_gdl2.m
 endif
