@@ -31,12 +31,9 @@
 all: config.status library documentation
 	@echo "You must now install Greg in order to use it"
 
-config.status: configure
+config.status:
 	./configure
 	$(MAKE) clean
-
-configure: configure.in
-	autoreconf
 
 library: 
 	(cd Library; $(MAKE));

@@ -1,3 +1,8 @@
+Wed Feb  6 16:39:04 2002  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* Makefile (configure): Rule removed.
+	(config.status): Do not depend on configure.
+
 2002-01-07  Adam Fedor  <fedor@gnu.org>
 
 	* Library/greg.c: Defines for export when on MINGW32
