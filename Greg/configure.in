@@ -98,3 +98,9 @@ AC_SUBST(MINOR_VERSION)
 AC_CONFIG_FILES([Library/Makefile Library/greg Library/greg.scm Documentation/Makefile Documentation/gregdoc.texi config.mak])
 AC_OUTPUT
 
+echo "********************************************************************"
+echo "This package is obsolete ... Greg now has its own project page at"
+echo "https://gna.org/projects/greg/ and you should use the up to date"
+echo "code from there unless you are sure this old version has all you need."
+echo "********************************************************************"
+

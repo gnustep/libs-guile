@@ -1,6 +1,11 @@
-2004-07-10  iAndreas Vogele <voegelas@gmx.net>
+2005-02-24  Richard Frith-Macdonald <rfm@gnu.org>
 
-	* Library/greg.scm.in: Use let raqther than define if not at outer
+	* This package is now obsolete.  Greg now has its own project page
+	at https://gna.org/projects/greg/
+
+2004-07-10  Andreas Vogele <voegelas@gmx.net>
+
+	* Library/greg.scm.in: Use let rather than define if not at outer
 	scope.
 
 2004-02-05 13:07  Alexander Malmberg <alexander@malmberg.org>
