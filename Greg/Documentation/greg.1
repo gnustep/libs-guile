@@ -1,0 +1,57 @@
+.TH GREG 1 2001-04-19 GNU FSF
+.SH NAME
+greg \- test driver
+.SH SYNOPSIS
+.B greg
+.RI [ OPTION "]... [" FILE ]...
+.SH DESCRIPTION
+.B greg
+runs the tests in FILEs.
+It prints the unexpected test results, as well as a summary, to standard out.
+.SH EXIT STATUS
+.B greg
+returns 1 if any test has an unexpected results; otherwise it
+returns 0.
+.SH OPTIONS
+.TP
+.BI \-\-tool " TOOL"
+Run the test scripts found in the subdirectory
+.IR TOOL .
+.TP
+.BI \-\-file " SCRIPT"
+Run the test scripts found in the file
+.IR SCRIPT .
+.TP
+.B \-\-debug
+Print extra debugging output to tests.dbg.
+.TP
+.BI \-\-objdir " PATH"
+Use
+.I PATH
+as the top directory to locate any auxiliary compiled test code.
+.TP
+.BI \-\-outdir " PATH"
+Write the output logs in
+.IR PATH .
+.TP
+.BI \-\-srcdir " PATH"
+Use
+.I PATH
+as the top directory for test scripts to run.
+.TP
+.BR \-v , " \-\-verbose"
+Print results of all tests, and a more verbose summary.
+.TP
+.B \-\-help
+Print a short summary of
+.BR greg 's
+options and exit.
+.TP
+.BR \-V , " \-\-version"
+Print the version number and exit.
+.SH AUTHOR
+.B greg
+was written by Richard Frith-Macdonald <rfm@gnu.org>.  This manual
+page was written by Matt Kraai <kraai@debian.org>.
+.SH SEE ALSO
+greg.info

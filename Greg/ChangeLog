@@ -1,3 +1,8 @@
+2001-05-20 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Documentation/Makefile.in: Added installation of greg man page.
+	* Documentation/greg.1: Man page contributed by Matt Kraai
+
 2001-04-20  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* Makefile: Rearranged targets; cleaned up.  (config.status): Run
