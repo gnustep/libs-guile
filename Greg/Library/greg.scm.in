@@ -488,7 +488,13 @@
       (catch #t
 	(lambda ()
 	  (greg-vlog 3 "Loading " path " ...\n")
-	  (load path)
+	  (define fullpath
+	    (if (string=? (substring path 0 1) "/")
+	      path
+	      (string-append (getcwd) "/" path)
+	    )
+	  )
+	  (load fullpath)
 	  (greg-vlog 3 "Loaded " path "\n")
 	)
 	(lambda key
@@ -515,7 +521,14 @@
 	  (greg-vlog 2 "Running " greg-file-name " ...\n")
 	  (catch #t
 	    (lambda ()
-	      (load (string-append name "/" greg-file-name))
+	      (define path (string-append name "/" greg-file-name))
+	      (define fullpath
+		(if (string=? (substring path 0 1) "/")
+		  path
+		  (string-append (getcwd) "/" path)
+		)
+	      )
+	      (load fullpath)
 	    )
 	    (lambda key
 	      (begin
@@ -540,7 +553,13 @@
       (catch #t
 	(lambda ()
 	  (greg-vlog 3 "Loading " path " ...\n")
-	  (load path)
+	  (define fullpath
+	    (if (string=? (substring path 0 1) "/")
+	      path
+	      (string-append (getcwd) "/" path)
+	    )
+	  )
+	  (load fullpath)
 	  (greg-vlog 3 "Loaded " path "\n")
 	)
 	(lambda key
@@ -723,7 +742,13 @@
       (catch #t
 	(lambda ()
 	  (greg-vlog 3 "Loading " path " ...\n")
-	  (load path)
+	  (define fullpath
+	    (if (string=? (substring path 0 1) "/")
+	      path
+	      (string-append (getcwd) "/" path)
+	    )
+	  )
+	  (load fullpath)
 	  (greg-vlog 3 "Loaded " path "\n")
 	)
 	(lambda key
@@ -756,7 +781,13 @@
       (catch #t
 	(lambda ()
 	  (greg-vlog 3 "Loading " path " ...\n")
-	  (load path)
+	  (define fullpath
+	    (if (string=? (substring path 0 1) "/")
+	      path
+	      (string-append (getcwd) "/" path)
+	    )
+	  )
+	  (load fullpath)
 	  (greg-vlog 3 "Loaded " path "\n")
 	)
 	(lambda key

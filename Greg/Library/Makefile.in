@@ -2,6 +2,7 @@
 SH = /bin/sh
 
 CC = @CC@
+CFLAGS = -g
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
@@ -65,7 +66,7 @@ libgreg.la: $(LIB_OBJECTS)
 	@echo '$(LTCOMPILE) -c $<'; \
 	$(LTCOMPILE) -c $<
 
-install: libgreg.la greg.scm greg
+install: libgreg.la
 	$(MKINSTDIRS) $(GUILE_BIN_PATH); \
 	$(MKINSTDIRS) $(GUILE_SCM_PATH); \
 	$(MKINSTDIRS) $(bindir); \

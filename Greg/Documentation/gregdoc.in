@@ -29,7 +29,7 @@ END-INFO-DIR-ENTRY
 @title The Greg testing framework
 @subtitle for Greg Version @VERSION@
 @sp 1
-@subtitle September 1998
+@subtitle November 1998
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
 @page
 
@@ -114,6 +114,8 @@ Converted makefiles to work without GNUstep
 Improved configuration code
 @item
 Improved documentation somewhat
+@item
+Updated to work with guile version 1.3
 @end itemize
 
 New in 0.5
@@ -157,8 +159,7 @@ DejaGNU, but also provides Guile modules to permit `embedded' testing of
 applications that use Guile as a scripting language and libraries that
 are directly accessible to Guile.
 
-This release has been tested with Guile-1.2 and a (May 1998)
-snapshot of the Guile code.
+This release has been tested with Guile-1.2 and 1.3
 
 Apologies to Guile/Scheme/Lisp programmers out there - I came to this from
 Objective-C programming and taught myself during the last four weeks while
