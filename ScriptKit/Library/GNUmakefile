@@ -1,9 +1,9 @@
 
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
-include ../config.mak
-
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
+
+include ../config.mak
 
 # The library to be compiled
 LIBRARY_NAME=libScriptKit
