@@ -1,0 +1,32 @@
+The gstep_guile library lets you use (and extend) the GNUstep libraries
+from within Guile.  This effectively provides you with scripting
+language for GNUstep and an interactive system for developing GNUstep
+applications.
+
+   You can find out more about GNUstep at `http://www.gnustep.org'
+You can find out more about Guile at `http://www.red-bean.com/guile/' or
+`http://www.fsf.org/software/guile/guile.html'
+
+   The package provides a (trivial) program which, when compiled and
+linked with libguile, libgstep_guile, and the GNUstep toolkit
+libraries, will give you a Guile command-line interpreter from which
+you can create Objective-C classes and objects and send messages to
+them.
+
+   The motivation for the development of this package was primarily to
+see if it was feasible to produce a better regression testing
+environment for the GNUstep libraries than that provided by dejagnu -
+but its potential uses go far beyond that.
+
+   This is *not* intended as a better libguileobjc, rather, it is
+specifically altered to work with the GNUstep libraries (or possibly
+other OpenStep based systems) and assumes that it will be built and
+used in the presence of an OpenStep foundation.  For this reason, most
+symbols used by the library have been renamed to have a 'gstep' prefix
+rather than the 'objc' prefix used by libguileobjc.  While making the
+library depend on OpenStep may seem like a restriction, it does permit
+the library to provide many more facilities for use with GNUstep.
+
+   Reade the NEWS file for the latest user visible changes. Read the
+INSTALL file for installation instructions.
+

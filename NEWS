@@ -1,0 +1,214 @@
+Note - the major and minor version numbers of this library will be tied
+to those of gstep-core.  This means that changes in the sub-minor
+version number may actually denote major changes in functionality!  I
+think that things have stabilised now and future releases will be more
+in the way of bug/portability fixes than the addition of new features.
+Version 0.5.14
+   * Note that previous version inadvertently set the version number of
+     shared libraries to 1.0.0. You may have to manually remove these
+     libraries if you have previously installed versions of gstep-guile.
+
+   * Merged in ScriptKit
+
+   Version 0.5.13 (unreleased)
+   * Added `gstep-ptr-ivar' to return a voidp that points to an instance
+     variable in an object.
+
+   Version 0.5.12
+   * Fixes to permit you to use Distributed Objects (ie send messages to
+     remote applications) from Guile.
+
+   * Fix to installation of shared library for loading as Guile module.
+
+   * Modifications to the Greg package to permit it to be built outside
+     the GNUstep environment.
+
+   Version 0.5.11
+   * Fixes suggested by Helge Hess to tidy things up and to get rid of
+     warnings when building for libFoundation instead of gstep-base.
+
+   * Warning about libFoundation garbage collection added to
+     documentation.
+
+   Version 0.5.10
+   * Many minor code changes to accommodate libFoundation - that can now
+     be used as a replacement for gstep-base.
+
+   * Major reorganisation (simplification) of the source files.
+
+   * Added +retain, +release, -retain, -release and
+     -methodSignatureForSelector: in catagory of Object so that old
+     (non-openstep) Object-derived stuff can work with gstep-guile.
+
+   * Removed the GGHNotifier class (as nobody seemed to want it and it's
+     trivial to re-implement anyway).
+
+   * Fixes to avoid memory leaks due to classes being initialised
+     outside autorelease pools.
+
+   * Changes to let voidp items be automatically type-cast to/from
+     objects and strings when calling objective-c methods from guile.
+
+   * Changed to refrain from building libgg_gui if compiled with
+     library_combo specifying no gui.
+
+   * Changed installation procedure to put libraries in the main GNUstep
+     system area rather than the 'Local' area.
+
+   * More efficient mark routine to speed up garbage collecting of
+     classes.
+
+   Version 0.5.9
+   * Modified to use NSInvocation rather than mframe for improved
+     portability to libFoundation and (eventually) MacOS-X, as
+     suggested by Helge Hess.
+
+   * Removed `[-forwardToGuile:frame:]' method.  This was messy to
+     implemente using NSInvocation, and the preferred way to call a
+     Guile method from ObjectiveC is to create a new class or add a
+     (Guile) method to an existing class anyway.
+
+   Version 0.5.8
+   * No longer link all Foundation classes by default - you have to call
+     the `gstep_link_base()' function to do it.
+
+   * The `gstep_link_base()' function is now in a library of it's own
+     called `libgg_base'.
+
+   * Added a new function (`gstep_link_gui()') in the library
+     `libgg_gui' to link in the AppKit classes in the same way that
+     `gstep_link_base()' links in the foundation stuff.
+
+   * Modified `gstep_link_base()' to create Guile variables for each of
+     the Foundation classes.
+
+   * added conversion operators for voidp <-> id
+
+   * Added all NSHashTable related functions.
+
+   * Added all NSMapTable related functions.
+
+   Version 0.5.7
+   * Documented more (all?) of the macros.
+
+   * Added voidp-nil to return a nul pointer.
+
+   * Fixed bug in scm2voidp() function.
+
+   * Added NSZone related functions.
+
+   Version 0.5.6
+   * Incorporated bugfix for returing the SCM corresponding to a  'nil'
+     object, sent in Masatake YAMATO.
+
+   * Incorporated bugfix for displaying id and voidp scheme objects,
+     sent in by Eiichi TAKAMORI
+
+   * Incorporated bugfix for gstep_scm2id sent in by Eiichi TAKAMORI.
+
+   * Removed the 'static' scoping of some functions so that they can be
+     used from within C and ObjC programs as requested by Masatake
+     YAMATO.
+
+   * Revised naming of external symbols to be more consistent (and
+     shorter) for the convenience of C/ObjC programmers.  This version
+     should stabilise the C/ObjectiveC interface with new functions
+     being added occasionally, but no more changes to the names of
+     existing functions.
+   * *NB. 'gstep_guile_init()' has been renamed to 'gstep_init()'*
+
+   * Removed 'compiled-module' make target  - install library in the
+     Guile modules directory by default.
+
+   Version 0.5.5
+   * Lots of work on `Greg' - now a pretty good replacement for
+     `DejaGNU', including decent configuration, installation, and
+     self-test.
+
+   * Improved and extended tests for gstep-guile.
+
+   * Updated to work with recent developer snapshots of Guile while
+     retaining compatibility with the old 1.2 release.
+
+   Version 0.5.4.1
+   * Bugfix for macro `bool->gstep-bool' supplied by Masatake YAMATO
+
+   * Changed module location to be the 'languages' directory as
+     suggested by Masatake YAMATOa.
+
+   * Credit Eiichi Takamori for work on guileobjc.
+
+   Version 0.5.4
+
+   Gstep-guile is beginning to stabilize - I expect to be working on the
+test-suite for gstep-guile and looking for bugs for a while.  I think
+that all major features are now in place.
+
+   * Added a new type `voidp' to use as an abstract pointer so that we
+     can call Objective-C methods returning pointers from within Guile
+     and so that we can pass pointers to methods that require them.
+
+   * Added the 'Greg' directory - `Greg' is a regression-testing
+     package written in Guile.  The tests for gstep-guile are now
+     written using `Greg'
+
+   * Added installation code to put 'gstep-guile.scm' and 'greg.scm' in
+     the modules directory.
+
+   * Added 'compiled-module' make target to put a copy of the library in
+     the Guile modules directory so that you can type `(use-modules
+     (languages gstep-guile compiled))' to get it dynamically loaded.
+
+   * Improved the documentation some.
+
+   Version 0.5.3
+
+   * Improved class creation to permit creation of classes with new
+     instance variables.
+
+   * Added the ability to list the names of the instance variables of a
+     class.
+
+   * Added the ability to query and modify the value of an instance
+     variable of an object.
+
+   * Tidied calling of Guile procedures as objc methods.
+
+   * Added code to ensure that all foundation classes are linked in.
+
+   Version 0.5.2
+
+   * Added the ability to create new ObjectiveC classes from Guile using
+     the `gstep-new-class' primitive.
+
+   * Added the ability to add new methods to existing classes from Guile
+     using the `gstep-class-methods' and `gstep-instance-methods'
+     primitives.
+
+   * Added facility for invoking a Guile procedure as an Objective-C
+     method.
+
+   * Now handles `copy' and `mutableCopy' methods is the same way as
+     `alloc' and `new' for memory management.
+
+   Version 0.5.1
+
+   * `gstep-lookup-nconstant' and `gstep-lookup-sconstant' removed -
+     The initialisation routine `gstep_init' now defines all OpenStep
+     numeric and string constants as Guile variables so that you can
+     use them by name in your Guile code.
+
+   * Gstep-guile now understands which methods return objects that need
+     to be retained and which do not.  This means that if you use
+     `alloc...', `new...', `copy' and `mutableCopy' methods, you don't
+     need to explicitly `release' the resulting objects when you have
+     finished with them - the Guile garbage collection mechanism will
+     do it for you (as with all other objects).
+
+   * Added helper macros to gstep-guile.scm for unquoted selector names
+     and terse creation of NSStrings from guile strings.
+
+   Version 0.5.0
+
+   Initial package put together to work with gstep-base-0.5.0
+
