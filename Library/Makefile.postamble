@@ -26,8 +26,11 @@ after-install::
 	      $(INSTALL_DATA) gstep-guile.scm $$DIRP/languages/gstep-guile.scm; \
 	      if [ ! -d $$DIRP/languages/gstep-guile ]; then mkdir $$DIRP/languages/gstep-guile; fi; \
 	      for i in $(LIBRARY_NAME); do \
-		$(INSTALL_PROGRAM) $(GNUSTEP_OBJ_DIR)/$${i}$(LIBRARY_NAME_SUFFIX).so $$DIRP/languages/gstep-guile/$${i}.so; \
-		$(INSTALL_PROGRAM) $(GNUSTEP_OBJ_DIR)/libgstep_guile$(LIBRARY_NAME_SUFFIX).so $$DIRP/languages/gstep-guile/libcompiled.so; \
+                module=`echo $$i | sed 's/^lib//'`; \
+                $(GNUSTEP_MAKEFILES)/mkinstalldirs $$DIRP/languages/$$module; \
+                rm -f $$DIRP/languages/$$module/libcompiled.so; \
+                ln -s $(GNUSTEP_LIBRARIES)/$${i}$(LIBRARY_NAME_SUFFIX).so \
+                $$DIRP/languages/$$module/libcompiled.so; \
 	      done \
 	    ) \
 	fi
