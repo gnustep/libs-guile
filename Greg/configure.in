@@ -1,6 +1,7 @@
 dnl Process this file with autoconf to produce configure.
 
-AC_INIT(Library/greg.c)
+AC_INIT
+AC_CONFIG_SRCDIR([Library/greg.c])
 . ./GREG-VERSION
 
 AC_CONFIG_HEADER(Library/config.h)
@@ -8,7 +9,7 @@ AC_CONFIG_HEADER(Library/config.h)
 #--------------------------------------------------------------------
 # Determine the host, build, and target systems
 #--------------------------------------------------------------------
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET([])
 
 HAVE_PTS_STREAM_MODULES=0
 case "${target}" in
@@ -37,7 +38,7 @@ if test "$GUILEPATH" = "NONE"; then
   echo "path, set the correct path by calling configure with --with-guile-path"
   echo "set to the correct path (e.g. configure --with-guile-path=/usr/bin/guile)"
   echo "********************************************************************"
-  AC_ERROR(No guile found - cannot continue)
+  AC_MSG_ERROR([No guile found - cannot continue])
 fi
 
 AC_CHECK_PROG(TEXI2HTML, texi2html, texi2html, :)
@@ -81,5 +82,6 @@ AC_SUBST(MAJOR_VERSION)
 AC_DEFINE_UNQUOTED(MINOR_VERSION, $MINOR_VERSION)
 AC_SUBST(MINOR_VERSION)
 
-AC_OUTPUT(Library/Makefile Library/greg Library/greg.scm Documentation/Makefile Documentation/gregdoc.texi config.mak)
+AC_CONFIG_FILES([Library/Makefile Library/greg Library/greg.scm Documentation/Makefile Documentation/gregdoc.texi config.mak])
+AC_OUTPUT
 
