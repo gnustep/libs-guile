@@ -1,3 +1,9 @@
+Tue Jul 29 15:48:18 2003  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* Library/Guile.h: Include GNUstepGuile/xxx.h rather than
+	gnustep/guile/xxx.h.
+	* Library/GuileSCM.h: Same change.
+	
 2003-04-08  David Ayers  <d.ayers@inode.at>
 
 	* ScriptKit/Library/GuileInterpreter.m: ([GuileSCM
