@@ -1,5 +1,7 @@
 -include ../config.mak
 
+GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
+
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
 
 # The library to be compiled

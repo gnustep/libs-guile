@@ -5,6 +5,8 @@
 	* Documentation/Makefile.postamble: Likewise to create version.texi
 	* Documentation/gstep_guile: Use info from version.texi.
 
+	* Test/GNUmakefile: Set install dir to GNUSTEP_SYSTEM_ROOT
+	
 	* GNUmakefile (SUBPROJECTS): Moved Documentation last, just in
 	case people can't make it.
 	* configure.in: Add with-guile-path for Greg

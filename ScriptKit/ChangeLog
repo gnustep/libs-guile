@@ -1,5 +1,7 @@
-1999-03-12  Adam Fedor  <fedor@gnu.org>
+1999-03-12  Adam Fedor  <fedor@gnu.org>	
 
+	* GNUmakefile: Set install dir to GNUSTEP_SYSTEM_ROOT
+	
 	* Makefile.postamble (before-all): Make ScriptKit link to use as
 	include dir. 
 	* Examples/Makefile.preamble (ADDITIONAL_INCLUDE_DIRS): Add

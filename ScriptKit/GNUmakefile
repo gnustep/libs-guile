@@ -1,5 +1,10 @@
+#
+
+GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
+
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
 include SCRIPT_KIT_VERSION
+
 #
 # The list of subproject directories
 #
