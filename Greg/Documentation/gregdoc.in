@@ -661,9 +661,10 @@ using Greg to test external programs run in a child process using the
 @item
 If you install Greg in a non-standard location, it's possible that guile
 will not be able to find the @code{libgreg.so} dynamic library to load it.
-In this case, you will need to change/set the @code{GUILE_LOAD_PATH}
-environment variable to include the directory in which the library has
-been installed.
+In this case, you will need to change/set the @code{LD_LIBRARY_PATH}
+environment variable (or whatever other environment variable your operating
+system uses to list the places in which dynamic libraries may be found) to
+include the directory in which the library has been installed.
 @item
 The @emph{C} code for this procedure is quite system-dependent and
 has only been tested on a few operating systems.
