@@ -1,3 +1,7 @@
+Fri Jul  2 12:12:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Library/link_gui.m: Don't link obsolete NSMenuMatrix class.
+
 1999-03-14  Adam Fedor  <fedor@gnu.org>
 
 	* README: New file
