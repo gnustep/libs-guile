@@ -1,3 +1,9 @@
+Wed Dec 02 20:20:54 1998  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Library/gg_NSObject.m: Added autorelease pool 
+	* Library/gg_Object.m: Added autorelease pool and tidied
+	* Library/gg_id.m: Tidied.
+
 Thu Nov 19 09:09:54 1998  Adam Fedor  <fedor@doc.com>
 
 	* Test/Makefile.preamble (ADDITIONAL_INCLUDE_DIRS): Add ../Library
