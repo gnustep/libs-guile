@@ -530,6 +530,7 @@ gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
 
 
 static char gstep_msg_send_n[] = "gstep-msg-send";
+static char gstep_sup_send_n[] = "gstep-sup-send";
 
 @interface	Hack
 {
@@ -551,18 +552,21 @@ get_number_of_arguments (const char *type)
 }
 
 static SCM
-gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
+gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
 {
-  id self;
-  char *method_name;
-  const char *method_types;
-  SEL selector;
-  int args_list_len;
-  SCM next_arg;
-  SCM ret = SCM_UNDEFINED;
-  Method_t m;
-  NSAutoreleasePool *arp;
-  NSMethodSignature *signature;
+  id			self;
+  char			*method_name;
+  const char		*method_types;
+  SEL			selector;
+  int			args_list_len;
+  SCM			next_arg;
+  SCM			ret = SCM_UNDEFINED;
+  Method_t		m;
+  NSAutoreleasePool	*arp;
+  NSMethodSignature	*signature;
+  char			*procname;
+
+  procname = toSuper ? gstep_sup_send_n : gstep_msg_send_n; 
 
   /* Get the receiver */
   if (SCM_NIMP(receiver))
@@ -602,7 +606,7 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
     }
   else
     {
-      SCM_ASSERT (0, receiver, SCM_ARG1, gstep_msg_send_n);
+      SCM_ASSERT (0, receiver, SCM_ARG1, procname);
     }
 
   /* Get the selector */
@@ -617,7 +621,7 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
     }
   else
     {
-      SCM_ASSERT (0, method, SCM_ARG2, gstep_msg_send_n);
+      SCM_ASSERT (0, method, SCM_ARG2, procname);
     }
 
   selector = sel_get_any_typed_uid(method_name);
@@ -635,15 +639,17 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 	  NS_DURING
 	    {
 	      signature = [self methodSignatureForSelector: selector];
-	      if (signature == nil) {
-		NSLog(@"did not find signature for selector '%s' ..",
-		      method_name);
-		selector = 0;
-	      }
-	      else {
-		method_types = [signature methodType];
-		selector = sel_register_typed_name(method_name, method_types);
-	      }
+	      if (signature == nil)
+		{
+		  NSLog(@"did not find signature for selector '%s' ..",
+		    method_name);
+		  selector = 0;
+		}
+	      else
+		{
+		  method_types = [signature methodType];
+		  selector = sel_register_typed_name(method_name, method_types);
+		}
 	    }
 	  NS_HANDLER
 	    {
@@ -703,15 +709,19 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
     NS_DURING
       {
 	signature = [self methodSignatureForSelector: selector];
-	if (signature == nil) {
-	  signature = [NSMethodSignature signatureWithObjCTypes: method_types];
-	}
-	if (signature == nil) {
-	  NSLog(@"did not find signature for selector '%@' ..",
-		NSStringFromSelector(selector));
-	  return SCM_BOOL_F;
-	}
+	if (signature == nil)
+	  {
+	    signature
+	      = [NSMethodSignature signatureWithObjCTypes: method_types];
+	  }
+	if (signature == nil)
+	  {
+	    NSLog(@"did not find signature for selector '%@' ..",
+	      NSStringFromSelector(selector));
+	    return SCM_BOOL_F;
+	  }
 	invocation = [NSInvocation invocationWithMethodSignature: signature];
+	[invocation setSendsToSuper: toSuper];
 	[invocation setTarget: self];
 	[invocation setSelector: selector];
 
@@ -728,7 +738,7 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 #endif
 	    data = alloca(objc_sizeof_type(type));
 	    SCM_ASSERT(gstep_guile_decode_item(gh_car(next_arg), data, &offset,
-			&type), gh_car(next_arg), count, gstep_msg_send_n);
+	      &type), gh_car(next_arg), count, procname);
 	    [invocation setArgument: data atIndex: count];
 
 	    next_arg = gh_cdr(next_arg);
@@ -752,17 +762,19 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 	    [invocation getReturnValue: data];
 
 	    if ((strncmp(method_name, "new", 3) == 0)
-		|| (strncmp(method_name, "copy", 4) == 0)
-		|| (strncmp(method_name, "mutableCopy", 11) == 0)
-		|| (strncmp(method_name, "alloc", 5) == 0)) {
+	      || (strncmp(method_name, "copy", 4) == 0)
+	      || (strncmp(method_name, "mutableCopy", 11) == 0)
+	      || (strncmp(method_name, "alloc", 5) == 0))
+	      {
 		/*
 		 *	If we get an object returned by a 'new...', 'copy...',
 		 *	'mutableCopy...', or 'alloc...' method, then we don't
 		 *	need to retain it as it already has a retain count of 1.
 		 */
 		allocFlag = YES;
-	    }
-	    if (strncmp(method_name, "init", 4) == 0) {
+	      }
+	    if (strncmp(method_name, "init", 4) == 0)
+	      {
 		/*
 		 *	Init is a special case - it normally returns its
 		 *	receiver (in which case we won't create a new scheme
@@ -772,12 +784,11 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
 		 *	retaining it.
 		 */
 		initFlag = YES;
-	    }
+	      }
 	    ret = gstep_guile_encode_item(data, &offset, &type, allocFlag,
-		initFlag, self, receiver);
+	      initFlag, self, receiver);
 	    if (ret == (SCM)0)
-		gstep_scm_error("don't handle that return type yet",
-			method);
+	      gstep_scm_error("don't handle that return type yet", method);
 	  }
       }
     NS_HANDLER
@@ -800,6 +811,17 @@ gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
   return ret;
 }
 
+static SCM
+gstep_msg_send_fn (SCM receiver, SCM method, SCM args_list)
+{
+  return gstep_send_fn(receiver, method, args_list, NO);
+}
+
+static SCM
+gstep_sup_send_fn (SCM receiver, SCM method, SCM args_list)
+{
+  return gstep_send_fn(receiver, method, args_list, YES);
+}
 
 
 static char gstep_get_nil_n[] = "gstep-get-nil";
@@ -838,6 +860,7 @@ gstep_init_id()
   scm_make_gsubr(gstep_id_p_n, 1, 0, 0, gstep_scm_id_p);
   scm_make_gsubr(gstep_get_nil_n, 0, 0, 0, gstep_get_nil_fn);
   scm_make_gsubr(gstep_msg_send_n, 2, 0, 1, gstep_msg_send_fn);
+  scm_make_gsubr(gstep_sup_send_n, 2, 0, 1, gstep_sup_send_fn);
   scm_make_gsubr(gstep_ivarnames_n, 1, 0, 0, gstep_ivarnames_fn);
   scm_make_gsubr(gstep_get_ivar_n, 2, 0, 0, gstep_get_ivar_fn);
   scm_make_gsubr(gstep_ptr_ivar_n, 2, 0, 0, gstep_ptr_ivar_fn);
