@@ -1,0 +1,24 @@
+Announcement
+************
+
+The GNUstep Guile Library, version 1.0.3, is now available.
+
+What is the GNUstep Guile Library?
+==================================
+
+   The gnustep_guile library lets you use (and extend) the GNUstep
+libraries from within Guile.  This effectively provides you with
+scripting language for GNUstep and an interactive system for developing
+GNUstep applications.
+
+Noteworthy changes in version `1.0.3'
+=====================================
+
+   * Minor fixes to install better with newer gnustep-make
+
+Where can you get it?  How can you compile it?
+==============================================
+
+   The gnustep-guile-1.0.3.tar.gz distribution file has been placed at
+<ftp://ftp.gnustep.org/pub/gnustep/libs>.
+
