@@ -28,7 +28,6 @@
 
 #include <Foundation/NSString.h>
 #include <Foundation/NSValue.h>
-#include <Foundation/NSConcreteNumber.h>
 #include <Foundation/NSObject.h>
 
 #include <objc/Object.h>
@@ -183,55 +182,7 @@ enum {
 - (SCM)scmValue;
 @end
 
-@interface NSBoolNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSUCharNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSCharNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSUShortNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSShortNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSUIntNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSIntNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSULongNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSLongNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSULongLongNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSLongLongNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSFloatNumber (GuileSCM)
-- (SCM) scmValue;
-@end
-
-@interface NSDoubleNumber (GuileSCM)
+@interface NSNumber (GuileSCM)
 - (SCM) scmValue;
 @end
 

@@ -1,3 +1,11 @@
+2003-10-22  David Ayers  <d.ayers@inode.at>
+
+	* Library/GuileSCM.h: Do not include NSConcreteNumber.h, remove
+	category declarations on private NSNumber subclasses and declare
+	category for NSNumber.
+	* Library/GuileSCM.m (-[NS*Number scmValue]): Exchange categories
+	on private subclasses with a category on public abstract class.
+
 Tue Jul 29 15:48:18 2003  Nicola Pero  <n.pero@mi.flashnet.it>
 
 	* Library/Guile.h: Include GNUstepGuile/xxx.h rather than
