@@ -1,3 +1,8 @@
+2003-02-23 23:58  Alexander Malmberg <alexander@malmberg.org>
+
+	* Library/link_gui.m: Add NSParagraphStyle and NSMutableParagraphStyle
+	to the list of classes.
+
 2002-02-04  David Ayers  <d.ayers@inode.at>
 
 	* GNUmakefile: distclean AppKit.make and EOF.make.
