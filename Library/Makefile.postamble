@@ -22,12 +22,12 @@
 # library to that the <libname>.so symlink points to. That should be the
 # shared object name of the library.
 after-install::
-	if [ "$(shared)" != "yes" ]; then exit 0; fi; \
 	DIRP=$(INSTALL_ROOT_DIR)`guile -c '(display (string-append (%package-data-dir) "/" (version)))'`; \
 	$(MKDIRS) $$DIRP/languages/gstep-guile; \
 	for i in $(SCHEME_FILES); do \
 	  $(INSTALL_DATA) $$i $$DIRP/languages/$$i; \
 	done; \
+        if [ "$(shared)" != "yes" ]; then exit 0; fi; \
 	libdir=`expr $(GNUSTEP_LIBRARIES) : '$(INSTALL_ROOT_DIR)\(.*\)'`; \
 	for i in $(LIBRARY_NAME); do \
 	  m=`expr "$$i" : 'lib\(.*\)'`; \
@@ -47,9 +47,6 @@ after-install::
 	  $(LN_S) $$libdir/$$lib.$$v \
 	    $$DIRP/languages/gstep-guile/$$m/$$srcfile; \
 	done
-
-# Things to do before uninstalling
-# before-uninstall::
 
 # Things to do after uninstalling
 # after-uninstall::
