@@ -34,4 +34,4 @@ AC_SUBST(ac_cv_header_AppKit_AppKit_h)
 CPPFLAGS="$save_CPPFLAGS"
 
 AC_CONFIG_SUBDIRS(Greg ScriptKit)
-AC_OUTPUT(config.mak guile.make Test/GNUmakefile)
+AC_OUTPUT(AppKit.make guile.make)

@@ -21,19 +21,18 @@
 
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
-GNUSTEP_MAKEFILES = $(GNUSTEP_SYSTEM_ROOT)/Makefiles
+GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES = ../guile.make
+include ../AppKit.make
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
 include ../Version
 
-include	../config.mak
-
-LIBRARY_NAME=libgstep_guile libgg_base
+LIBRARY_NAME = libgstep_guile libgg_base
 
 ifneq ($(HAVE_APPKIT),no)
-LIBRARY_NAME += libgg_gui
-libgg_gui_OBJC_FILES = link_gui.m
+  LIBRARY_NAME += libgg_gui
+  libgg_gui_OBJC_FILES = link_gui.m
 endif
 
 libgg_base_OBJC_FILES = link_base.m
