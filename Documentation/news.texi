@@ -4,21 +4,23 @@
 @include version.texi
 @end ifset
 
-@section Noteworthy changes in version @samp{1.0.3}
+@section Noteworthy changes in version @samp{1.1.0}
 
 @itemize @bullet
-@item Minor fixes to install better with newer gnustep-make
+@item Updated to support guile 1.6 and to support the latest GNUstep
+base and gui libraries.  
+@item Added support for gdl2 by David Ayers.
+@item Handle either debug or non-debug libraries (preferably debug)
 @end itemize
 
 @c ====================================================================
 @c Keep the next line just below the list of changes in most recent version.
 @ifclear ANNOUNCE-ONLY
 
-@section Noteworthy changes in version @samp{1.1.0}
+@section Noteworthy changes in version @samp{1.0.3}
 
 @itemize @bullet
-@item Updated to support guile 1.6 and to support the latest GNUstep
-basae and gui libraries.  Also added support for gdl2 by David Ayers.
+@item Minor fixes to install better with newer gnustep-make
 @end itemize
 
 @section Noteworthy changes in version @samp{1.0.2}
