@@ -1,3 +1,9 @@
+2001-05-12 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Source/gg_NSObject.m: Removed category for NSProxy, as a closer
+	reading of documentation convinced me that the base library would
+	be better modified so that NSProxy could work directly.
+
 2001-05-11 Richard Frith-Macdonald <rfm@gnu.org>
 
 	Remove duplicate of path_guile.m4 so we only have one version to
