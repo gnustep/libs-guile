@@ -92,9 +92,11 @@ remove-header-links:
 	-rm -rf gnustep
 else
 header-links: $(HEADER_LINK_DEPENDS)
-	-rm -rf gnustep
-	$(MKDIRS) gnustep
-	$(LN_S) .. gnustep/guile
+	@(if [ ! -L gnustep/guile ]; then \
+	  rm -rf gnustep; \
+	  $(MKDIRS) gnustep; \
+	  $(LN_S) .. gnustep/guile; \
+	fi)
 remove-header-links:
-	-rm -f gnustep
+	-rm -rf gnustep
 endif

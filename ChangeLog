@@ -1,3 +1,11 @@
+Mon Apr 28 15:17:32 2003  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* Library/Makefile.postamble (remove-header-links): Use -r when
+	removing the symlink parent, else it was failing because it was
+	not empty.
+	(header-links): Do not destroy/recreate the symlink if it is
+	already there.
+
 2003-04-09 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/gstep-guile.scm.in:
