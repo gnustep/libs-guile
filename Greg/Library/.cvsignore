@@ -1,0 +1,7 @@
+Makefile
+greg
+greg.scm
+config.h
+.libs
+greg.lo
+libgreg.la
