@@ -286,6 +286,58 @@ gstep_ivarnames_fn (SCM receiver)
   return item;
 }
 
+static char gstep_methods_n[] = "gstep-methods";
+
+static SCM 
+gstep_methods_fn (SCM receiver)
+{
+  Class		class;
+  id		self = nil;
+  struct objc_method_list	*methods;
+  SCM		item = SCM_EOL;
+
+  if (SCM_NIMP(receiver) && OBJC_ID_P(receiver))
+    {
+      self = (id)gh_cdr(receiver);
+      if (!self)
+	{
+	  return receiver;	/* objc nil */
+	}
+    }
+  if (self == nil)
+    {
+      gstep_scm_error("not an object", receiver);
+    }
+
+  class = self->class_pointer;
+
+  while (class != nil)
+    {
+      int	i;
+
+      methods = class->methods;
+      class = class->super_class;
+      if (methods)
+	{
+	  for (i = 0; i < methods->method_count; i++)
+	    {
+	      const char	*name;
+	      const char	*type;
+	      char		*sig;
+
+	      name = sel_get_name(methods->method_list[i].method_name);
+	      type = methods->method_list[i].method_types;
+	      sig = objc_malloc(strlen(name) + strlen(type) + 3);
+	      sprintf(sig, "(%s)%s", type, name);
+	      item = scm_cons(scm_makfrom0str(sig), item);
+	      objc_free(sig);
+	    }
+	  methods = methods->method_next;
+	}
+    }
+  return item;
+}
+
 
 static char gstep_get_ivar_n[] = "gstep-get-ivar";
 
@@ -877,6 +929,7 @@ gstep_init_id()
   scm_make_gsubr(gstep_msg_send_n, 2, 0, 1, gstep_msg_send_fn);
   scm_make_gsubr(gstep_sup_send_n, 2, 0, 1, gstep_sup_send_fn);
   scm_make_gsubr(gstep_ivarnames_n, 1, 0, 0, gstep_ivarnames_fn);
+  scm_make_gsubr(gstep_methods_n, 1, 0, 0, gstep_methods_fn);
   scm_make_gsubr(gstep_get_ivar_n, 2, 0, 0, gstep_get_ivar_fn);
   scm_make_gsubr(gstep_ptr_ivar_n, 2, 0, 0, gstep_ptr_ivar_fn);
   scm_make_gsubr(gstep_set_ivar_n, 3, 0, 0, gstep_set_ivar_fn);

@@ -21,8 +21,8 @@ Available from
 @url{ftp://ftp.gnu.org/gnu/gnustep} or see
 @url{http://www.gnustep.org/} for further information.
 
-@item gcc-2.8.*@*
-Gcc should be available from any GNU ftp site @*
+@item gcc-2.8.* or greater@*
+Gcc 3.0 is recommended and should be available from any GNU ftp site @*
 You may also use a recent version of egcs. @*
 NB. For debugging, you need gdb-4.17 with the objc patch.
 The patch for gdb-4.17 is available at
@@ -35,7 +35,7 @@ The patch for gdb-4.17 is available at
 
 @itemize @bullet
 
-@item Make sure you have gcc-2.8.* installed.
+@item Make sure you have a recent gcc installed.
 
 @item Make sure you have Guile-1.3.4 or later built and installed.
 This library has been tested with 1.4 and 1.3.4.
