@@ -1,10 +1,10 @@
-
 #
 #  Makefile for Greg documentation.
 #  
-#  Copyright (C) 1998 Free Software Foundation, Inc.
+#  Copyright (C) 1998, 2001 Free Software Foundation, Inc.
 #
 #  Written by:	Richard Frith-Macdonald <rfm@gnu.org>
+#  Modified by: Nicola Pero <n.pero@mi.flashnet.it>
 #
 #  This file is part of the GNUstep Base Library.
 #
@@ -31,22 +31,22 @@ TEXI2HTML=@TEXI2HTML@
 TEXI2DVI=@TEXI2DVI@
 MAKEINFO=@MAKEINFO@
 
-all:	info html dvi
+all: gregdoc.info gregdoc.html gregdoc.dvi
 
-gregdoc.texi:	gregdoc
-	sed -e 's,@email{\([^}]*\)},<\1>,g' gregdoc \
-        | sed -e 's#@uref{\([^,}]*,\)\([^}]*\)}#@emph{\2}#g' \
-        | sed -e 's,@uref{\([^}]*\)},@emph{\1},g' \
-        | sed -e 's,@url{\([^}]*\)},@emph{\1},g' > gregdoc.texi
+gregdoc.texi:
+	@echo "You must run ../configure before building the documentation!"
 
-dvi:	gregdoc.texi
-	$(TEXI2DVI) gregdoc.texi
+# We use a `-' so that if any of the following fails, that won't
+# prevent people from installing Greg anyway
 
-html:	gregdoc
-	$(TEXI2HTML) -monolithic -expandinfo gregdoc
+gregdoc.dvi: gregdoc.texi
+	-$(TEXI2DVI) gregdoc.texi
 
-info:	gregdoc
-	$(MAKEINFO) -D NO-TEXI2HTML -o gregdoc.info gregdoc
+gregdoc.html: gregdoc.texi
+	-$(TEXI2HTML) -monolithic -expandinfo gregdoc.texi
+
+gregdoc.info: gregdoc.texi
+	-$(MAKEINFO) -D NO-TEXI2HTML -o gregdoc.info gregdoc.texi
 
 install-info: gregdoc.info
 	../mkinstalldirs $(INSTALL_ROOT_DIR)$(infodir)
@@ -54,15 +54,12 @@ install-info: gregdoc.info
 	-install-info gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/dir
 	-$(INSTALL_DATA) gregdoc.info $(INSTALL_ROOT_DIR)$(infodir)/greg.info
 
-install:	install-info
+install: install-info
 
 clean:
 	rm -f gregdoc.aux gregdoc.cp gregdoc.cps gregdoc.dvi \
-	gregdoc.fn gregdoc.ky gregdoc.log gregdoc.pg \
-	gregdoc.texi gregdoc.toc gregdoc.tp gregdoc.vr
+	      gregdoc.fn gregdoc.ky gregdoc.log gregdoc.pg \
+	      gregdoc.toc gregdoc.tp gregdoc.vr gregdoc.html gregdoc.info
 
-distclean:	clean
-
-reallyclean:	distclean
-	rm -f gregdoc *.html
-
+distclean: clean
+	rm -f gregdoc.texi Makefile
