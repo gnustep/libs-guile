@@ -1,3 +1,11 @@
+Tue Aug  3 11:40:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Changes to make it straightforward to build and install on systems
+	where only the foundation library is available.
+	* configure.in: Check for AppKit/AppKit.h
+	* Library/link_gui.m: dummy function if no gui library
+	* Test/GNUmakefile.in: don't guild gui version when there is no gui.
+
 Fri Jul  2 12:12:00 1999  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Library/link_gui.m: Don't link obsolete NSMenuMatrix class.

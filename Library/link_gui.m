@@ -21,6 +21,10 @@
    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
    */
 
+#include "../config.h"
+
+#if	HAVE_APPKIT_APPKIT_H
+
 #include "gstep_guile.h"
 
 #include	<Foundation/Foundation.h>
@@ -184,4 +188,11 @@ gstep_link_gui()
     gstep_gui_functions();
     gstep_gui_classes();
 }
+
+#else
+void
+gstep_link_gui()
+{
+}
+#endif
 
