@@ -6,7 +6,7 @@
 @c
 @c This file documents the GNUstep-Guile Regression testing framework `Greg'
 @c
-@c Copyright (C) 1998,1999,2000 Free Software Foundation, Inc.
+@c Copyright (C) 1998,1999,2000,2001 Free Software Foundation, Inc.
 @c
 @c This text may be freely distributed under the terms of the GNU
 @c General Public License.
@@ -29,12 +29,12 @@ END-INFO-DIR-ENTRY
 @title The Greg testing framework
 @subtitle for Greg Version @VERSION@
 @sp 1
-@subtitle January 2001
+@subtitle February 2001
 @author Richard Frith-Macdonald <rfm@@gnu.org>
 @page
 
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1998,1999,2000 Free Software Foundation, Inc.
+Copyright @copyright{} 1998,1999,2000,2001 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -51,7 +51,7 @@ into another language, under the above conditions for modified versions.
 @end titlepage
 
 @ifinfo
-Copyright @copyright{} 1998,1999,2000 Free Software Foundation, Inc.
+Copyright @copyright{} 1998,1999,2000,2001 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -104,6 +104,22 @@ See the file @file{COPYING.LIB}.
 @node News, Overview, Copying, Top
 @chapter New in this release
 @cindex News
+
+New in 1.4
+
+@itemize @bullet
+@item
+Updated to save/restore expect settings at start of a tool and end of a
+tool so that they can be readily set up for the duration of a tool test.
+@item
+The default action on reading an end of file from a child is now to 
+make the test FAIL rather than be unresolved.
+@item
+The default action on having a timeout when reading from a child is now to 
+make the test FAIL rather than be unresolved.
+@item
+Added hooks for pre and post testcase procedures.
+@end itemize
 
 New in 1.3
 
@@ -1198,7 +1214,8 @@ consist of Guile code to send commands to the child process and wait
 for responses from it.
 
 The child process is normally started by a @file{begin.grg} script
-using the @code{(greg-child)} procedure.
+using the @code{(greg-child)} procedure, though it is of course possible
+to start and stop child processes in each test script.
 
 @end itemize
 
@@ -1354,6 +1371,63 @@ dependent on the success of an earlier testcase.
 @end smallexample
 @end cartouche
 
+The system provides hooks for general purpose procedures that are
+automatically called immediately before and after each testcase is
+executed.  These procedures can be used to perform additional
+logging or other housekeeping functions. -
+@itemize @bullet
+@item greg-case-begin
+@cindex greg-case-begin
+The @code{greg-case-begin} variable is a hook for a procedure to be
+executed immediately before each testcase.  It is initially defined
+to be  @code{(lambda () ())} which does nothing except return an
+unused empty list.  You can replace this with a procedure of your choice,
+and use it to do any pre-test logging etc.  When this procedure is called,
+@code{greg-case-name} will contain the name of the current testcase.
+
+@item greg-case-end
+@cindex greg-case-end
+The @code{greg-case-end} variable is a hook for a procedure to be
+executed immediately before each testcase.  It is initially defined
+to be  @code{(lambda (result) ())} which does nothing except return an
+unused empty list.  You can replace this with a procedure of your choice.
+When this procedure is called, @code{greg-case-name} will contain the
+name of the current testcase.
+@end itemize
+
+While a testcase is executing (or in the @code{greg-case-begin} or
+@code{greg-case-end} procedures) there are a number of public procedures
+that may be used to obtain information about the system -
+
+@itemize @bullet
+@item greg-casename
+@cindex greg-casename
+This procedure returns the name of the current testcase.  It is valid during
+execution of the testcase and during the pre and post test procedures.
+
+@item greg-directory
+@cindex greg-directory
+The @code{greg-directory} procedure takes no arguments and simply returns
+a string containing the absolute path name of the directory in which the
+current testscript is located.  This value can be used where a testscript
+wishes to load data from local files in order to support a test.
+The string returned by this method includes a trailing slash character,
+so to refer to a file located in the same directory as the testscript
+simply by appending the fielname.
+eg @code{(string-append (greg-directory) "foo")}
+
+@item greg-filename
+@cindex greg-filename
+This procedure returns the name of the current test file.  It is valid during
+execution of the testcase and during the pre and post test procedures.
+
+@item greg-toolname
+@cindex greg-toolname
+This procedure returns the name of the current test tool.  It is valid during
+execution of the testcase and during the pre and post test procedures.
+
+@end itemize
+
 @subsection Multiple testcases
 @cindex multiple testcases
 
@@ -1422,19 +1496,6 @@ is whether the test succeeded or not, you can use the return value from the
 
 @end smallexample
 @end cartouche
-
-@subsection External data files
-@cindex External data files
-@cindex greg-directory
-
-The @code{greg-directory} procedure takes no arguments and simply returns
-a string containing the absolute path name of the directory in which the
-current testscript is located.  This value can be used where a testscript
-wishes to load data from local files in order to support a test.
-The string returned by this method includes a trailing slash character,
-so to refer to a file located in the same directory as the testscript
-simply by appending the fielname.
-eg @code{(string-append (greg-directory) "foo")}
 
 @subsection External tests
 @cindex external tests
@@ -1521,25 +1582,24 @@ each list containing a string (a pattern to match)
 and a result to return on a successful match.  The value returned by
 @code{greg-recv} is the result for the pattern actually matched.@*
 If no pattern is matched within the timeout period then an exception
-is raised, causing the testcase to return an UNRESOLVED result
+is raised, causing the testcase to return a FAIL result
 (unless you use @code{(set! expect-timeout-proc xxx)} to
 override Gregs timeout handler.@*
 If no pattern is matched before an end-of-file is read, then an exception
-is raised, causing the testcase to return an UNRESOLVED result
+is raised, causing the testcase to return a FAIL result
 (unless you use @code{(set! expect-eof-proc xxx)} to
 override Gregs end-of-file handler.@*
-You must override any @code{expect} settings @emph{after} calling
-@code{greg-child}, since that procedure sets up the default settings.
 
-If you want a timeout or end-of-file to result in a failure rather than
-an UNRESOLVED testcase, you should override the default procedures as
-follows -
-@cartouche
-@smallexample
-(set! expect-timeout-proc (lambda (args) #f))
-(set! expect-eof-proc (lambda (args) #f))
-@end smallexample
-@end cartouche
+NB. The @code{expect-timeout-proc} and @code{expect-eof-proc} are saved
+when a tool is tarted, and restored when it ends ... so if you want to
+make changes to these procedures in multiple tools, you must do so in the
+@code{begin.grg} and @code{end.grg} files for each tool.
+
+In addition to setting up the above expect procedures, Greg also sets
+the @code{expect-timeout} variable to a 15 second timeout, and sets the
+@code{expect-char-proc} to be @code{greg-dlog} so that data read from
+the child process is logged as debug output by default.  You can of
+course override this behavior in @code{begin.grg}.
 
 The pattern matching is done with extended regular expressions,
 usually with input split into lines so that a carat (^) at the start of an
@@ -1561,6 +1621,37 @@ respectively, then you can use -
 This pattern matching behavior is occasionally useful when you are
 testing a program that produces output without clearly recognisable
 individual lines.
+NB. greg does not save and restore these values, so a change to them
+effect all tools being tested until you change them back.
+
+@subsubsection A complete external test
+@cindex a complete external test
+@cartouche
+@example
+;
+; Run an interactive shell as a child process
+;
+(greg-child "/bin/sh" "-i")
+
+;
+; Set the shell prompt
+;
+(greg-send "PS1='% '\n")   
+
+;
+; Now test that the shell echoes what we expect.
+; If we have a timeout or an eof, we will get a failure result.
+;
+(greg-testcase "echo 'hello'" #t
+  (lambda ()
+    (greg-send "echo hello\n")  ; Get it to send us something
+    (expect-strings
+      ("hello\r\n% " #t)
+    )
+  )
+)
+@end example
+@end cartouche
 
 @node Index, , Writing tests, Top
 @unnumbered Index

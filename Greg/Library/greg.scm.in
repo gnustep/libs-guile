@@ -72,6 +72,7 @@
 (if (not (feature? 'greg-pty))
     (dynamic-call "scm_init_greg" (dynamic-link "libgreg.so")))
 
+(use-modules (ice-9 expect))
 
 (define-public (greg-version)
     "@VERSION@"
@@ -89,16 +90,23 @@
 (define-public greg-files ())
 (define-public greg-tools ())
 (define-public greg-paths ())
+(define-public greg-case-begin (lambda () ()))
+(define-public greg-case-end (lambda (result) ()))
 
 ;
 ; Define top-level variables for storing test statistics etc.
 ;
-(define greg-num-tools 0)
-(define greg-tool-name "")
-(define greg-file-name "")
 (define greg-case-name "")
+(define greg-file-name "")
+(define greg-tool-name "")
+(define greg-num-tools 0)
 (define greg-test-expects #t)
 (define greg-individual-test #f)
+
+(define greg-tool-expect-timeout 15)
+(define greg-tool-expect-timeout-proc expect-timeout-proc)
+(define greg-tool-expect-eof-proc expect-eof-proc)
+(define greg-tool-expect-char-proc expect-char-proc)
 
 (define greg-tool-attempts 0)
 (define greg-tool-unresolved 0)
@@ -126,7 +134,6 @@
 (define greg-log-port #f)
 (define greg-child-info ())
 (define greg-expect-list ())
-(define greg-timeout 15)
 
 ;
 ; Public functions to access some counters
@@ -143,6 +150,9 @@
 ; Access the current script directory path
 ;
 (define-public (greg-directory) greg-script-dir)
+(define-public (greg-casename) greg-case-name)
+(define-public (greg-filename) greg-file-name)
+(define-public (greg-toolname) greg-tool-name)
 
 (define (insert list elem)
   (if (eq? list ())
@@ -634,6 +644,7 @@
       )
       (begin
 	(set! greg-case-name assertion)
+	(greg-case-begin)
 	(set! greg-tool-attempts (+ greg-tool-attempts 1))
 	(set! greg-total-attempts (+ greg-total-attempts 1))
 	(set! testcase-result
@@ -712,6 +723,7 @@
 	    )
 	  )
 	)
+	(greg-case-end testcase-result)
 	(if (boolean? testcase-result)
 	  (if testcase-result
 	    (if expecting
@@ -857,6 +869,7 @@
 		  (greg-vlog 2 "Ended " greg-file-name "\n")
 		)
 	      )
+	      (greg-end-tool)
 	    )
 	  )
 	)
@@ -915,6 +928,29 @@
     (set! greg-tool-upasses 0)
     (set! greg-tool-ufailures 0)
     (set! greg-tool-unresolved 0)
+
+    (set! greg-tool-expect-timeout-proc expect-timeout-proc)
+    (set! expect-timeout-proc
+      (lambda (arg)
+	(begin
+	  (greg-dlog "timed out in expect after '" arg "'\n")
+	  (throw `fail)
+	)
+      )
+    )
+    (set! greg-tool-expect-eof-proc expect-eof-proc)
+    (set! expect-eof-proc
+      (lambda (arg)
+	(begin
+	  (greg-dlog "end-of-file in expect after '" arg "'\n")
+	  (throw `fail)
+	)
+      )
+    )
+    (set! greg-tool-expect-char-proc expect-char-proc)
+    (set! expect-char-proc greg-dlog)
+    (set! expect-timeout greg-tool-expect-timeout)
+
     (set! greg-num-tools (+ greg-num-tools 1))
   )
 )
@@ -925,6 +961,10 @@
 (define (greg-end-tool)
   (if (not (eqv? greg-tool-name ""))
     (begin
+      (set! expect-timeout greg-tool-expect-timeout)
+      (set! expect-timeout-proc greg-tool-expect-timeout-proc)
+      (set! expect-eof-proc greg-tool-expect-eof-proc)
+      (set! expect-char-proc greg-tool-expect-char-proc)
       (if (or (> greg-verbose 0)  greg-individual-test)
 	(begin
 	  (greg-vlog 2 "\n                === " greg-tool-name " Summary ===\n")
@@ -959,29 +999,15 @@
   )
 )
 
-;
-;
-;
-;
-
-(use-modules (ice-9 expect))
 
 ;
 ; Restore expect settings from stack and return the restored settings.
 ;
-(define-public greg-expect-pop
+(define greg-expect-pop
   (lambda ()
     (if (> (length greg-expect-list) 0)
       (let ((state (car greg-expect-list)))
-	(set! expect-char-proc (car state))
-	(set! state (cdr state))
-	(set! expect-eof-proc (car state))
-	(set! state (cdr state))
-	(set! expect-timeout-proc (car state))
-	(set! state (cdr state))
-	(set! expect-timeout (car state))
-	(set! state (cdr state))
-	(set! expect-port (car state))
+	(set! expect-port state)
 	(set! greg-expect-list (cdr greg-expect-list))
 	state
       )
@@ -992,19 +1018,9 @@
 ;
 ; Save current expect settings to stack.
 ;
-(define-public greg-expect-push
+(define greg-expect-push
   (lambda ()
-    (set! greg-expect-list (cons (greg-expect-save) greg-expect-list))
-  )
-)
-
-;
-; Save current expect settings as a list which we return
-;
-(define-public greg-expect-save
-  (lambda ()
-    (list expect-char-proc expect-eof-proc expect-timeout-proc
-	expect-timeout expect-port)
+    (set! greg-expect-list (cons expect-port greg-expect-list))
   )
 )
 
@@ -1070,24 +1086,6 @@
 	    (begin
 	      (greg-expect-push)
 	      (set! expect-port (car greg-child-info))
-	      (set! expect-timeout greg-timeout)
-	      (set! expect-timeout-proc
-		(lambda (arg)
-		  (begin
-		    (greg-dlog "timed out in expect after '" arg "'\n")
-		    (throw `unresolved)
-		  )
-		)
-	      )
-	      (set! expect-eof-proc
-		(lambda (arg)
-		  (begin
-		    (greg-dlog "end-of-file in expect after '" arg "'\n")
-		    (throw `unresolved)
-		  )
-		)
-	      )
-	      (set! expect-char-proc greg-dlog)
 	      greg-child-info
 	    )
 	    greg-child-info

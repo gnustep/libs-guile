@@ -1,3 +1,10 @@
+2001-02-12 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Library/greg.scm.in: Many updates for ease of use with external
+	tests.
+	* Documentation/gregdoc.in: Updated for new procedures to obtain
+	info during tests, and to describe pre/post test hooks.
+
 2001-01-22  Nicola Pero  <nicola@brainstorm.co.uk>
 
 	* Library/Makefile.in, Documentation/Makefile.in: Use
