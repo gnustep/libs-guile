@@ -38,6 +38,75 @@
 
 
 
+@interface EOKVCTester : NSObject
+{ 
+  id  obj_iv;
+  id  _obj_iv;
+  id  _other_obj_iv;
+
+  id _objGet;
+
+  int _int_iv;
+  int _other_int_iv;
+}
+@end
+@implementation EOKVCTester
+- (NSString *)description
+{
+  return [NSString stringWithFormat:
+		     @"obj_iv = '%@'\n_obj_iv = '%@'\n_other_obj_iv = '%@'\n_int_iv = %d\n_other_int_iv = %d",
+		   obj_iv, _obj_iv, _other_obj_iv,
+		   _int_iv, _other_int_iv];
+}
+- (void)unableToSetNullForKey: (NSString *)key
+{
+  if ([key isEqualToString: @"int_iv"])
+    {
+      _int_iv = 0;
+    }
+  else
+    {
+      [super unableToSetNullForKey: key];
+    }
+}
+- (id)getObjGet
+{
+  return [[_objGet description]
+	   stringByAppendingFormat: @"|%@", NSStringFromSelector(_cmd)];
+}
+- (void)setObjGet:(id)val
+{
+  [_objGet autorelease];
+  _objGet = [[val description]
+	   stringByAppendingFormat: @"|%@", NSStringFromSelector(_cmd)];
+  [_objGet retain];
+}
+- (id)_getObjGet
+{
+  return [[_objGet description]
+	   stringByAppendingFormat: @"|%@", NSStringFromSelector(_cmd)];
+}
+- (void)_setObjGet:(id)val
+{
+  [_objGet autorelease];
+  _objGet = [[val description]
+	   stringByAppendingFormat: @"|%@", NSStringFromSelector(_cmd)];
+  [_objGet retain];
+}
+- (id)objGet
+{
+  return [[_objGet description]
+	   stringByAppendingFormat: @"|%@", NSStringFromSelector(_cmd)];
+}
+- (id)_objGet
+{
+  return [[_objGet description]
+	   stringByAppendingFormat: @"|%@", NSStringFromSelector(_cmd)];
+}
+@end
+
+
+
 static void
 gstep_gdl2_numeric_constants()
 {
@@ -142,29 +211,6 @@ gstep_gdl2_classes()
 {
   NSAutoreleasePool	*arp = [NSAutoreleasePool new];
 
-  /*EOAccess*/
-#if	HAVE_EOACCESS_EOACCESS_H
-  CCLS(EOAdaptor);
-  CCLS(EOAdaptorChannel);
-  CCLS(EOAdaptorContext);
-  CCLS(EOAdaptorOperation);
-  CCLS(EOAttribute);
-  CCLS(EODatabase);
-  CCLS(EODatabaseChannel);
-  CCLS(EODatabaseContext);
-  CCLS(EODatabaseDataSource);
-  CCLS(EODatabaseOperation);
-  CCLS(EOEntity);
-  CCLS(EOJoin);
-  CCLS(EOModel);
-  CCLS(EOModelGroup);
-  CCLS(EORelationship);
-  CCLS(EOStoredProcedure);
-  CCLS(EOSQLExpression);
-  CCLS(EOSQLQualifier);
-
-#endif
-
 #if	HAVE_EOCONTROL_EOCONTROL_H
   /*EOControl*/
   CCLS(EOSortOrdering);
@@ -195,6 +241,29 @@ gstep_gdl2_classes()
   CCLS(EODelayedObserverQueue);
   CCLS(EOObserverProxy);
 
+  CCLS(EOKVCTester);
+#endif
+
+  /*EOAccess*/
+#if	HAVE_EOACCESS_EOACCESS_H
+  CCLS(EOAdaptor);
+  CCLS(EOAdaptorChannel);
+  CCLS(EOAdaptorContext);
+  CCLS(EOAdaptorOperation);
+  CCLS(EOAttribute);
+  CCLS(EODatabase);
+  CCLS(EODatabaseChannel);
+  CCLS(EODatabaseContext);
+  CCLS(EODatabaseDataSource);
+  CCLS(EODatabaseOperation);
+  CCLS(EOEntity);
+  CCLS(EOJoin);
+  CCLS(EOModel);
+  CCLS(EOModelGroup);
+  CCLS(EORelationship);
+  CCLS(EOStoredProcedure);
+  CCLS(EOSQLExpression);
+  CCLS(EOSQLQualifier);
 #endif
 
   [arp release];

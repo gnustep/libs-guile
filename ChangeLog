@@ -1,9 +1,22 @@
-003-03-17 Richard Frith-Macdonald <rfm@gnu.org>
+2003-03-27  David Ayers  <d.ayers@inode.at>
+
+	* configure.in: Check for EOF libraries more selectively and base
+	inclusion of any EOF support on availablity of EOControl instead
+	of EOAccess.  Assert autoconf version.
+	* configure: Regenerated with autoconf 2.5.
+	* config.h.in: Sorted entries according to dependancy.
+	* EOF.make.in: Allow for more selective configuration.
+	* Library/link_gdl2.m (EOKVCTester): Added class to support
+	testing.
+	(gstep_gdl2_classes): Added test class and reordered classes to
+	reflect hierarchical dependancy.
+	
+2003-03-17 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Library/gstep-guile.scm.in: Use 'defined?' rather than the
 	guile version.
 
-003-03-16 Richard Frith-Macdonald <rfm@gnu.org>
+2003-03-16 Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Version: Increase in preparation for new release
 	* configure: regenerate

@@ -1,1 +1,5 @@
-HAVE_EOF = @ac_cv_header_EOAccess_EOAccess_h@
+HAVE_EOCONTROL   = @ac_cv_header_EOControl_EOControl_h@
+HAVE_EOACCESS    = @ac_cv_header_EOAccess_EOAccess_h@
+HAVE_EOINTERFACE = @ac_cv_header_EOInterface_EOInterface_h@
+
+HAVE_EOF = @ac_cv_header_EOControl_EOControl_h@
