@@ -216,6 +216,13 @@ The latest version of Greg can normally be found at
 with documentation online at
 @uref{http://www.tiptree.demon.co.uk/gstep/guile/gregdoc_toc.html}
 
+or, for the bleeding edge - availably by anonymous cvs -
+
+CVSROOT=":pserver:anoncvs@@cvs.net-community.com:/gnustep"@*
+export CVSROOT@*
+cvs login (password is `anoncvs')@*
+cvs -z3 checkout guile/Greg@*
+
 @menu
 * Running Tests::               How to run a Greg testsuite
 * Sample Test::                 A trivial example of a testcase
