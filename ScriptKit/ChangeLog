@@ -1,3 +1,10 @@
+2006-09-08  Nicola Pero  <nicola.pero@meta-innovation.com>
+
+	* Library/run-test.sh: Removed difference between shared_obj,
+	static_obj, etc. and replaced them with a single obj directory.
+	This in preparation for the new gnustep-make that has only a
+	single obj directory.
+
 2003-10-22  David Ayers  <d.ayers@inode.at>
 
 	* Library/GuileSCM.h: Do not include NSConcreteNumber.h, remove
