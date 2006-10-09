@@ -1,5 +1,3 @@
-GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
-
 GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES = ../guile.make
 include ../AppKit.make
 include ../EOF.make

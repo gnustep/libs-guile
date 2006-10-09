@@ -1,3 +1,10 @@
+2006-10-09  Nicola Pero <nicola.pero@meta-innovation.com>
+
+	* GNUmakefile: Do not set GNUSTEP_INSTALLATION_DIR.
+	* Library/GNUmakefile: Same change.
+	* Test/GNUmakefile: Same change.
+	* Tools/GNUmakefile: Same change.
+	
 2005-02-24  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* The Greg subdirectory is now obsolete.

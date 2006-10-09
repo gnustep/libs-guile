@@ -1,6 +1,4 @@
 
-GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
-
 # Load our own local GUILE flags, then set GUILE_MAKE_LOADED to yes in
 # order to prevent the $GNUSTEP_MAKEFILES/Additional/guile.make from
 # being loaded, as it defines some flags which conflict with our own,
