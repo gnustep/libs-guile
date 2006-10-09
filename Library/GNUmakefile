@@ -19,8 +19,6 @@
 #   If not, write to the Free Software Foundation,
 #   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
-
 GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES = ../guile.make
 include ../AppKit.make
 include ../EOF.make
