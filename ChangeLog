@@ -1,3 +1,8 @@
+2007-02-18  Nicola Pero <nicola.pero@meta-innovation.com>
+
+	* configure.in: Updated to work with gnustep-make v2.
+	* configure: Regenerated.
+	
 2006-10-09  Nicola Pero <nicola.pero@meta-innovation.com>
 
 	* GNUmakefile: Do not set GNUSTEP_INSTALLATION_DIR.
