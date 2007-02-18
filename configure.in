@@ -33,9 +33,9 @@ AC_INIT(configure.in)
 
 sinclude(ScriptKit/path_guile.m4)
 
-if test -z "$GNUSTEP_SYSTEM_ROOT"; then
+if test -z "$GNUSTEP_MAKEFILES"; then
   {
-   echo "ERROR: You must run the GNUstep initialization script before configuring the gnustep-guile library!" 1>&2;
+   echo "ERROR: You must set GNUSTEP_MAKEFILES or run the GNUstep initialization script before configuring the gnustep-guile library!" 1>&2;
   exit 1; 
   }
 fi
@@ -45,21 +45,36 @@ fi
 #--------------------------------------------------------------------
 AC_CONFIG_HEADER(config.h)
 
-#--------------------------------------------------------------------
-# The GNUstep root directory.
-#--------------------------------------------------------------------
-AC_PREFIX_DEFAULT(`echo $GNUSTEP_SYSTEM_ROOT`)
-if test "x$prefix" = "x"; then
-  prefix=$ac_default_prefix ;
-fi
-
 AC_PROG_CC
 AC_PROG_CPP
 AC_PATH_GUILE
 AC_DEFINE_UNQUOTED(GUILE_VERSION, "$GUILE_VERSION")
 
+#--------------------------------------------------------------------
+# TODO: use gnustep-config (if available) once its API is stabilized.
+#--------------------------------------------------------------------
+
+#
+# It looks like we ought to source the whole GNUstep.sh here, and even
+# ask it to output all variables!  That way we have access to (eg)
+# GNUSTEP_SYSTEM_HEADERS below.
+#
+GNUSTEP_SH_EXPORT_ALL_VARIABLES=yes
+. "$GNUSTEP_MAKEFILES/GNUstep.sh"
+unset GNUSTEP_SH_EXPORT_ALL_VARIABLES
+
+# For backwards compatibility, define GNUSTEP_SYSTEM_HEADERS from
+# GNUSTEP_SYSTEM_ROOT if not set yet.
+if test x"$GNUSTEP_SYSTEM_HEADERS" = x""; then
+  GNUSTEP_SYSTEM_HEADERS="$GNUSTEP_SYSTEM_ROOT/Library/Headers"
+fi
+
+if test x"$GNUSTEP_SYSTEM_LIBRARIES" = x""; then
+  GNUSTEP_SYSTEM_LIBRARIES="$GNUSTEP_SYSTEM_ROOT/Library/Libraries"
+fi
+
 save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -x objective-c -I$GNUSTEP_SYSTEM_ROOT/Library/Headers -I$GNUSTEP_SYSTEM_ROOT/Library/Headers/gnustep -I$GNUSTEP_SYSTEM_ROOT/Library/Headers/$GNUSTEP_HOST_CPU/$GNUSTEP_HOST_OS"
+CPPFLAGS="$CPPFLAGS -x objective-c -I$GNUSTEP_SYSTEM_HEADERS -I$GNUSTEP_SYSTEM_HEADERS/gnustep -I$GNUSTEP_SYSTEM_HEADERS/$GNUSTEP_HOST_CPU/$GNUSTEP_HOST_OS"
 AC_CHECK_HEADERS(AppKit/AppKit.h)
 AC_SUBST(ac_cv_header_AppKit_AppKit_h)
 AC_CHECK_HEADERS(EOControl/EOControl.h)
