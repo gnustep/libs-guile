@@ -3,6 +3,10 @@ libraries from within Guile.  This effectively provides you with
 scripting language for GNUstep and an interactive system for developing
 GNUstep applications.
 
+   The library should work with guile version 1.3 to 1.6 (inclusive),
+if you wish to add support for other versions of guile, please provide
+patches to doi so (see http://savannah.gnu.org/patch/?group=gnustep).
+
    You can find out more about GNUstep at <http://www.gnustep.org>
 You can find out more about Guile at <http://www.fsf.org/software/guile>
 
