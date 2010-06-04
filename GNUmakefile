@@ -7,23 +7,11 @@ RPM_DISABLE_RELOCATABLE=YES
 PACKAGE_NEEDS_CONFIGURE=YES
 CVS_MODULE_NAME = guile
 
-# 
-# Pass it down to Greg
-#
-export INSTALL_ROOT_DIR
 
-#
-# The list of subproject directories
-#
-SUBPROJECTS = Greg Library Tools Test ScriptKit
-
--include GNUmakefile.preamble
-
--include GNUmakefile.local
+SUBPROJECTS = Library Tools Test ScriptKit
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
 
--include GNUmakefile.postamble
 
 # Compatibility with gnustep-make <= 1.2.0
 ifeq ($(MKINSTALLDIRS),)
@@ -35,9 +23,8 @@ after-distclean::
 		AppKit.make EOF.make
 
 before-install::
-	$(MKINSTALLDIRS) $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional
-	$(INSTALL_DATA) guile.make \
-	  $(INSTALL_ROOT_DIR)$(GNUSTEP_MAKEFILES)/Additional
+	$(MKINSTALLDIRS) $(DESTDIR)$(GNUSTEP_MAKEFILES)/Additional
+	$(INSTALL_DATA) guile.make $(DESTDIR)$(GNUSTEP_MAKEFILES)/Additional
 
 config.status:
 	./configure
