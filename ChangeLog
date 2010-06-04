@@ -1,5 +1,12 @@
 2010-06-02  Nicola Pero <nicola.pero@meta-innovation.com>
 
+	* Library/gg_class.m (gstep_send_msg_to_guile): Updated some
+	typecasts to compile with recent versions of guile.
+	* ScriptKit/Library/GuileInterpreter.m ([-executeScript:]): Same
+	change.
+	
+2010-06-02  Nicola Pero <nicola.pero@meta-innovation.com>
+
 	* GNUmakefile: Replaced INSTALL_ROOT_DIR with DESTDIR.  Do not
 	export INSTALL_ROOT_DIR.  Do not include non-existing makefiles.
 	(SUBPROJECTS): Do not try to build the Greg subdirectory, which is

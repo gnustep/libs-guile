@@ -349,9 +349,13 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
       NS_DURING
 	{
 	  ret = gh_catch (SCM_BOOL_T, 
-			  (scm_catch_body_t) eval_str_wrapper, 
+			  /* FIXME: Very old versions of guile require
+			   * scm_catch_body_t and scm_catch_handler_t
+			   * here.
+			   */
+			  (scm_t_catch_body) eval_str_wrapper, 
 			  c_script, 
-			  (scm_catch_handler_t) gopenstep_batch_handler, 
+			  (scm_t_catch_handler) gopenstep_batch_handler, 
 			  // Pass a script as nsstring to the handler
 			  script); 
 	}
@@ -365,9 +369,13 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
     {
       // Only print message
       ret = gh_catch (SCM_BOOL_T, 
-		      (scm_catch_body_t) eval_str_wrapper, 
+		      /* FIXME: Very old versions of guile require
+		       * scm_catch_body_t and scm_catch_handler_t
+		       * here.
+		       */
+		      (scm_t_catch_body) eval_str_wrapper, 
 		      c_script, 
-		      (scm_catch_handler_t) gopenstep_interactive_handler, 
+		      (scm_t_catch_handler) gopenstep_interactive_handler, 
 		      // Pass a script as cstring to the handler
 		      c_script);
     }

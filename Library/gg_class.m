@@ -414,11 +414,11 @@ gstep_send_msg_to_guile(id rcv, SEL sel, ...)
   data.selname = gh_str02scm((char*)selname);
   data.argslist = argsList;
 
-  /* FIXME: newer versions of guile need scm_t_catch_body and
-   * scm_t_catch_handler here.
+  /* FIXME: older versions of guile need scm_catch_body_t and
+   * scm_catch_handler_t here.
    */
-  val = gh_catch(SCM_BOOL_T, (scm_catch_body_t)proc_wrapper, (void*)&data,
-			(scm_catch_handler_t)proc_error, (void*)procname);
+  val = gh_catch(SCM_BOOL_T, (scm_t_catch_body)proc_wrapper, (void*)&data,
+		 (scm_t_catch_handler)proc_error, (void*)procname);
 
   /*
    *	Now decode the Guile return value into the correct ObjectiveC
