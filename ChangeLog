@@ -1,3 +1,12 @@
+2010-06-02  Nicola Pero <nicola.pero@meta-innovation.com>
+
+	* GNUmakefile: Replaced INSTALL_ROOT_DIR with DESTDIR.  Do not
+	export INSTALL_ROOT_DIR.  Do not include non-existing makefiles.
+	(SUBPROJECTS): Do not try to build the Greg subdirectory, which is
+	now longer there.
+	* Greg/: Directory removed.  It is now maintained at
+	https://gna.org/projects/greg/
+	
 2007-02-18  Nicola Pero <nicola.pero@meta-innovation.com>
 
 	* configure.in: Updated to work with gnustep-make v2.
