@@ -166,7 +166,7 @@ static SCM
 gstep_string_voidp_fn(SCM str)
 {
   char	*s;
-  int	l;
+  size_t	l;
   SCM	v;
 
   SCM_ASSERT(gh_string_p(str), str, SCM_ARG1, gstep_string_voidp_n);

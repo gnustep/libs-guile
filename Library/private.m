@@ -265,7 +265,7 @@ gstep_guile_decode_item(SCM list, void* datum, int *position, const char** types
 	      {
 		NSMutableData	*d;
 		char		*s;
-		int		l;
+		size_t		l;
 
 		s = gh_scm2newstr(val, &l);
 		d = [NSMutableData dataWithBytesNoCopy: s length: l];
@@ -295,7 +295,7 @@ gstep_guile_decode_item(SCM list, void* datum, int *position, const char** types
 	      {
 		NSMutableData	*d;
 		char		*s;
-		int		l;
+		size_t		l;
 
 		s = gh_scm2newstr(val, &l);
 		d = [NSMutableData dataWithBytesNoCopy: s length: l];

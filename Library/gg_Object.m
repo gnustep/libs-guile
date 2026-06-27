@@ -31,6 +31,9 @@
 #include "gg_Object.h"
 #include "private.h"
 
+@interface Object (GNUstepGuilePrivate)
+- (id) free;
+@end
 
 static NSMapTable	*objectMap = 0;
 

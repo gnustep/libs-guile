@@ -356,7 +356,7 @@ static char gstep_get_ivar_n[] = "gstep-get-ivar";
 static SCM 
 gstep_get_ivar_fn (SCM receiver, SCM ivarname)
 {
-  char				*name;
+  char				*name = NULL;
   id				self = nil;
   Ivar				ivar = 0;
   SCM				item;
@@ -386,7 +386,7 @@ gstep_get_ivar_fn (SCM receiver, SCM ivarname)
     }
   if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname))
     {
-      int	len;
+      size_t	len;
 
       name = gh_scm2newstr(ivarname, &len);
     }
@@ -417,7 +417,7 @@ static char gstep_ptr_ivar_n[] = "gstep-ptr-ivar";
 static SCM 
 gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
 {
-  char			*name;
+  char			*name = NULL;
   id			self = nil;
   Ivar			ivar = 0;
   int			offset;
@@ -447,7 +447,7 @@ gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
     }
   if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname))
     {
-      int	len;
+      size_t	len;
 
       name = gh_scm2newstr(ivarname, &len);
     }
@@ -475,7 +475,7 @@ static char gstep_set_ivar_n[] = "gstep-set-ivar";
 static SCM 
 gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
 {
-  char			*name;
+  char			*name = NULL;
   id			self = nil;
   Ivar			ivar = 0;
   int			offset;
@@ -504,7 +504,7 @@ gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
     }
   if (SCM_NIMP(ivarname) && SCM_STRINGP(ivarname))
     {
-      int	len;
+      size_t	len;
 
       name = gh_scm2newstr(ivarname, &len);
     }
@@ -514,6 +514,7 @@ gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
     }
 
   ivar = class_getInstanceVariable(object_getClass(self), name);
+  free(name);
   if (ivar == 0)
     {
       gstep_scm_error("not defined for object", ivarname);
@@ -582,7 +583,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
       if (SCM_STRINGP(receiver))
 	{
 	  char	*name;
-	  int	len;
+	  size_t	len;
 	  Class	class;
 
 	  name = gh_scm2newstr(receiver, &len);
@@ -655,8 +656,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
 		}
 	      else
 		{
-		  method_types = [signature methodType];
-		  selector = sel_registerTypedName_np(method_name, method_types);
+		  selector = sel_getUid(method_name);
 		}
 	    }
 	  NS_HANDLER
