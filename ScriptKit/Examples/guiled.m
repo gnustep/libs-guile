@@ -11,7 +11,6 @@ func (GuileInterpreter * interpreter)
 {
   NSMutableDictionary * name_space = [[NSMutableDictionary alloc] init];
   GuileScript * script = [[GuileScript alloc] init];
-  NSString * str;
 
   [name_space setLong: 3 forKey: @"a"];
   [name_space setLong: 4 forKey: @"b"];

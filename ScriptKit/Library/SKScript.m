@@ -66,7 +66,7 @@
   return interpreter;
 }
 
-- (void) setInterpreter: (id <SKInterpreter>)intr
+- (oneway void) setInterpreter: (id <SKInterpreter>)intr
 {
   if (interpreter != intr)
     {
@@ -80,7 +80,7 @@
   return dictionary;
 }
 
-- (void) setUserDictionary: (NSMutableDictionary *)dict
+- (oneway void) setUserDictionary: (NSMutableDictionary *)dict
 {
   if (dictionary != dict)
     {
@@ -94,7 +94,7 @@
     return delegate;
 }
 
-- (void) setDelegate: (id)del
+- (oneway void) setDelegate: (id)del
 {
   if (delegate != del)
     {
@@ -146,7 +146,7 @@
 {
   NSString *str = nil;
 
-  if ([delegate isKindOf: [NSString class]])
+  if ([(NSObject *)delegate isKindOfClass: [NSString class]])
     str = delegate;
   else if ([delegate respondsToSelector:@selector(stringValue)])
     /* OLD Code:
@@ -191,7 +191,7 @@
        (Masatake) */
     str = [delegate stringValue];
   else if ( 0 && [delegate respondsToSelector:@selector(string)] )
-    str = [delegate perform:@selector (string)];
+    str = [delegate performSelector:@selector (string)];
   return str;
 }
 

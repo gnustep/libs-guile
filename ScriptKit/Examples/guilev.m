@@ -12,7 +12,6 @@ func (GuileInterpreter * interpreter)
 {
   NSMutableDictionary * name_space = [[NSMutableDictionary alloc] init];
   GuileScript * script = [[GuileScript alloc] init];
-  NSString * str;
   NSNumber *x, *y;
   
   x = [NSNumber numberWithLong: 3];

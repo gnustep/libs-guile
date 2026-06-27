@@ -1174,6 +1174,7 @@ gstep_link_base()
       gstep_init();
       gstep_base_numeric_constants();
       gstep_base_string_constants();
+      gstep_base_pointer_constants();
       gstep_base_functions();
       gstep_base_classes();
 

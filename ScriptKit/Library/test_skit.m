@@ -331,12 +331,11 @@ test_keyword(GuileInterpreter *i)
 {
   GuileSCM * result_interpreter;
   GuileSCM * result_dictionary;
-  GuileSCM * result_update;
 
   print_header ("Testing Keyword");
   result_interpreter = [i eval: @"guile-interpreter"];
   result_dictionary= [i eval: @"guile-dictionary"];
-  result_update = [i eval: @"guile-update"];
+  [i eval: @"guile-update"];
 
   if ((YES    == [result_interpreter isObject])
       && (i   == [result_interpreter objectValue])
@@ -444,7 +443,7 @@ test_update(GuileInterpreter * i)
   result = ((int)[[let objectForKey: @"str0"] longValue] +
 	    (int)[[let objectForKey: @"str1"] longValue] +
 	    (int)[[let objectForKey: @"str2"] longValue]);
-  fprintf(stderr, "%d + %d + %d ?= %d\n", a, b, c, result);
+  fprintf(stderr, "%ld + %ld + %ld ?= %d\n", a, b, c, result);
   if (result == (a + b + c))
     print_result (OK, NULL);
   else
@@ -465,9 +464,7 @@ test_repl(GuileInterpreter * i)
 }
 
 void
-test_main (orig_argc, orig_argv)
-     int orig_argc;
-     char **orig_argv;
+test_main (int orig_argc, char **orig_argv)
 {
   NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
   GuileInterpreter * interp = [[GuileInterpreter alloc] init];
@@ -492,9 +489,7 @@ test_main (orig_argc, orig_argv)
 }
 
 int
-main (argc, argv)
-     int argc;
-     char ** argv;
+main (int argc, char ** argv)
 {
   gh_enter(argc, argv, test_main);
   return 0;

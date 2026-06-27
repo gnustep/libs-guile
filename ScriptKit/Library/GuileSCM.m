@@ -655,7 +655,7 @@ GuileSCM_mapper_remove (SCM scm)
 {
   id		str;
   char	*tmp;
-  int		len;
+  size_t	len;
     
   tmp = gh_scm2newstr (value, &len);
   str = [NSString stringWithCString: tmp length: len];
@@ -666,7 +666,7 @@ GuileSCM_mapper_remove (SCM scm)
 {
   id		str;
   char	*tmp;
-  int		len;
+  size_t	len;
     
   tmp = gh_symbol2newstr (value, &len);
   str = [NSString stringWithCString: tmp length: len];
@@ -987,19 +987,19 @@ GuileSCM_mapper_remove (SCM scm)
 
 
 @implementation NSMutableDictionary(GuileSCM)
-- (void)setLong: (long)l forKey: (NSObject *)aKey
+- (void)setLong: (long)l forKey: (id <NSCopying>)aKey
 {
   [self setObject: [GuileSCM scmWithLong: l] forKey: aKey];
 }
-- (void)setDouble: (double)d forKey: (NSObject *)aKey
+- (void)setDouble: (double)d forKey: (id <NSCopying>)aKey
 {
   [self setObject: [GuileSCM scmWithDouble: d] forKey: aKey];
 }
-- (void)setBool: (BOOL)b forKey: (NSObject *)aKey
+- (void)setBool: (BOOL)b forKey: (id <NSCopying>)aKey
 {
   [self setObject: [GuileSCM scmWithBool: b] forKey: aKey];
 }
-- (void)setCString: (char *)str forKey: (NSObject *)aKey
+- (void)setCString: (char *)str forKey: (id <NSCopying>)aKey
 {
   [self setObject: [GuileSCM scmWithCString: str] forKey: aKey];
 }

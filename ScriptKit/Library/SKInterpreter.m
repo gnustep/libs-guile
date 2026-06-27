@@ -53,12 +53,12 @@ script_kit_version()
 {
 }
 
-- (id) executeScript: (id)scr
+- (id) executeScript: (in id)scr
 {
   return [self shouldNotImplement:_cmd];
 }
 
-- (oneway void) executeScriptOneway: (id)scr
+- (oneway void) executeScriptOneway: (in id)scr
 {
   [self shouldNotImplement:_cmd];
 }

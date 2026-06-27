@@ -203,10 +203,10 @@ enum {
 
 
 @interface NSMutableDictionary(GuileSCM)
-- (void)setLong: (long)l forKey: (NSObject *)aKey;
-- (void)setDouble: (double)d forKey: (NSObject *)aKey;
-- (void)setBool: (BOOL)b forKey: (NSObject *)aKey;
-- (void)setCString: (char *)str forKey: (NSObject *)aKey;
+- (void)setLong: (long)l forKey: (id <NSCopying>)aKey;
+- (void)setDouble: (double)d forKey: (id <NSCopying>)aKey;
+- (void)setBool: (BOOL)b forKey: (id <NSCopying>)aKey;
+- (void)setCString: (char *)str forKey: (id <NSCopying>)aKey;
 @end
 
 #endif /* Not def: GUILE_S_C_M_H */

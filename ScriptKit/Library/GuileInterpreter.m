@@ -36,7 +36,6 @@
 #include <Foundation/NSObjCRuntime.h>
 #include <Foundation/NSMethodSignature.h>
 #include <Foundation/NSValue.h>
-#include <Foundation/NSUtilities.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSException.h>
 #include <Foundation/NSDictionary.h>
@@ -50,10 +49,7 @@ static GuileInterpreter *currentInterpreter = nil;
 
 //xxxbegin
 static void
-gscm_2_str (out, len_out, objp)
-     char ** out;
-     int * len_out;
-     SCM * objp;
+gscm_2_str (char **out, int *len_out, SCM *objp)
 {
   SCM_ASSERT (SCM_NIMP (*objp) && SCM_STRINGP (*objp), *objp, SCM_ARG3, "gscm_2_str");
   if (out)
@@ -237,6 +233,7 @@ gopenstep_batch_handler (void *data, SCM tag, SCM throw_args)
 		   reason: script
 		   userInfo: dict];
   [e raise];
+  return SCM_BOOL_F;
 }
 
 static void 
@@ -276,7 +273,6 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
 }
 - (NSString *) generateRealScript: (id<SKScript>)scr
 {
-  char *c_script;
   NSMutableString * script = nil;
 
   if (scr == nil)
@@ -301,7 +297,6 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
   if ((userDictionary != nil) && [userDictionary count] != 0)
     {
       NSEnumerator * keys = [userDictionary keyEnumerator];
-      NSObject * elt;
       NSString * key;
       while ((key = [keys nextObject]))
 	{
@@ -328,13 +323,13 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
 
   return script;
 }
-- (id) executeScript: (id<SKScript>)scr
+- (id) executeScript: (in id)scr
 {
   SCM ret;
   char *c_script;
   NSString * script = nil;
 
-  script   = [self generateRealScript: scr];
+  script   = [self generateRealScript: (id<SKScript>)scr];
   c_script = (char *)[script cString];
   // [singleInterpreterLock lock];
   currentInterpreter = self;
@@ -381,7 +376,7 @@ add_let_script(NSMutableString * script, NSString * entry, NSString * value)
   return [GuileSCM scmWithSCM: ret];
 }
 
-- (oneway void) executeScriptOneway: (id<SKScript>)scr
+- (oneway void) executeScriptOneway: (in id)scr
 {
   [self executeScript:scr];
 }
