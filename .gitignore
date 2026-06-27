@@ -2,3 +2,11 @@
 *.d
 *.so
 *.so*
+*.make
+*.log
+config.h
+*/obj
+obj
+*.status
+*.mak
+ScriptKit/ScriptKit
