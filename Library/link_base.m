@@ -560,7 +560,7 @@ gstep_NSEnumerateHashTable(SCM i)
 
   SCM_ASSERT(gstep_voidp_p(i), i, SCM_ARG1, gstep_NSEnumerateHashTable_n);
   t = (NSHashTable*)gstep_scm2voidp(i);
-  result = (NSHashEnumerator*)objc_malloc(sizeof(*result));
+  result = (NSHashEnumerator*)malloc(sizeof(*result));
   CALL(*result = NSEnumerateHashTable(t))
   return gstep_voidp2scm(result, YES, YES, 0);
 }
@@ -833,7 +833,7 @@ gstep_NSEnumerateMapTable(SCM i)
 
   SCM_ASSERT(gstep_voidp_p(i), i, SCM_ARG1, gstep_NSEnumerateMapTable_n);
   t = (NSMapTable*)gstep_scm2voidp(i);
-  result = (NSMapEnumerator*)objc_malloc(sizeof(*result));
+  result = (NSMapEnumerator*)malloc(sizeof(*result));
   CALL(*result = NSEnumerateMapTable(t))
   return gstep_voidp2scm(result, YES, YES, 0);
 }
@@ -946,7 +946,7 @@ gstep_NSMapMember(SCM i0, SCM i1, SCM i2, SCM i3)
       gstep_voidp_set(i2, ok, NO, YES, 0);
       gstep_voidp_set(i3, ov, NO, YES, 0);
   }
-  return gh_scm2long(result);
+  return gh_long2scm(result);
 }
 
 static char gstep_NSMapRemove_n[] = "NSMapRemove";
@@ -984,7 +984,7 @@ gstep_NSNextMapEnumeratorPair(SCM i0, SCM i1, SCM i2)
       gstep_voidp_set(i1, k, NO, YES, 0);
       gstep_voidp_set(i2, v, NO, YES, 0);
   }
-  return gh_scm2long(result);
+  return gh_long2scm(result);
 }
 
 static char gstep_NSResetMapTable_n[] = "NSResetMapTable";
@@ -1184,4 +1184,3 @@ gstep_link_base()
 #endif
     }
 }
-

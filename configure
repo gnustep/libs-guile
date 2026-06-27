@@ -2533,6 +2533,12 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
+if test -z "$GUILE"; then
+  { { echo "$as_me:$LINENO: error: Guile is required to build gnustep-guile. Install a Guile development package that provides the legacy gh API." >&5
+echo "$as_me: error: Guile is required to build gnustep-guile. Install a Guile development package that provides the legacy gh API." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
 if test -n "$GUILE"; then
   echo "$as_me:$LINENO: checking for guile version" >&5
 echo $ECHO_N "checking for guile version... $ECHO_C" >&6
@@ -2590,14 +2596,14 @@ fi
 
 
   if test -n "$GUILE_CONFIG"; then
-    $GUILE_CONFIG info includedir > tmp_guile_config
+    $GUILE_CONFIG compile > tmp_guile_config
     echo "$as_me:$LINENO: checking for guile cflags" >&5
 echo $ECHO_N "checking for guile cflags... $ECHO_C" >&6
 if test "${ac_cv_misc_guile_cflags+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-	ac_cv_misc_guile_cflags="-I`cat tmp_guile_config`"
+	ac_cv_misc_guile_cflags="`cat tmp_guile_config`"
 
 fi
 echo "$as_me:$LINENO: result: $ac_cv_misc_guile_cflags" >&5
@@ -2728,8 +2734,8 @@ fi
 done
 
     if test "$ac_cv_func_gh_apply" = no; then
-      { echo "$as_me:$LINENO: WARNING: Could not link to libguile - configuration is probably messed up" >&5
-echo "$as_me: WARNING: Could not link to libguile - configuration is probably messed up" >&2;}
+      { echo "$as_me:$LINENO: WARNING: libguile does not provide the legacy gh API; using the local compatibility header" >&5
+echo "$as_me: WARNING: libguile does not provide the legacy gh API; using the local compatibility header" >&2;}
     fi
     echo "$as_me:$LINENO: checking for scm_make_smob_type" >&5
 echo $ECHO_N "checking for scm_make_smob_type... $ECHO_C" >&6
@@ -6066,4 +6072,3 @@ echo "$as_me: error: $ac_sub_configure failed for $ac_dir" >&2;}
     cd $ac_popdir
   done
 fi
-

@@ -32,6 +32,7 @@
 #include <objc/objc-api.h>
 #include <objc/encoding.h>
 #include <objc/Protocol.h>
+#include <objc/runtime.h>
 
 #include <stdarg.h>
 
@@ -127,7 +128,7 @@ print_gstep_id (SCM exp, SCM port, scm_print_state *pstate)
   if (o == nil)
     scm_display(gh_str02scm("nil"), port);
   else
-    scm_display(gh_str02scm((char*)class_get_class_name([o class])), port);
+    scm_display(gh_str02scm((char*)class_getName([o class])), port);
 
   if ([o respondsToSelector: @selector(printForGuile:)])
     [o printForGuile:port];
@@ -154,7 +155,7 @@ gstep_fixup_id(SCM obj)
   if (o != nil)
     {
       NSMapRemove(knownObjects, (void*)o);
-      SCM_SETCDR(obj, (SCM)nil); 
+      SCM_SET_SMOB_DATA(obj, (scm_t_bits)nil);
     }
 }
 
@@ -169,9 +170,7 @@ gstep_id2scm(id o, BOOL shouldRetain)
       if (gstep_nil == 0)
 	{
 	  gh_defer_ints();
-	  SCM_NEWCELL(answer);
-	  SCM_SETCAR(answer, gstep_scm_tc16_id); 
-	  SCM_SETCDR(answer, (SCM)o); 
+	  SCM_NEWSMOB(answer, gstep_scm_tc16_id, (scm_t_bits)o);
 	  gstep_nil = answer;
 	  scm_permanent_object(gstep_nil); /* Don't garbage collect */
 	  gh_allow_ints();
@@ -192,9 +191,7 @@ gstep_id2scm(id o, BOOL shouldRetain)
     }
   if (answer == 0)
     {
-      SCM_NEWCELL(answer);
-      SCM_SETCAR(answer, gstep_scm_tc16_id); 
-      SCM_SETCDR(answer, (SCM)o); 
+      SCM_NEWSMOB(answer, gstep_scm_tc16_id, (scm_t_bits)o);
       NSMapInsertKnownAbsent(knownObjects, (void*)o, (void*)answer);
       if (shouldRetain && [o respondsToSelector: @selector(retain)])
 	{
@@ -260,7 +257,6 @@ gstep_ivarnames_fn (SCM receiver)
 {
   Class		class;
   id		self = nil;
-  struct objc_ivar_list	*ivars;
   SCM		item = SCM_EOL;
 
   if (SCM_NIMP(receiver) && OBJC_ID_P(receiver))
@@ -277,25 +273,27 @@ gstep_ivarnames_fn (SCM receiver)
     }
 
   if (gstep_guile_object_is_class(self))
-    class = self;
+    class = (Class)self;
   else
-    class = self->class_pointer;
+    class = object_getClass(self);
 
   while (class != nil)
     {
-      int	i;
+      unsigned int i;
+      unsigned int count = 0;
+      Ivar *ivars = class_copyIvarList(class, &count);
 
-      ivars = class->ivars;
-      class = class->super_class;
       if (ivars)
 	{
-	  for (i = 0; i < ivars->ivar_count; i++)
+	  for (i = 0; i < count; i++)
 	    {
-	      const char*	name = ivars->ivar_list[i].ivar_name;
+	      const char*	name = ivar_getName(ivars[i]);
 
 	      item = scm_cons(scm_makfrom0str(name), item);
 	    }
+	  free(ivars);
 	}
+      class = class_getSuperclass(class);
     }
   return item;
 }
@@ -307,7 +305,6 @@ gstep_methods_fn (SCM receiver)
 {
   Class		class;
   id		self = nil;
-  struct objc_method_list	*methods;
   SCM		item = SCM_EOL;
 
   if (SCM_NIMP(receiver) && OBJC_ID_P(receiver))
@@ -323,31 +320,32 @@ gstep_methods_fn (SCM receiver)
       gstep_scm_error("not an object", receiver);
     }
 
-  class = self->class_pointer;
+  class = object_getClass(self);
 
   while (class != nil)
     {
-      int	i;
+      unsigned int i;
+      unsigned int count = 0;
+      Method *methods = class_copyMethodList(class, &count);
 
-      methods = class->methods;
-      class = class->super_class;
       if (methods)
 	{
-	  for (i = 0; i < methods->method_count; i++)
+	  for (i = 0; i < count; i++)
 	    {
 	      const char	*name;
 	      const char	*type;
 	      char		*sig;
 
-	      name = sel_get_name(methods->method_list[i].method_name);
-	      type = methods->method_list[i].method_types;
-	      sig = objc_malloc(strlen(name) + strlen(type) + 3);
+	      name = sel_getName(method_getName(methods[i]));
+	      type = method_getTypeEncoding(methods[i]);
+	      sig = malloc(strlen(name) + strlen(type) + 3);
 	      sprintf(sig, "(%s)%s", type, name);
 	      item = scm_cons(scm_makfrom0str(sig), item);
-	      objc_free(sig);
+	      free(sig);
 	    }
-	  methods = methods->method_next;
+	  free(methods);
 	}
+      class = class_getSuperclass(class);
     }
   return item;
 }
@@ -359,10 +357,8 @@ static SCM
 gstep_get_ivar_fn (SCM receiver, SCM ivarname)
 {
   char				*name;
-  Class				class;
   id				self = nil;
-  struct	objc_ivar_list	*ivars;
-  struct 	objc_ivar	*ivar = 0;
+  Ivar				ivar = 0;
   SCM				item;
   int				offset;
   const char			*type;
@@ -399,33 +395,15 @@ gstep_get_ivar_fn (SCM receiver, SCM ivarname)
       gstep_scm_error("not a symbol or string", ivarname);
     }
 
-  class = self->class_pointer;
-  while (class != nil && ivar == 0)
-    {
-      ivars = class->ivars;
-      class = class->super_class;
-      if (ivars)
-	{
-	  int	i;
-
-	  for (i = 0; i < ivars->ivar_count; i++)
-	    {
-	      if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0)
-		{
-		  ivar = &ivars->ivar_list[i];
-		  break;
-		}
-	    }
-	}
-    }
+  ivar = class_getInstanceVariable(object_getClass(self), name);
   free(name);
   if (ivar == 0)
     {
       gstep_scm_error("not defined for object", ivarname);
     }
 
-  offset = ivar->ivar_offset;
-  type = ivar->ivar_type;
+  offset = ivar_getOffset(ivar);
+  type = ivar_getTypeEncoding(ivar);
 
   item = gstep_guile_encode_item((void*)self, &offset, &type, NO, NO, nil, 0);
 
@@ -440,10 +418,8 @@ static SCM
 gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
 {
   char			*name;
-  Class			class;
   id			self = nil;
-  struct objc_ivar_list	*ivars;
-  struct objc_ivar	*ivar = 0;
+  Ivar			ivar = 0;
   int			offset;
   const char		*type;
   void			*addr;
@@ -480,33 +456,15 @@ gstep_ptr_ivar_fn (SCM receiver, SCM ivarname)
       gstep_scm_error("not a symbol or string", ivarname);
     }
 
-  class = self->class_pointer;
-  while (class != nil && ivar == 0)
-    {
-      ivars = class->ivars;
-      class = class->super_class;
-      if (ivars)
-	{
-	  int	i;
-
-	  for (i = 0; i < ivars->ivar_count; i++)
-	    {
-	      if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0)
-		{
-		  ivar = &ivars->ivar_list[i];
-		  break;
-		}
-	    }
-	}
-    }
+  ivar = class_getInstanceVariable(object_getClass(self), name);
   free(name);
   if (ivar == 0) {
       gstep_scm_error("not defined for object", ivarname);
   }
 
-  offset = ivar->ivar_offset;
+  offset = ivar_getOffset(ivar);
   addr = ((void*)self)+offset;
-  type = ivar->ivar_type;
+  type = ivar_getTypeEncoding(ivar);
 
   return gstep_voidp2scm(addr, NO, YES, objc_sizeof_type(type));
 }
@@ -518,10 +476,8 @@ static SCM
 gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
 {
   char			*name;
-  Class			class;
   id			self = nil;
-  struct objc_ivar_list	*ivars;
-  struct objc_ivar	*ivar = 0;
+  Ivar			ivar = 0;
   int			offset;
   const char		*type;
 
@@ -557,32 +513,14 @@ gstep_set_ivar_fn (SCM receiver, SCM ivarname, SCM value)
       gstep_scm_error("not a symbol or string", ivarname);
     }
 
-  class = self->class_pointer;
-  while (class != nil && ivar == 0)
-    {
-      ivars = class->ivars;
-      class = class->super_class;
-      if (ivars)
-	{
-	  int	i;
-
-	  for (i = 0; i < ivars->ivar_count; i++)
-	    {
-	      if (strcmp(ivars->ivar_list[i].ivar_name, name) == 0)
-		{
-		  ivar = &ivars->ivar_list[i];
-		  break;
-		}
-	    }
-	}
-    }
+  ivar = class_getInstanceVariable(object_getClass(self), name);
   if (ivar == 0)
     {
       gstep_scm_error("not defined for object", ivarname);
     }
 
-  offset = ivar->ivar_offset;
-  type = ivar->ivar_type;
+  offset = ivar_getOffset(ivar);
+  type = ivar_getTypeEncoding(ivar);
 
   if (gstep_guile_decode_item(value, (void*)self, &offset, &type))
     {
@@ -627,7 +565,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
   int			args_list_len;
   SCM			next_arg;
   SCM			ret = SCM_UNDEFINED;
-  Method_t		m;
+  Method		m;
   NSAutoreleasePool	*arp;
   NSMethodSignature	*signature;
   char			*procname;
@@ -648,7 +586,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
 	  Class	class;
 
 	  name = gh_scm2newstr(receiver, &len);
-	  class = (id) objc_lookup_class(name);
+	  class = objc_lookUpClass(name);
 	  free(name);
 	  if (class == nil)
 	    {
@@ -656,10 +594,6 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
 	    }
 	  else
 	    {
-	      if (!CLS_ISRESOLV(class))
-		{
-		  __objc_resolve_class_links();
-		}
 	      receiver = gstep_id2scm(class, NO);
 	    }
 	}
@@ -690,7 +624,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
       SCM_ASSERT (0, method, SCM_ARG2, procname);
     }
 
-  selector = sel_get_any_typed_uid(method_name);
+  selector = sel_getUid(method_name);
   
   if (!selector)
     {
@@ -698,13 +632,13 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
      *	If no selector, we may have a proxy object that can return a
      *  method signature to be used in creating a selector - so try that.
      */
-      selector = sel_get_uid(method_name);
+      selector = sel_getUid(method_name);
       if (selector)
 	{
 	  arp = [NSAutoreleasePool new];
 	  NS_DURING
 	    {
-	      if (sel_eq(selector, @selector(methodSignatureForSelector:)))
+	      if (selector == @selector(methodSignatureForSelector:))
 		{
 		  signature
 		    = [NSMethodSignature signatureWithObjCTypes: "@@::"];
@@ -722,7 +656,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
 	      else
 		{
 		  method_types = [signature methodType];
-		  selector = sel_register_typed_name(method_name, method_types);
+		  selector = sel_registerTypedName_np(method_name, method_types);
 		}
 	    }
 	  NS_HANDLER
@@ -743,17 +677,17 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
      type correct in case there are multiple implementations of the method
      with different return types */
   m = (gstep_guile_object_is_class(self)
-	    ?class_get_class_method(((Hack*)self)->isa, selector)
-	    :class_get_instance_method(((Hack*)self)->isa, selector));
+	    ?class_getClassMethod((Class)self, selector)
+	    :class_getInstanceMethod(object_getClass(self), selector));
 
-  if (m != METHOD_NULL)
+  if (m != NULL)
     {
-      selector = m->method_name;
-      method_types = m->method_types;
+      selector = method_getName(m);
+      method_types = method_getTypeEncoding(m);
     }
   else
     {
-      method_types = sel_get_type(selector);
+      method_types = NULL;
     }
 
   if (!method_types)
@@ -782,7 +716,7 @@ gstep_send_fn (SCM receiver, SCM method, SCM args_list, BOOL toSuper)
     arp = [NSAutoreleasePool new];
     NS_DURING
       {
-	if (sel_eq(selector, @selector(methodSignatureForSelector:)))
+	if (selector == @selector(methodSignatureForSelector:))
 	  {
 	    signature = [NSMethodSignature signatureWithObjCTypes: "@@::"];
 	  }
@@ -951,4 +885,3 @@ gstep_init_id()
       CFUN(gstep_set_ivar_n, 3, 0, 0, gstep_set_ivar_fn);
     }
 }
-

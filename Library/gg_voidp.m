@@ -24,6 +24,7 @@
 #include <stdarg.h>
 
 #include <string.h>		// #ifdef .. #endif
+#include <stdlib.h>
 
 #include "private.h"
 
@@ -73,9 +74,9 @@ free_gstep_voidp (SCM obj)
 
   if (v->isMallocMem)
     {
-      objc_free(v->ptr);
+      free(v->ptr);
     }
-  objc_free(v);
+  free(v);
   
   return (scm_sizet)0;
 }
@@ -96,14 +97,12 @@ gstep_voidp2scm(void* ptr, BOOL isMallocMem, BOOL lengthKnown, int len)
   SCM	answer;
 
   gh_defer_ints();
-  v = (voidp)objc_malloc(sizeof(struct voidp_struct));
+  v = (voidp)malloc(sizeof(struct voidp_struct));
   v->ptr = ptr;
   v->len = len > 0 ? len : 0;
   v->lengthKnown = lengthKnown;
   v->isMallocMem = isMallocMem;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, gstep_scm_tc16_voidp); 
-  SCM_SETCDR(answer, (SCM)v); 
+  SCM_NEWSMOB(answer, gstep_scm_tc16_voidp, (scm_t_bits)v);
   gh_allow_ints();
   return answer;
 }
@@ -117,7 +116,7 @@ gstep_voidp_set(SCM o, void *ptr, BOOL m, BOOL lenKnown, int len)
 
       if (p->isMallocMem && p->ptr != ptr && p->ptr != 0)
 	{
-	  objc_free(p->ptr);
+	  free(p->ptr);
 	}
       p->ptr = ptr;
       p->isMallocMem = m;
@@ -509,7 +508,7 @@ gstep_list_voidp_fn(SCM l, SCM t)
 
   total = ROUND(objc_sizeof_type(type), align)
     * (count-1) + objc_sizeof_type(type);
-  ptr = (void*)objc_malloc(total);
+  ptr = (void*)malloc(total);
   obj = gstep_voidp2scm(ptr, YES, YES, total);
 
   while (l != SCM_EOL)
@@ -576,4 +575,3 @@ gstep_init_voidp()
   CFUN(gstep_voidp_id_n, 1, 0, 0, gstep_voidp_id_fn);
   CFUN(gstep_id_voidp_n, 1, 0, 0, gstep_id_voidp_fn);
 }
-

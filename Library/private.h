@@ -41,7 +41,7 @@
 #define	CNUM(X) gh_define(#X, gh_long2scm(X)); scm_c_export(#X, 0)
 #define	CSTR(X) gh_define(#X, gstep_id2scm(X, NO)); scm_c_export(#X, 0)
 #define	CPTR(X) gh_define(#X, gstep_voidp2scm((void*)X, NO, YES, 0)); scm_c_export(#X, 0)
-#define	CSEL(X) gh_define(#X, gh_str02scm((char*)sel_get_name(X))); scm_c_export(#X, 0)
+#define	CSEL(X) gh_define(#X, gh_str02scm((char*)sel_getName(X))); scm_c_export(#X, 0)
 
 #else
 
@@ -54,14 +54,9 @@
 #define	CNUM(X) gh_define(#X, gh_long2scm(X))
 #define	CSTR(X) gh_define(#X, gstep_id2scm(X, NO))
 #define	CPTR(X) gh_define(#X, gstep_voidp2scm((void*)X, NO, YES, 0))
-#define	CSEL(X) gh_define(#X, gh_str02scm((char*)sel_get_name(X)))
+#define	CSEL(X) gh_define(#X, gh_str02scm((char*)sel_getName(X)))
 
 #endif
-
-#ifdef HAVE_SCM_GC_PROTECT_OBJECT
-#define	scm_protect_object	scm_gc_protect_object
-#endif
-
 
 /*
  *	NOTE - OBJC_VERSION needs to be defined to be the version of the

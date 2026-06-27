@@ -75,6 +75,10 @@ AC_ARG_WITH(guile-exec-prefix, [  --with-guile-exec-prefix=PFX	Exec prefix where
 ac_path_guile_dummy_path="$guile_exec_prefix:$PATH"
 AC_PATH_PROG(GUILE, guile,,
 	$ac_path_guile_dummy_path)
+if test -z "$GUILE"; then
+  AC_MSG_ERROR([Guile is required to build gnustep-guile. Install a Guile development package that provides the legacy gh API.])
+fi
+
 if test -n "$GUILE"; then
   AC_CACHE_CHECK(for guile version, ac_cv_misc_guile_version, [
 	changequote(<<, >>)
@@ -87,9 +91,9 @@ if test -n "$GUILE"; then
 	$ac_path_guile_dummy_path)
 
   if test -n "$GUILE_CONFIG"; then
-    $GUILE_CONFIG info includedir > tmp_guile_config
+    $GUILE_CONFIG compile > tmp_guile_config
     AC_CACHE_CHECK(for guile cflags, ac_cv_misc_guile_cflags, [
-	ac_cv_misc_guile_cflags="-I`cat tmp_guile_config`"
+	ac_cv_misc_guile_cflags="`cat tmp_guile_config`"
     ])
     rm -f tmp_guile_config
     GUILE_CFLAGS="$ac_cv_misc_guile_cflags"
@@ -108,7 +112,7 @@ if test -n "$GUILE"; then
 
     AC_CHECK_FUNCS(gh_apply)
     if test "$ac_cv_func_gh_apply" = no; then
-      AC_WARN(Could not link to libguile - configuration is probably messed up)
+      AC_WARN([libguile does not provide the legacy gh API; using the local compatibility header])
     fi
     AC_CHECK_FUNC(scm_make_smob_type)
     if test $ac_cv_func_scm_make_smob_type = yes; then

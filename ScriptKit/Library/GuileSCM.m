@@ -356,7 +356,7 @@ static NSMapTable * map_SCM_to_GuileSCM;
 #define _OBJECTS_NOT_A_SCM_MARKER (const void *) SCM_UNDEFINED
 
 /* Callbacks for SCM */
-static unsigned map_SCM_hash(NSMapTable * table, SCM i);        /* hash */
+static NSUInteger map_SCM_hash(NSMapTable * table, SCM i);      /* hash */
 static BOOL map_SCM_is_equal(NSMapTable * table, SCM i, SCM j); /* isEqual */
 static void map_SCM_retain(NSMapTable * table, SCM i);          /* retain  */ 
 static void map_SCM_release(NSMapTable * table, SCM i);         /* release */
@@ -364,7 +364,7 @@ static NSString * map_SCM_describe(NSMapTable * table, SCM i);  /* describe */
 
 static NSMapTableKeyCallBacks map_callbacks_for_SCM =
 {
-  (unsigned (*)(NSMapTable *, const void *))map_SCM_hash,
+  (NSUInteger (*)(NSMapTable *, const void *))map_SCM_hash,
   (BOOL     (*)(NSMapTable *, const void *, const void *))map_SCM_is_equal,
   (void     (*)(NSMapTable *, const void *))map_SCM_retain,
   (void     (*)(NSMapTable *, void *))map_SCM_release,
@@ -372,10 +372,10 @@ static NSMapTableKeyCallBacks map_callbacks_for_SCM =
   _OBJECTS_NOT_A_SCM_MARKER
 };
 
-static unsigned
+static NSUInteger
 map_SCM_hash(NSMapTable * table, SCM i) 
 {
-  return (unsigned) i;
+  return (NSUInteger) i;
 }
 
 static BOOL
@@ -455,9 +455,7 @@ GuileSCM_mapper_init ()
   scm_tc16_mapper_dummy = scm_newsmob (&mapper_dummy_smob);
 #endif
   
-  SCM_NEWCELL(mapper_dummy);
-  SCM_SETCAR (mapper_dummy, scm_tc16_mapper_dummy);
-  SCM_SETCDR (mapper_dummy, 0);
+  SCM_NEWSMOB(mapper_dummy, scm_tc16_mapper_dummy, 0);
   scm_protect_object (mapper_dummy);
 
   map_SCM_to_GuileSCM = NSCreateMapTable(map_callbacks_for_SCM,
@@ -880,7 +878,7 @@ GuileSCM_mapper_remove (SCM scm)
 }
 - (unsigned long) length
 {
-  return gh_length ([self scmValue]);
+  return gh_scm2ulong(gh_length ([self scmValue]));
 }
 - memq: x
 {

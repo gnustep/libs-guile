@@ -30,6 +30,7 @@
 
 #include	<Foundation/NSData.h>
 #include	<objc/encoding.h>
+#include	<objc/runtime.h>
 
 #include "private.h"
 
@@ -178,7 +179,7 @@ gstep_guile_decode_item(SCM list, void* datum, int *position, const char** types
 	      if (SCM_STRINGP(val))
 		{
 		  gstep_scm2str(&s, &l, &val);
-		  *(SEL*)where = sel_get_any_typed_uid(s);
+		  *(SEL*)where = sel_getUid(s);
 		}
 	      else
 		return NO;
@@ -413,7 +414,7 @@ gstep_guile_encode_item(void* datum, int *position, const char** typespec, BOOL 
 	    break;
 
 	  case _C_SEL:
-	    val = gh_str02scm((char*)sel_get_name(*(SEL *)where));
+	    val = gh_str02scm((char*)sel_getName(*(SEL *)where));
 	    break;
 
 	  case _C_CHR:
@@ -529,12 +530,7 @@ gstep_guile_list_length(SCM list)
 BOOL
 gstep_guile_object_is_class(id object)
 {
-  if (object != nil 
-#if NeXT_runtime
-      && CLS_ISMETA(((Class)object)->isa))
-#else
-      && CLS_ISMETA(((Class)object)->class_pointer))
-#endif
+  if (object != nil && class_isMetaClass(object_getClass(object)))
     return YES;
   else
     return NO;
@@ -564,4 +560,3 @@ gstep_scm2str(char **out, int *len_out, SCM *objp)
   if (len_out)
     *len_out = SCM_LENGTH (*objp);
 }
-

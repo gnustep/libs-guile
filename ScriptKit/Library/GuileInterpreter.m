@@ -43,11 +43,7 @@
 
 #include <string.h>
 
-#ifdef HAVE_SCM_C_DEFINE_GSUBR
 #define CFUN(X,A1,A2,A3,P) scm_c_define_gsubr(X,A1,A2,A3,P)
-#else
-#define CFUN(X,A1,A2,A3,P) scm_make_gsubr(X,A1,A2,A3,P)
-#endif
 
 static GuileInterpreter *currentInterpreter = nil;
 // static NSLock *singleInterpreterLock = nil;
@@ -178,7 +174,7 @@ NSString * GuileInterpreterKeyWord_Update  = @"guile-update";
     SCM errsym;
     SCM str;
 
-    errsym = gh_car (scm_intern ("error", 5));
+    errsym = gh_symbol2scm ("error");
     str = gh_str02scm ((char*)[message cString]);
     scm_throw (errsym, gh_cons (str, args));
 }
